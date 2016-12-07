@@ -13,7 +13,7 @@
 <?php get_header(); ?>
 <div class="container">
 	<div class="row">
-		<div class="col-sm-12">
+		<div class="col-xs-12">
 			<section id="blog">
 				<?php
 				if( have_posts() ):
@@ -47,13 +47,13 @@
                     <h2><?php echo $name; ?></h2>
 
                     <div class="row repeater-row">
-                      <div class="col-sm-4 column">
+                      <div class="col-xs-4 column">
 
                         <h4>Lifespan: <?php echo $lifespan; ?></h4>
 
                         <p><?php echo $racial_characteristics; ?></p>
                       </div>
-                      <div class="col-sm-8 column">
+                      <div class="col-xs-8 column">
 
                         <h4>Descriptipn</h4>
                         <?php echo $description; ?>
@@ -84,8 +84,9 @@
               </div>
             </div>
         <?php endif; ?>
+
         <?php if( have_rows('classes') ): ?>
-          <div class="race-content switcher-content" style="display:none;">
+          <div class="race-content switcher-content">
 
             <div id="cf-classes" class="cf-repeater">
               <div class="row repeater-content rf-hidden">
@@ -115,42 +116,43 @@
             </div>
           </div>
         <?php endif; ?>
+
         <?php if( have_rows('skills') ): ?>
-          <div class="skill-content switcher-content" style="display:none;">
+          <div class="skill-content switcher-content">
 
             <div id="cf-skills" class="cf-repeater">
               <div class="row repeater-content rf-hidden">
                 <div class="col-lg-12 column">
 
                   <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-xs-3">
                       Name
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       M
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       R
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       T
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       N
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       A
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       W
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       M
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       D
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                       B
                     </div>
                   </div>
@@ -166,7 +168,7 @@
                     $templar_cost = get_sub_field('templar_cost');
                     $nightblade_cost = get_sub_field('nightblade_cost');
                     $assassin_cost = get_sub_field('assassin_cost');
-                    $witchhunter_cost = get_sub_field('witchhunter_cost');
+                    $witchhunter_cost = get_sub_field('witchblade_cost');
                     $mage_cost = get_sub_field('mage_cost');
                     $druid_cost = get_sub_field('druid_cost');
                     $bard_cost = get_sub_field('bard_cost');
@@ -174,34 +176,34 @@
                     ?>
 
                     <div class="row">
-                      <div class="col-sm-3">
+                      <div class="col-xs-3">
                         <?php echo $name; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $mercenary_cost; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $ranger_cost; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $templar_cost; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $nightblade_cost; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $assassin_cost; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $witchhunter_cost; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $mage_cost; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $druid_cost; ?>
                       </div>
-                      <div class="col-sm-1">
+                      <div class="col-xs-1">
                         <?php echo $bard_cost; ?>
                       </div>
                     </div>
@@ -214,7 +216,7 @@
         <?php endif; ?>
 
 			</section><!--/#blog-->
-		</div><!--/.col-sm-7-->
+		</div><!--/.col-xs-7-->
 	</div><!--/.row-->
 </div><!--/.container-->
 <?php get_footer(); ?>

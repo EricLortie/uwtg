@@ -210,8 +210,6 @@
 
                   <?php while( have_rows('classes') ): the_row(); ?>
 
-                    <?php write_log(get_field()); ?>
-
                     <?php // vars
                     $name = get_sub_field('name');
                     $description = get_sub_field('description');
