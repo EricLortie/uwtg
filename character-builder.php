@@ -25,29 +25,6 @@
 				endif;
 				?>
 
-        <div class="row">
-          <div class="col-sm-12 blog-post">
-            <a id="character-generator" href="#" title="Generate Random Character" class="blog-post-button">Generate Random Character!</a>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-4">
-            Name:
-          </div>
-          <div class="col-sm-8">
-            <span class="name-holder"></span>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-4">
-            Race:
-          </div>
-          <div class="col-sm-8">
-            <span class="race-holder"></span>
-          </div>
-        </div>
 
 
         <script type="text/javascript">
@@ -60,175 +37,93 @@
           builder_data.professions = [];
         </script>
 
-        <div class="row switcher-element">
-          <div class="col-sm-2"></div>
-          <div class="col-sm-4 switcher-box">
-            <h2 class="switcher active">Races</h2>
-          </div>
-          <div class="col-sm-4 switcher-box">
-            <h2 class="switcher">Classes</h2>
-          </div>
-          <div class="col-sm-2"></div>
-        </div>
+        <?php if( have_rows('races'), 812 ): ?>
 
-        <?php if( have_rows('races') ): ?>
-          <div class="race-content switcher-content">
+          <?php while( have_rows('races'), 812 ): the_row(); ?>
 
-            <div id="cf-races" class="cf-repeater">
-              <div class="row repeater-content rf-hidden">
-                <div class="col-lg-12 column">
-
-                  <?php while( have_rows('races') ): the_row(); ?>
-
-
-                    <?php // vars
-                    $name = get_sub_field('name');
-                    $lifespan = get_sub_field('lifespan');
-                    $description = get_sub_field('description');
-                    $racial_characteristics = get_sub_field('racial_characteristics');
-                    $advantages = get_sub_field('advantages');
-                    $disadvantages = get_sub_field('disadvantages');
-
-                    ?>
-                    <h2><?php echo $name; ?></h2>
-
-                    <div class="row repeater-row">
-                      <div class="col-sm-4 column">
-
-                        <h4>Lifespan: <?php echo $lifespan; ?></h4>
-
-                        <p><?php echo $racial_characteristics; ?></p>
-                      </div>
-                      <div class="col-sm-8 column">
-
-                        <h4>Descriptipn</h4>
-                        <?php echo $description; ?>
-
-                        <h4>Advantages</h4>
-                        <?php echo $advantages; ?>
-
-                        <h4>Disadvantages:</h4>
-                        <?php echo $disadvantages; ?>
-
-                      </div>
-                    </div>
-
-                    <script type="text/javascript">
-                      builder_data.races.push({
-                        name: `<?php echo $name ?>`,
-                        lifespan: `<?php echo $lifespan ?>`,
-                        racial_characteristics: `<?php echo $racial_characteristics ?>`,
-                        description: `<?php echo $description ?>`,
-                        advantages: `<?php echo $advantages ?>`,
-                        disadvantages: `<?php echo $disadvantages ?>`
-                      });
-                    </script>
-
-                    <?php endwhile; ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-        <?php endif; ?>
-        <?php if( have_rows('classes') ): ?>
-          <div class="race-content switcher-content" style="display:none;">
-
-            <div id="cf-classes" class="cf-repeater">
-              <div class="row repeater-content rf-hidden">
-                <div class="col-lg-12 column">
-
-                  <?php while( have_rows('classes') ): the_row(); ?>
-
-                    <?php // vars
-                    $name = get_sub_field('name');
-                    $description = get_sub_field('description');
-                    ?>
-
-                    <h2><?php echo $name; ?></h2>
-                    <p><?php echo $description; ?></p>
-                    <br/>
-
-                    <script type="text/javascript">
-                      builder_data.pc_classes.push({
-                        name: `<?php echo $name ?>`,
-                        description: `<?php echo $description ?>`
-                      });
-                    </script>
-
-                  <?php endwhile; ?>
-                </div>
-              </div>
-            </div>
-          </div>
-        <?php endif; ?>
-
-        <?php if( have_rows('backstory_arrival') ): ?>
-          <?php while( have_rows('backstory_arrival') ): the_row(); ?>
 
             <?php // vars
-            $arrival = get_sub_field('arrival');
+            $name = get_sub_field('name');
+            $lifespan = get_sub_field('lifespan');
+            $description = get_sub_field('description');
+            $racial_characteristics = get_sub_field('racial_characteristics');
+            $advantages = get_sub_field('advantages');
+            $disadvantages = get_sub_field('disadvantages');
+
             ?>
 
             <script type="text/javascript">
-              builder_data.arrivals.push(`<?php echo $arrival; ?>`);
+              builder_data.races.push({
+                name: `<?php echo $name ?>`,
+                lifespan: `<?php echo $lifespan ?>`,
+                racial_characteristics: `<?php echo $racial_characteristics ?>`,
+                description: `<?php echo $description ?>`,
+                advantages: `<?php echo $advantages ?>`,
+                disadvantages: `<?php echo $disadvantages ?>`
+              });
             </script>
 
           <?php endwhile; ?>
         <?php endif; ?>
 
-        <?php if( have_rows('backstory_purpose') ): ?>
-          <?php while( have_rows('backstory_purpose') ): the_row(); ?>
+        <?php if( have_rows('classes'), 815 ): ?>
+
+          <?php while( have_rows('classes'), 815 ): the_row(); ?>
 
             <?php // vars
-            $purpose = get_sub_field('purpose');
+            $name = get_sub_field('name');
+            $description = get_sub_field('description');
             ?>
 
             <script type="text/javascript">
-              builder_data.purposes.push(`<?php echo $purpose; ?>`);
+              builder_data.pc_classes.push({
+                name: `<?php echo $name ?>`,
+                description: `<?php echo $description ?>`
+              });
             </script>
 
           <?php endwhile; ?>
         <?php endif; ?>
 
-        <?php if( have_rows('backstory_quirk') ): ?>
-          <?php while( have_rows('backstory_quirk') ): the_row(); ?>
+
+        <?php if( have_rows('skills') ): ?>
+          <?php while( have_rows('skills') ): the_row(); ?>
 
             <?php // vars
-            $quirk = get_sub_field('quirk');
+            $name = get_sub_field('name');
+            $description = get_sub_field('description');
+            $prereq = get_sub_field('prerequesites');
+            $mercenary_cost = get_sub_field('mercenary_cost');
+            $ranger_cost = get_sub_field('ranger_cost');
+            $templar_cost = get_sub_field('templar_cost');
+            $nightblade_cost = get_sub_field('nightblade_cost');
+            $assassin_cost = get_sub_field('assassin_cost');
+            $witchhunter_cost = get_sub_field('witchblade_cost');
+            $mage_cost = get_sub_field('mage_cost');
+            $druid_cost = get_sub_field('druid_cost');
+            $bard_cost = get_sub_field('bard_cost');
+
             ?>
 
             <script type="text/javascript">
-              builder_data.quirks.push(`<?php echo $quirk; ?>`);
+              builder_data.skills.push({
+                name: `<?php echo $name ?>`,
+                description: `<?php echo $description ?>`,
+                prerequesites: `<?php echo $prereq ?>`,
+                mercenary_cost: `<?php echo $mercenary_cost ?>`,
+                ranger_cost: `<?php echo $ranger_cost ?>`,
+                templaer_cost: `<?php echo $templater_cost ?>`,
+                nightblade_cost: `<?php echo $nightblade_cost ?>`,
+                assassin_cost: `<?php echo $assassin_cost ?>`,
+                witchhunter_cost: `<?php echo $witchhunter_cost ?>`,
+                mage_cost: `<?php echo $mage_cost ?>`,
+                druid_cost: `<?php echo $druid_cost ?>`,
+                bard_cost: `<?php echo $bard_cost ?>`
+              });
             </script>
 
           <?php endwhile; ?>
         <?php endif; ?>
-
-        <?php if( have_rows('backstory_profession') ): ?>
-          <?php while( have_rows('backstory_profession') ): the_row(); ?>
-
-            <?php // vars
-            $profession = get_sub_field('profession');
-            ?>
-
-            <script type="text/javascript">
-              builder_data.professions.push(`<?php echo $profession; ?>`);
-            </script>
-
-          <?php endwhile; ?>
-        <?php endif; ?>
-
-        <script type="text/javascript">
-          jQuery(document).on('ready', function(){
-            jQuery('.switcher').on('click', function(){
-              if(!jQuery(this).hasClass('active')){
-                jQuery('.switcher-content').toggle();
-                jQuery('.switcher').toggleClass('active');
-              }
-            });
-          });
-
-        </script>
 
 			</section><!--/#blog-->
 		</div><!--/.col-sm-7-->
