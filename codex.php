@@ -99,7 +99,7 @@
                     $description = get_sub_field('description');
                     ?>
 
-                    <h2><?php echo $name; ?></h2>
+                    <h4><?php echo $name; ?></h4>
                     <p><?php echo $description; ?></p>
                     <br/>
 
@@ -124,7 +124,7 @@
               <div class="row repeater-content rf-hidden">
                 <div class="col-lg-12 column">
 
-                  <div class="row">
+                  <div class="row skill_header">
                     <div class="col-xs-3">
                       Name
                     </div>
@@ -175,9 +175,9 @@
 
                     ?>
 
-                    <div class="row">
+                    <div class="row skill_row">
                       <div class="col-xs-3">
-                        <?php echo $name; ?>
+                        <?php echo $name; ?>&nbsp <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
                       </div>
                       <div class="col-xs-1">
                         <?php echo $mercenary_cost; ?>
@@ -206,6 +206,11 @@
                       <div class="col-xs-1">
                         <?php echo $bard_cost; ?>
                       </div>
+                      <div class="col-xs-12 skill_desc" style="display:none;">
+                        <?php echo $description; ?>
+                        <hr />
+                        <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                      </div>
                     </div>
 
                   <?php endwhile; ?>
@@ -213,6 +218,21 @@
               </div>
             </div>
           </div>
+
+          <script type="text/javascript">
+            jQuery(document).on('ready', function(){
+              jQuery('.skill_expander').on('click', function(){
+                var desc = jQuery(this).closest('.skill_row').find('.skill_desc');
+                desc.slideToggle();
+              });
+              jQuery('.skill_closer').on('click', function(e){
+                e.preventDefault();
+                var desc = jQuery(this).closest('.skill_desc');
+                desc.slideToggle();
+              });
+            });
+          </script>
+
         <?php endif; ?>
 
 			</section><!--/#blog-->

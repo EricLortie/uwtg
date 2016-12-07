@@ -577,3 +577,33 @@ h2.switcher.active {
   border: none;
   color: white;
 }
+
+.skill_desc {
+  background: #111;
+  border: 1px solid darkgrey;
+  padding: 1rem;
+  margin: 2rem;
+  width: 93%;
+}
+
+.skill_header, .skill_row {
+  padding: 1rem 0px;
+}
+
+
+.skill_header {
+  text-transform:uppercase;
+  font-size: 2rem;
+  font-weight:bolder;
+  border-bottom: 1px solid darkred;
+}
+.skill_row {
+  border-bottom: 1px dotted darkred;
+}
+.skill_meta {
+  text-align:right;
+}
+.skill_closer {
+  text-transformer:uppercase;
+  color: darkred;
+}
