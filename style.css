@@ -1,0 +1,579 @@
+/*
+Theme Name: Illdy
+Theme URI: http://colorlib.com/wp/themes/illdy/
+Author: Colorlib
+Author URI: http://colorlib.com
+Description: Illdy is a free premium one page WordPress theme.
+Version: 1.0.12
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: black, brown, orange, tan, white, yellow, light, one-column, two-columns, right-sidebar, custom-header, custom-menu, editor-style, featured-images, microformats, post-formats, rtl-language-support, sticky-post, translation-ready
+Text Domain: illdy
+
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned with others.
+*/
+
+@import 'layout/css/main.css';
+@import 'layout/css/custom.min.css';
+
+body {
+    background-color: #191919;
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+    color: whitesmoke;
+}
+
+#awesome_video {
+	position: absolute;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    background-size: cover;
+    overflow: hidden;
+    top:0;
+}
+#header.mobile {
+    background: url('./inc/header-bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#header .top-header {
+    background: black !important;
+    padding: 10px 0px;
+}
+
+.jumbotron_text {
+	 text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+	 color: #D80032 !important;
+}
+.jumbotron_text a {
+	 /* color: #d2eda6 !important; */
+}
+.span-dot {
+	color: #060502 !important;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+
+.header-navigation ul {
+    padding: 12px !important;
+    border-radius: 10px;
+    margin-top: 0px !important;
+}
+
+.header-navigation ul a:hover {
+    color: #EF233C !important;
+}
+
+.header-button-one {
+    border: none !important;
+    background: #8D99AE !important;
+    float:left;
+}
+.header-button-one:hover {
+    background: #9185B5 !important;
+}
+.header-button-two {
+    background: #D80032 !important;
+    float:right;
+}
+.header-button-two:hover {
+    background: #EF233C !important;
+}
+.bottom-header {
+    padding-top: 120px !important;
+    padding-bottom: 120px !important;
+}
+
+section {
+    color: whitesmoke;
+    background: #0c0c0c;
+}
+section h3 {
+    color: #eeeeee;
+}
+
+#contact-us {
+    background-color: #2B2D42;
+}
+#contact-us, #contact-us span,#contact-us a {
+    color: #fff !important;
+}
+#contact-us input, #contact-us textarea {
+    background-color: #9185B5 !important;
+    border: 1px solid #fff !important;
+}
+#contact-us input[type=submit] {
+    color: #fff !important;
+    font-weight: bolder;
+    background: #D80032 !important;
+}
+
+.latest-news-button {
+    border: none !important;
+    background: #8D99AE !important;
+}
+.latest-news-button:hover {
+    background: #9185B5 !important;
+}
+.person a, .testimonial a, .post-button {
+    color: #D80032 !important;
+}
+.sub-menu {
+    z-index: 100;
+}
+#about {
+    width: 100%;
+    padding: 65px 0 65px 0;
+    text-align: center;
+}
+#about .section-header {
+    margin-bottom: 0px !important;
+}
+
+#services {
+    width: 100%;
+    padding: 65px 0 75px 0;
+    text-align: center;
+}
+#services .section-content .service .service-entry {
+    width: 100%;
+    line-height: 1.6;
+}
+#services h3 {
+    color: #eeeeee;
+}
+
+
+#testimonials {
+    width: 100%;
+    padding: 50px 0 30px 0;
+    text-align: center;
+    position: relative;
+    background: #333333;
+    background: -moz-linear-gradient(top, #333333 0%, #0c0c0c 100%);
+    background: -webkit-linear-gradient(top, #333333 0%, #0c0c0c 100%);
+    background: linear-gradient(to bottom, #333333 0%, #0c0c0c 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#0c0c0c',GradientType=0 );
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+}
+
+
+#testimonials .section-header h3 {
+    color: #ffffff;
+}
+
+#testimonials .section-content .testimonials-carousel .carousel-testimonial .testimonial-content {
+    background-color: #2B2D42;
+}
+#testimonials .section-content .testimonials-carousel .carousel-testimonial .testimonial-content:after {
+    border-color: #2B2D42 transparent transparent transparent;
+}
+
+#latest-news {
+    background: url('./inc/medieval-bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+#latest-news .section-content .post {
+    background-color: #2B2D42;
+}
+
+#latest-news .section-content .post .post-title {
+    color:#ffffff;
+}
+#latest-news .section-content .post .post-title:hover {
+    color: #D80032;
+}
+#latest-news .section-content .post .post-entry {
+    color: whitesmoke;
+}
+
+#team {
+  background: #222;
+}
+#team .section-content .person .person-content {
+    float: right;
+}
+#team .section-content .person .person-image {
+    width: 180px;
+}
+#team .section-content .person .person-content h4 {
+color: #D80032;
+}
+
+body #tribe-events {
+    background: transparent;
+}
+#tribe-events, #tribe-events h1, #tribe-events h2, #tribe-events h3, #tribe-events h4, #tribe-events h5 {
+    color: whitesmoke;
+}
+#tribe-events a {
+    color: #D80032;
+}
+
+#tribe-bar-collapse-toggle {
+    background: #444444;
+}
+#tribe-bar-views label {
+    color: #060502;
+}
+#tribe-bar-dates label, #tribe-bar-dates input {
+    color: black;
+}
+#tribe-events-content td {
+    background: lightgrey;
+}
+
+#tribe-bar-form label {
+    color: black;
+}
+#tride-bar-form input {
+    border: 1px solid lightgrey;
+    color: black;
+}
+.tribe-events-list-separator-month {
+    background: #444;
+}
+.tribe-events-event-cost {
+  background: none !important;
+}
+.tribe-events-list .tribe-events-event-cost span {
+    background: none !important;
+    border: 0px !important;
+}
+#blog {
+    background: transparent;
+    color: #989898;
+}
+#blog h2, #blog .blog-post .blog-post-title {
+    color: whitesmoke;
+}
+#sidebar input {
+    background: #888 !important;
+    color: white !important;
+    border: 1px solid #eee !important;
+}
+#sidebar label, #sidebar h1, #sidebar h2, #sidebar h3, #sidebar h4, #sidebar h5, #sidebar li {
+    color: whitesmoke !important;
+}
+
+/* 06. Services */
+.section-header {
+    width: 100%;
+    margin-bottom: 65px;
+}
+.section-content {
+    width: 100%;
+}
+.service {
+    width: 100%;
+    text-align: center;
+}
+.service .service-icon {
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 34px;
+}
+.service-icon .fa {
+    display: block;
+}
+.service-title {
+    width: 100%;
+    margin-bottom: 30px;
+    line-height: 1.611;
+    font-weight: 700;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+.widget_illdy_service {
+    margin-top: 40px;
+}
+.widget_illdy_service:nth-child(1), .widget_illdy_service:nth-child(2), .widget_illdy_service:nth-child(3) {
+    margin-top: 0;
+}
+
+div.wpcf7-mail-sent-ok {
+    border: none !important;
+}
+
+#bbpress-forums div {
+    background: transparent !important;
+}
+#bbpress-forums input, .bbpress-forums textarea, div.bbp-the-content-wrapper textarea.bbp-the-content, #anspress input, #anspress textarea {
+    background: #444 !important;
+    color: whitesmoke !important;
+}
+
+div.bbp-template-notice, div.indicator-hint {
+    color: #ffffff;
+}
+div.bbp-template-notice a {
+    color: #e2c504 !important;
+}
+
+fieldset.bbp-form legend {
+    padding: 5px;
+    background: #999;
+}
+
+#bbp_topic_submit {
+    color: black;
+}
+#subscription-toggle {
+    float: right;
+}
+ul.forums li {
+    background: transparent !important;
+}
+#bbpress-forums fieldset.bbp-form, #bbpress-forums li.bbp-header, #bbpress-forums li.bbp-footer, #bbpress-forums li.bbp-header, #bbpress-forums li.bbp-footer {
+    border: none !important;
+}
+#bbpress-forums li.bbp-header, #bbpress-forums li.bbp-header, #bbpress-forums li.bbp-footer {
+    background: #444 !important;
+}
+.bbp-body, #bbpress-forums div.odd, #bbpress-forums ul.odd {
+    background: transparent !important;
+}
+.blog-post-author {
+    background: transparent;
+}
+#bbpress-forums .bbp-topics-front ul.super-sticky,
+#bbpress-forums .bbp-topics ul.super-sticky,
+#bbpress-forums .bbp-topics ul.sticky,
+#bbpress-forums .bbp-forum-content ul.sticky {
+    background-color: transparent !important;
+    font-size: 1.1em;
+}
+#bbpress-forums .status-closed, #bbpress-forums .status-closed a {
+  color: #e2c504 !important;
+    font-weight: bolder;
+}
+
+#blog .blog-post .blog-post-button {
+    background-color: darkred !important;
+}
+
+
+.person-content-social {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.person-content-social li {
+    margin-left: 10px;
+    float: left;
+}
+.person-content-social li:first-child {
+    margin-left: 0;
+}
+.person-content-social li a {
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    display: inline-block;
+    border-radius: 50%;
+    font-size: 12px;
+    color: #ffffff;
+    text-align: center;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+.person-content-social li a:hover {
+    opacity: 0.9;
+}
+
+.wp-link-wrap {
+  color: black !important;
+}
+#bbpress-forums div.even, #bbpress-forums ul.even {
+    background-color: #222;
+}
+#footer {
+    background-color: #222;
+}
+#footer a {
+  color: red;
+}
+#footer ol.tribe-list-widget {
+  padding-left: 0px;
+}
+
+#anspress {
+  background: none !important;
+  color: whitesmoke !important;
+}
+#anspress p, #anspress span {
+  color: #aaa !important;
+}
+#anspress a {
+  color: red !important;
+}
+#anspress .ap-list-head {
+    border: none !important;
+}
+#anspress .ap-form-head {
+    background: none !important;
+    border-bottom: 0px !important;
+}
+.ap-answers-tab a {
+  color: black;
+}
+.apicon-thumb-up {
+  color: darkgreen;
+}
+.ap-stats-widget ul, .ap-stats-widget li {
+  border: none !important;
+}
+.ap-post-upload-form span {
+  color: black !important;
+}
+.widget .ap-stats-widget, .ap-widget-pos .ap-stats-widget {
+  border: 0px !important;
+}
+.stat-label {
+  color: #fff !important;
+}
+.wpcf7-form-control {
+  width: 100%;
+}
+.wpcf7-submit {
+  color: black;
+  float: right;
+  padding: 4px 30px;
+}
+
+div#id-changeidname {
+  display: none;
+}
+#drupalchat ul li div a {
+  color:#fff !important;
+}
+#drupalchat ul li a.iflychat.subpanel_toggle.active {
+    color: #fff !important;
+}
+#chatpanel {
+  background: darkred !important;
+}
+
+.um-meta-text, .um-field-label, .um-name a, #drupalchat .chatboxcontent p, .um, .subpanel_title_text, .chatboxtextarea {
+    color: whitesmoke !important;
+}
+
+
+#anspress #ap-question-sorting .ap-dropdown-toggle.active {
+    background: grey !important;
+    color: white !important;
+}
+#anspress .ap-list-head .ap-btn-ask {
+    background: lightgrey !important;
+    color: black !important;
+}
+#anspress .ap-questions-acount span, #anspress .ap-questions-vcount span {
+    color: black !important;
+}
+#anspress #ap-question-sorting .ap-dropdown-menu a {
+    color: black !important;
+}
+#anspress .ap-dropdown-menu li.active a {
+    background: darkgrey;
+}
+
+#anspress .ap-answers-label {
+  color: whitesmoke;
+}
+#anspress .ap-questions-tab>li.active a, #anspress .ap-answers-tab>li.active a {
+  background:darkgrey;
+}
+#ap-answers-c .ap-answers-tab li a, #anspress .ap-btn-counter {
+  color: black !important;
+}
+#ap-modal-inner {
+  background:#444;
+}
+#ap-modal-inner, #ap-modal-inner p, #ap-modal-inner a {
+  color: whitesmoke;
+}
+
+#ap-modal-inner label {
+  display:block;
+  clear:both;
+}
+#anspress .ap-form-label .ap-field-desc {
+  color: black !important;
+}
+.ap-q-content {
+  background:#222;
+  padding:8px;
+}
+#anspress .ap-taxo-detail {
+  background: none !important;
+}
+#anspress .ap-taxo-detail .ap-tax-item-count {
+  background: none !important;
+}
+
+div.character-photo img {
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.repeater-content h4 {
+  border-bottom: 1px solid darkred;
+}
+.switcher-element {
+  margin-top: 5rem;
+  border-top: 3px dotted darkred;
+  padding-top: 4rem;
+  border-bottom: 1px solid white;
+  cursor: pointer;
+}
+.switcher-box {
+  border: 1px solid white;
+  border-bottom: none;
+  background:#444;
+  text-align: center;
+  text-transform: uppercase;
+}
+h2.switcher.active {
+  font-weight:bold;
+  color: red !important;
+}
+#generated-character {
+  display:none;
+  margin-bottom: 3rem;
+  background: #222;
+  padding: 2rem;
+}
+#gen-opts {
+  margin: 4rem 0;
+}
+#gen-opts label {
+  text-transform: uppercase;
+}
+#gen-opts .col-sm-2 {
+  margin-top: 1rem;
+}
+.gen-opt {
+  width: 100%;
+  background: darkred;
+  border: none;
+  color: white;
+}
