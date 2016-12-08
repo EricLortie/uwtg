@@ -64,13 +64,14 @@
 
 
             <?php // vars
-            array_push($races, $name);
             $name = get_sub_field('name');
             $lifespan = get_sub_field('lifespan');
             $description = get_sub_field('description');
             $racial_characteristics = get_sub_field('racial_characteristics');
             $advantages = get_sub_field('advantages');
             $disadvantages = get_sub_field('disadvantages');
+
+            array_push($races, $name);
 
             ?>
 
@@ -93,10 +94,9 @@
           <?php while( have_rows('classes', 815) ): the_row(); ?>
 
             <?php // vars
-
-            array_push($classes, $name);
             $name = get_sub_field('name');
             $description = get_sub_field('description');
+            array_push($classes, $name);
             ?>
 
             <script type="text/javascript">
@@ -127,49 +127,94 @@
             $druid_cost = get_sub_field('druid_cost');
             $bard_cost = get_sub_field('bard_cost');
 
+
             ?>
 
             <script type="text/javascript">
-              builder_data.skills[`<?php echo $name; ?>`] = {
-                name: `<?php echo $name ?>`,
-                description: `<?php echo $description ?>`,
-                prerequesites: `<?php echo $prereq ?>`,
-                mercenary_cost: `<?php echo $mercenary_cost ?>`,
-                ranger_cost: `<?php echo $ranger_cost ?>`,
-                templaer_cost: `<?php echo $templar_cost ?>`,
-                nightblade_cost: `<?php echo $nightblade_cost ?>`,
-                assassin_cost: `<?php echo $assassin_cost ?>`,
-                witchhunter_cost: `<?php echo $witchhunter_cost ?>`,
-                mage_cost: `<?php echo $mage_cost ?>`,
-                druid_cost: `<?php echo $druid_cost ?>`,
-                bard_cost: `<?php echo $bard_cost ?>`
-              }
+              jQuery(document).on('ready', function(){
+                console.log('<?php echo $name; ?>');
+                builder_data.skills[`<?php echo $name; ?>`] = {
+                  name: `<?php echo $name ?>`,
+                  description: `<?php echo $description ?>`,
+                  prerequesites: `<?php echo $prereq ?>`,
+                  mercenary_cost: `<?php echo $mercenary_cost ?>`,
+                  ranger_cost: `<?php echo $ranger_cost ?>`,
+                  templar_cost: `<?php echo $templar_cost ?>`,
+                  nightblade_cost: `<?php echo $nightblade_cost ?>`,
+                  assassin_cost: `<?php echo $assassin_cost ?>`,
+                  witchhunter_cost: `<?php echo $witchhunter_cost ?>`,
+                  mage_cost: `<?php echo $mage_cost ?>`,
+                  druid_cost: `<?php echo $druid_cost ?>`,
+                  bard_cost: `<?php echo $bard_cost ?>`
+                }
+              });
             </script>
 
           <?php endwhile; ?>
         <?php endif; ?>
 
         <div class="row">
-          <div class="col-xs-4">
+          <div class="col-sm-4">
 
-              <label>Select Your Race</label>
-                <select id="cb-race" class="gen-opt">
-                  <? foreach ($races as $race) { ?>
-                    <?php if ($race == 'character-builder-beta'){ continue; } ?>
-                    <option value="<?php echo $race; ?>"><?php echo $race; ?></option>
-                  <?php } ?>
-                </select>
+            <label>Select Your Race</label>
+            <select id="cb-race" class="gen-opt">
+              <?php foreach ($races as $race) { ?>
+                <?php if ($race == 'character-builder-beta'){ continue; } ?>
+                <option value="<?php echo $race; ?>"><?php echo $race; ?></option>
+              <?php } ?>
+            </select>
+
+            <hr />
+
+            <label>Select Your Class</label>
+            <select id="cb-class" class="gen-opt">
+              <?php $count = 0; ?>
+              <? foreach ($classes as $class) { ?>
+                <option value="<?php echo $count; ?>"><?php echo $class; ?></option>
+                <?php $count++; ?>
+              <?php } ?>
+            </select>
+
+            <hr />
+
+            <h4>Level: <span id="cb_level"></span></h4>
+            <h4>CP Spent: <span id="cb_cp_spent"></span></h4>
+            <h4>CP Available: <span id="cb_cp_avail"></span></h4>
+            <h4>Frags Spent: <span id="cb_frags_spent"></span></h4>
+            <h4>Body Points: <span id="cb_bp"></span></h4>
+
+            <hr />
 
           </div>
-          <div class="col-xs-4">
+          <div class="col-sm-8">
 
-              <label>Select Your Class</label>
-                <select id="cb-class" class="gen-opt">
-                  <? foreach ($classes as $class) { ?>
-                    <option value="<?php echo $class; ?>"><?php echo $class; ?></option>
-                  <?php } ?>
-                </select>
+            <div id="skill_list" class="row">
 
+            </div>
+
+            <script type="text/javascript">
+              jQuery(document).on('ready', function(){
+                console.log(builder_data.skills.length);
+                if(builder_data.skills.length > 0) {
+                  console.log('in loop');
+                  for (skill in builder_data.skills) {
+                    console.log(skill);
+                    var cost = 3;
+                    var skill_row = jQuery('<div class="col-sm-12 skill_item"></div>');
+                    jQuery('#skill_list').append('<div class="col-xs-5">' +
+                        skill.name +
+                      '</div>' +
+                      '<div class="col-xs-5">' +
+                        skill.prerequesites +
+                      '</div>' +
+                      '<div class="col-xs-2">' +
+                        skill.cost +
+                      '</div>'
+                    );
+                  }
+                }
+              });
+            </script>
           </div>
         </div>
 
