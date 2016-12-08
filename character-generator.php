@@ -80,7 +80,7 @@
 
         <div class="row">
           <div class="col-sm-12 blog-post text-center" style="margin-bottom:3rem;">
-            <a id="character-generator" href="#" title="Generate Random Character" class="blog-post-button">Generate Random Character!</a>
+            <a id="character-generator" href="#" title="Generate Random Character" class="blog-post-button">Generate!</a>
           </div>
         </div>
 

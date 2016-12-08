@@ -31,18 +31,40 @@
           var builder_data = {};
           builder_data.races = [];
           builder_data.pc_classes = [];
-          builder_data.arrivals = [];
-          builder_data.purposes = [];
-          builder_data.quirks = [];
-          builder_data.professions = [];
+          builder_data.skills = [];
+          builder_data.level_chart = [
+            {'cp': 150, 'cppb': 65, 'bp_w': 6, 'bp_r': 4, 'bp_s': 3},
+            {'cp': 250, 'cppb': 43, 'bp_w': 8, 'bp_r': 5, 'bp_s': 4},
+            {'cp': 350, 'cppb': 34, 'bp_w': 10, 'bp_r': 6, 'bp_s': 4},
+            {'cp': 450, 'cppb': 28, 'bp_w': 12, 'bp_r': 7, 'bp_s': 5},
+            {'cp': 550, 'cppb': 24, 'bp_w': 14, 'bp_r': 8, 'bp_s': 6},
+            {'cp': 650, 'cppb': 22, 'bp_w': 16, 'bp_r': 9, 'bp_s': 6},
+            {'cp': 750, 'cppb': 19, 'bp_w': 18, 'bp_r': 10, 'bp_s': 7},
+            {'cp': 850, 'cppb': 17, 'bp_w': 20, 'bp_r': 11, 'bp_s': 8},
+            {'cp': 950, 'cppb': 16, 'bp_w': 22, 'bp_r': 12, 'bp_s': 8},
+            {'cp': 1050, 'cppb': 15, 'bp_w': 24, 'bp_r': 13, 'bp_s': 9},
+            {'cp': 1150, 'cppb': 14, 'bp_w': 26, 'bp_r': 14, 'bp_s': 10},
+            {'cp': 1250, 'cppb': 13, 'bp_w': 28, 'bp_r': 15, 'bp_s': 10},
+            {'cp': 1350, 'cppb': 12, 'bp_w': 30, 'bp_r': 16, 'bp_s': 11},
+            {'cp': 1450, 'cppb': 12, 'bp_w': 32, 'bp_r': 17, 'bp_s': 12},
+            {'cp': 1550, 'cppb': 11, 'bp_w': 34, 'bp_r': 18, 'bp_s': 12},
+            {'cp': 1650, 'cppb': 11, 'bp_w': 36, 'bp_r': 19, 'bp_s': 13},
+            {'cp': 1750, 'cppb': 10, 'bp_w': 38, 'bp_r': 20, 'bp_s': 14},
+            {'cp': 1850, 'cppb': 10, 'bp_w': 40, 'bp_r': 21, 'bp_s': 14},
+            {'cp': 1950, 'cppb': 10, 'bp_w': 42, 'bp_r': 22, 'bp_s': 15},
+            {'cp': 2050, 'cppb': 10, 'bp_w': 44, 'bp_r': 23, 'bp_s': 16},
+          ]
+
+
         </script>
 
-        <?php if( have_rows('races'), 812 ): ?>
-
-          <?php while( have_rows('races'), 812 ): the_row(); ?>
+        <?php if( have_rows('races', 812) ): ?>
+          <?php $races = []; ?>
+          <?php while( have_rows('races',812) ): the_row(); ?>
 
 
             <?php // vars
+            array_push($races, $name);
             $name = get_sub_field('name');
             $lifespan = get_sub_field('lifespan');
             $description = get_sub_field('description');
@@ -53,41 +75,43 @@
             ?>
 
             <script type="text/javascript">
-              builder_data.races.push({
+              builder_data.races[`<?php echo $name; ?>`] = {
                 name: `<?php echo $name ?>`,
                 lifespan: `<?php echo $lifespan ?>`,
                 racial_characteristics: `<?php echo $racial_characteristics ?>`,
                 description: `<?php echo $description ?>`,
                 advantages: `<?php echo $advantages ?>`,
                 disadvantages: `<?php echo $disadvantages ?>`
-              });
+              }
             </script>
 
           <?php endwhile; ?>
         <?php endif; ?>
 
-        <?php if( have_rows('classes'), 815 ): ?>
-
-          <?php while( have_rows('classes'), 815 ): the_row(); ?>
+        <?php if( have_rows('classes', 815) ): ?>
+          <?php $classes = []; ?>
+          <?php while( have_rows('classes', 815) ): the_row(); ?>
 
             <?php // vars
+
+            array_push($classes, $name);
             $name = get_sub_field('name');
             $description = get_sub_field('description');
             ?>
 
             <script type="text/javascript">
-              builder_data.pc_classes.push({
+              builder_data.pc_classes[`<?php echo $name; ?>`] = {
                 name: `<?php echo $name ?>`,
                 description: `<?php echo $description ?>`
-              });
+              }
             </script>
 
           <?php endwhile; ?>
         <?php endif; ?>
 
 
-        <?php if( have_rows('skills') ): ?>
-          <?php while( have_rows('skills') ): the_row(); ?>
+        <?php if( have_rows('skills', 825) ): ?>
+          <?php while( have_rows('skills', 825) ): the_row(); ?>
 
             <?php // vars
             $name = get_sub_field('name');
@@ -106,24 +130,50 @@
             ?>
 
             <script type="text/javascript">
-              builder_data.skills.push({
+              builder_data.skills[`<?php echo $name; ?>`] = {
                 name: `<?php echo $name ?>`,
                 description: `<?php echo $description ?>`,
                 prerequesites: `<?php echo $prereq ?>`,
                 mercenary_cost: `<?php echo $mercenary_cost ?>`,
                 ranger_cost: `<?php echo $ranger_cost ?>`,
-                templaer_cost: `<?php echo $templater_cost ?>`,
+                templaer_cost: `<?php echo $templar_cost ?>`,
                 nightblade_cost: `<?php echo $nightblade_cost ?>`,
                 assassin_cost: `<?php echo $assassin_cost ?>`,
                 witchhunter_cost: `<?php echo $witchhunter_cost ?>`,
                 mage_cost: `<?php echo $mage_cost ?>`,
                 druid_cost: `<?php echo $druid_cost ?>`,
                 bard_cost: `<?php echo $bard_cost ?>`
-              });
+              }
             </script>
 
           <?php endwhile; ?>
         <?php endif; ?>
+
+        <div class="row">
+          <div class="col-xs-4">
+
+              <label>Select Your Race</label>
+                <select id="cb-race" class="gen-opt">
+                  <? foreach ($races as $race) { ?>
+                    <?php if ($race == 'character-builder-beta'){ continue; } ?>
+                    <option value="<?php echo $race; ?>"><?php echo $race; ?></option>
+                  <?php } ?>
+                </select>
+
+          </div>
+          <div class="col-xs-4">
+
+              <label>Select Your Class</label>
+                <select id="cb-class" class="gen-opt">
+                  <? foreach ($classes as $class) { ?>
+                    <option value="<?php echo $class; ?>"><?php echo $class; ?></option>
+                  <?php } ?>
+                </select>
+
+          </div>
+        </div>
+
+
 
 			</section><!--/#blog-->
 		</div><!--/.col-sm-7-->
