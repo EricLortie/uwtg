@@ -136,8 +136,9 @@
 
             <script type="text/javascript">
               jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="col-sm-12 skill_row" style=""></div>');
-                skill_row.append(`
+                var skill_row = jQuery('<div class="row skill_row"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_ele = skill_row.find('.skill');
+                skill_ele.append(`
                   <div class="col-xs-1">
                     <i class="fa fa-plus-square skill_add" aria-hidden="true"></i>
                   </div>
@@ -221,7 +222,6 @@
                 if(jQuery(this).val() == "Human"){
                   builder_data.character.cp_avail = 200;
                 }
-                builder_data.character.cp_spent = 0;
               });
 
               jQuery('#cb-class').on('change', function(){
@@ -266,6 +266,7 @@
                 builder_data.character.level = 1;
                 builder_data.character.blankets_spent = 0;
                 builder_data.character.cp_avail = 0;
+                builder_data.character.cp_spent = 0;
                 builder_data.character.cp_total = 0;
                 builder_data.character.frags_avail = 0;
                 builder_data.character.frags_spent = 0;
@@ -285,6 +286,12 @@
                 jQuery('#cb_cp_spent').html(builder_data.character.cp_spent);
                 jQuery('#cb_frags_spent').html(builder_data.character.frags_spent);
                 jQuery('#cb_bp').html(builder_data.character.body_points);
+
+                update_skills();
+              }
+
+              function update_skills() {
+
               }
 
             });
@@ -349,7 +356,7 @@
             </div>
 
           </div>
-          <div class="col-xs-8">
+          <div class="col-sm-8">
             <div id="skills_section" class="mandatory_section">
               <div id="skill_header" class="row">
                 <div class="col-xs-1">
