@@ -315,8 +315,8 @@
             <select id="cb-class" class="gen-opt mandatory">
               <option value="">Please select a class</option>
               <?php $count = 0; ?>
-              <? foreach ($classes as $class) { ?>
-                <option value="<?php echo $class; ?>" data-cost-ele="<?php echo strtolower(substr($class, 0, 2)); ?>_cost"><?php echo $class; ?></option>
+              <?php foreach ($classes as $pc_class) { ?>
+                <option value="<?php echo $pc_class; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class, 0, 2)); ?>_cost"><?php echo $pc_class; ?></option>
                 <?php $count++; ?>
               <?php } ?>
             </select>
