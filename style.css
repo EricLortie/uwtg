@@ -365,7 +365,7 @@ ul.forums li {
 }
 
 #blog .blog-post .blog-post-button {
-    background-color: darkred !important;
+    background-color: darkred;
 }
 
 
@@ -600,10 +600,27 @@ h2.switcher.active {
 .skill_row {
   border-bottom: 1px dotted darkred;
 }
+.skill_cost {
+  display: none;
+}
 .skill_meta {
   text-align:right;
+}
+.skill_add {
+  cursor: pointer;
+  color: darkred;
+}
+.skill_add:hover {
+  color: white;
 }
 .skill_closer {
   text-transformer:uppercase;
   color: darkred;
+}
+.mandatory_section {
+  display: none;
+}
+#btn_generate.locked {
+  background: grey !important;
+  cursor: not-allowed;
 }

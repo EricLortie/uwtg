@@ -311,3 +311,9 @@ if ( ! function_exists('write_log')) {
       }
    }
 }
+
+if ( ! function_exists('sortByOption')) {
+	 function sortByOption($a, $b) {
+		 return strcmp($a[0], $b[0]);
+	 }
+ }
