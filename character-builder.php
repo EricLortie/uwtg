@@ -299,7 +299,6 @@
                 <?php
                 $name = $race[0];
                 $frag_string = "";
-                write_log($race[1]);
                 if($race[1] != null){
                   $frag_string = "(FRAG RACE)";
                 }
