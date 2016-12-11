@@ -587,7 +587,7 @@ h2.switcher.active {
 }
 
 .skill_header, .skill_row {
-  padding: 1rem 0px;
+  padding: 1rem 1rem;
 }
 
 
@@ -599,6 +599,13 @@ h2.switcher.active {
 }
 .skill_row {
   border-bottom: 1px dotted darkred;
+}
+.skill_row.locked {
+  background:black;
+  cursor: not-allowed;
+}
+.skill_row.locked .skill_add {
+  color: black;
 }
 .skill_cost {
   display: none;

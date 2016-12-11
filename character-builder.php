@@ -204,6 +204,10 @@
                 desc.slideToggle();
               });
 
+              jQuery('.skill_add').on('click', function(){
+                add_skill_to_character(jQuery(this).closest('.skill_row'));
+              });
+
               jQuery('select.mandatory').on('change', function(){
 
                 reset_character();
@@ -218,10 +222,6 @@
 
               jQuery('#cb-race').on('change', function(){
                 builder_data.character.race = jQuery(this).val();
-                builder_data.character.cp_avail = 150;
-                if(jQuery(this).val() == "Human"){
-                  builder_data.character.cp_avail = 200;
-                }
               });
 
               jQuery('#cb-class').on('change', function(){
@@ -261,11 +261,29 @@
                 update_character();
               });
 
+              function add_skill_to_character(skill_ele){
+                console.log(skill_ele)
+                if(builder_data.character.skills.hasOwnProperty(skill_ele.data('name'))) {
+                  builder_data.character.skills[skill_ele.data('name')] += 1;
+                } else {
+                  builder_data.character.skills[skill_ele.data('name')] = 1;
+                }
+                var skill_cost = parseInt(skill_ele.find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
+                console.log(skill_cost);
+                builder_data.character.cp_avail -= skill_cost;
+                builder_data.character.cp_spent += skill_cost;
+                update_character();
+                update_skills();
+              }
+
               function reset_character() {
 
                 builder_data.character.level = 1;
                 builder_data.character.blankets_spent = 0;
-                builder_data.character.cp_avail = 0;
+                builder_data.character.cp_avail = 150;
+                if(builder_data.character.race == "Human"){
+                  builder_data.character.cp_avail = 200;
+                }
                 builder_data.character.cp_spent = 0;
                 builder_data.character.cp_total = 0;
                 builder_data.character.frags_avail = 0;
@@ -273,6 +291,7 @@
                 builder_data.character.level_data = builder_data.level_chart[0];
                 builder_data.character.blanket_value = builder_data.character.level_data.cppb;
                 builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
+                builder_data.character.skills = {};
 
                 update_character();
 
@@ -291,7 +310,13 @@
               }
 
               function update_skills() {
-
+                jQuery('.skill_row').each(function(){
+                  if (parseInt(jQuery(this).find('.skill_cost:visible').html()) > builder_data.character.cp_avail) {
+                    jQuery(this).addClass('locked');
+                  } else {
+                    jQuery(this).removeClass('locked');
+                  }
+                });
               }
 
             });
