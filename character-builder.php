@@ -204,10 +204,12 @@
               });
 
               jQuery('select.mandatory').on('change', function(){
+
+                reset_character();
+
                 if (jQuery('#cb-class').val() != '' && jQuery('#cb-race').val() != '') {
                   jQuery('#btn_generate').removeClass('locked');
                 } else {
-                  reset_character();
                   jQuery('#btn_generate').addClass('locked');
                   jQuery('#btn_generate').show();
                 }
@@ -220,7 +222,6 @@
                   builder_data.character.cp_avail = 200;
                 }
                 builder_data.character.cp_spent = 0;
-                update_character();
               });
 
               jQuery('#cb-class').on('change', function(){
@@ -251,7 +252,7 @@
                 builder_data.character.blankets_spent += 1;
                 builder_data.character.cp_avail += builder_data.character.blanket_value;
                 builder_data.character.cp_total = (builder_data.character.cp_avail + builder_data.character.cp_spent);
-                if(builder_data.character.cp_total >= builder_data.character.level_data['cp']){
+                if(builder_data.character.cp_total >= (builder_data.character.level_data['cp']+100)){
                   builder_data.character.level += 1;
                   builder_data.character.level_data = builder_data.level_chart[builder_data.character.level-1];
                   builder_data.character.blanket_value = builder_data.character.level_data.cppb;
@@ -264,6 +265,8 @@
 
                 builder_data.character.level = 1;
                 builder_data.character.blankets_spent = 0;
+                builder_data.character.cp_avail = 0;
+                builder_data.character.cp_total = 0;
                 builder_data.character.frags_avail = 0;
                 builder_data.character.frags_spent = 0;
                 builder_data.character.level_data = builder_data.level_chart[0];
