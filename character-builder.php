@@ -121,6 +121,7 @@
             $name = get_sub_field('name');
             $description = get_sub_field('description');
             $prereq = get_sub_field('prerequesites');
+            $optional_fields = get_sub_field('optional_fields');
             $mercenary_cost = get_sub_field('mercenary_cost');
             $ranger_cost = get_sub_field('ranger_cost');
             $templar_cost = get_sub_field('templar_cost');
@@ -130,6 +131,16 @@
             $mage_cost = get_sub_field('mage_cost');
             $druid_cost = get_sub_field('druid_cost');
             $bard_cost = get_sub_field('bard_cost');
+
+            $optional = get_sub_field('optional_fields');
+            $frag_skill = false;
+            if ( $optional && in_array('frag_skill', $optional) ) {
+              $frag_skill = true;
+            }
+            $multiple = false;
+            if ( $optional && in_array('multiple', $optional) ) {
+              $multiple = true;
+            }
 
 
             ?>
@@ -145,8 +156,11 @@
                   <div class="col-xs-4">
                     <?php echo $name; ?>&nbsp <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
                   </div>
-                  <div class="col-xs-5">
+                  <div class="col-xs-3">
                     <?php echo $prereq; ?>
+                  </div>
+                  <div class="col-xs-2">
+                    <?php echo (($multiple) ? "Y" : "N"); ?>
                   </div>
                   <div class="col-xs-2">
                     <span class="me_cost skill_cost"><?php echo $mercenary_cost ?></span>
@@ -169,15 +183,17 @@
                 skill_row.data('name', `<?php echo $name ?>`),
                 skill_row.data('description', `<?php echo $description ?>`),
                 skill_row.data('prerequesites', `<?php echo $prereq ?>`),
-                skill_row.data('mercenary_cost', `<?php echo $mercenary_cost ?>`),
-                skill_row.data('ranger_cost', `<?php echo $ranger_cost ?>`),
-                skill_row.data('templar_cost', `<?php echo $templar_cost ?>`),
-                skill_row.data('nightblade_cost', `<?php echo $nightblade_cost ?>`),
-                skill_row.data('assassin_cost', `<?php echo $assassin_cost ?>`),
-                skill_row.data('witchhunter_cost', `<?php echo $witchhunter_cost ?>`),
-                skill_row.data('mage_cost', `<?php echo $mage_cost ?>`),
-                skill_row.data('druid_cost', `<?php echo $druid_cost ?>`),
-                skill_row.data('bard_cost', `<?php echo $bard_cost ?>`)
+                skill_row.data('multiple', `<?php echo $multiple ?>`),
+                //skill_row.data('frag', `<?php echo $frag_skill ?>`),
+                // skill_row.data('mercenary_cost', `<?php echo $mercenary_cost ?>`),
+                // skill_row.data('ranger_cost', `<?php echo $ranger_cost ?>`),
+                // skill_row.data('templar_cost', `<?php echo $templar_cost ?>`),
+                // skill_row.data('nightblade_cost', `<?php echo $nightblade_cost ?>`),
+                // skill_row.data('assassin_cost', `<?php echo $assassin_cost ?>`),
+                // skill_row.data('witchhunter_cost', `<?php echo $witchhunter_cost ?>`),
+                // skill_row.data('mage_cost', `<?php echo $mage_cost ?>`),
+                // skill_row.data('druid_cost', `<?php echo $druid_cost ?>`),
+                // skill_row.data('bard_cost', `<?php echo $bard_cost ?>`)
 
                 <?php if($prereq != ''){ ?>
                   skill_row.hide();
@@ -262,14 +278,15 @@
               });
 
               function add_skill_to_character(skill_ele){
-                console.log(skill_ele)
+                if(skill_ele.data('multiple') == ""){
+                  skill_ele.addClass('purchased');
+                }
                 if(builder_data.character.skills.hasOwnProperty(skill_ele.data('name'))) {
                   builder_data.character.skills[skill_ele.data('name')] += 1;
                 } else {
                   builder_data.character.skills[skill_ele.data('name')] = 1;
                 }
                 var skill_cost = parseInt(skill_ele.find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
-                console.log(skill_cost);
                 builder_data.character.cp_avail -= skill_cost;
                 builder_data.character.cp_spent += skill_cost;
                 update_character();
@@ -305,18 +322,35 @@
                 jQuery('#cb_cp_spent').html(builder_data.character.cp_spent);
                 jQuery('#cb_frags_spent').html(builder_data.character.frags_spent);
                 jQuery('#cb_bp').html(builder_data.character.body_points);
+                jQuery('#cb_skills').html(output_skills(builder_data.character.skills));
 
                 update_skills();
               }
 
+              function output_skills(skills) {
+                html = "<ul>";
+                for (skill in skills) {
+                  if (skills.hasOwnProperty(skill)) {
+                    html += "<li>"+skill + " X" + skills[skill] + "</li>";
+                  }
+                }
+                html += "</ul>";
+                return html;
+              }
+
               function update_skills() {
                 jQuery('.skill_row').each(function(){
-                  if (parseInt(jQuery(this).find('.skill_cost:visible').html()) > builder_data.character.cp_avail) {
+                  var cost = parseInt(jQuery(this).find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
+                  if (cost > builder_data.character.cp_avail) {
                     jQuery(this).addClass('locked');
                   } else {
                     jQuery(this).removeClass('locked');
                   }
+                  jQuery(this).data('cost', cost);
                 });
+
+                //tinysort('#skill_list>.skill_row',{data:'cost'});
+
               }
 
             });
@@ -377,6 +411,8 @@
               <h4>Frags Spent: <span id="cb_frags_spent"></span></h4>
               <h4>Body Points: <span id="cb_bp"></span></h4>
 
+              <div id="cb_skills"></div>
+
               <hr />
             </div>
 
@@ -390,8 +426,11 @@
                 <div class="col-xs-4">
                   Name
                 </div>
-                <div class="col-xs-5">
+                <div class="col-xs-3">
                   Requirements
+                </div>
+                <div class="col-xs-2">
+                  Multiple Purchases?
                 </div>
                 <div class="col-xs-2">
                   Cost
@@ -406,10 +445,11 @@
           </div>
         </div>
 
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinysort/2.3.6/tinysort.js"></script>
 
 			</section><!--/#blog-->
 		</div><!--/.col-sm-7-->
 	</div><!--/.row-->
 </div><!--/.container-->
+<link rel="javascript"
 <?php get_footer(); ?>

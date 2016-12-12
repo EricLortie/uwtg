@@ -590,6 +590,9 @@ h2.switcher.active {
   padding: 1rem 1rem;
 }
 
+#skills_section {
+  padding: 3rem;
+}
 
 .skill_header {
   text-transform:uppercase;
@@ -600,11 +603,11 @@ h2.switcher.active {
 .skill_row {
   border-bottom: 1px dotted darkred;
 }
-.skill_row.locked {
+.skill_row.locked, .skill_row.purchased  {
   background:black;
   cursor: not-allowed;
 }
-.skill_row.locked .skill_add {
+.skill_row.locked .skill_add, .skill_row.purchased .skill_add  {
   color: black;
 }
 .skill_cost {
