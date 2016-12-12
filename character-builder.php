@@ -30,6 +30,8 @@
         <script type="text/javascript">
           var builder_data = {};
           builder_data.character = {};
+          builder_data.character.frags_avail = 0;
+          builder_data.character.frags_spent = 0;
           builder_data.races = [];
           builder_data.pc_classes = [];
           builder_data.skills = [];
@@ -67,13 +69,13 @@
             <?php // vars
             $name = get_sub_field('name');
             $lifespan = get_sub_field('lifespan');
-            $frag_race = get_sub_field('frag_race');
+            $frag_cost = get_sub_field('frag_cost');
             $description = get_sub_field('description');
             $racial_characteristics = get_sub_field('racial_characteristics');
             $advantages = get_sub_field('advantages');
             $disadvantages = get_sub_field('disadvantages');
 
-            array_push($races, [$name, $frag_race]);
+            array_push($races, [$name, $frag_cost]);
 
             ?>
 
@@ -85,7 +87,7 @@
                 description: `<?php echo $description ?>`,
                 advantages: `<?php echo $advantages ?>`,
                 disadvantages: `<?php echo $disadvantages ?>`,
-                frag_race: `<?php ($frag_race) ? true : false ?>`
+                frag_cost: `<?php  echo $frag_cost; ?>`
               }
             </script>
 
@@ -133,10 +135,6 @@
             $bard_cost = get_sub_field('bard_cost');
 
             $optional = get_sub_field('optional_fields');
-            $frag_skill = false;
-            if ( $optional && in_array('frag_skill', $optional) ) {
-              $frag_skill = true;
-            }
             $multiple = false;
             if ( $optional && in_array('multiple', $optional) ) {
               $multiple = true;
@@ -175,6 +173,10 @@
                     <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
                   </div>
                   <div class="col-xs-12 skill_desc" style="display:none;">
+                    <?php if ($prereq != "") { ?>
+                      <p>Requirements: <?php echo $prereq; ?></p>
+                    <?php } ?>
+                    <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
                     <?php echo $description; ?>
                     <hr />
                     <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
@@ -183,9 +185,9 @@
 
                 skill_row.data('name', `<?php echo $name ?>`),
                 skill_row.data('description', `<?php echo $description ?>`),
-                skill_row.data('prerequesites', `<?php echo $prereq ?>`),
+                skill_row.data('requirements', `<?php echo $prereq ?>`),
                 skill_row.data('multiple', `<?php echo $multiple ?>`),
-                //skill_row.data('frag', `<?php echo $frag_skill ?>`),
+                //skill_row.data('frag', `<?php echo $frag_cost ?>`),
                 // skill_row.data('mercenary_cost', `<?php echo $mercenary_cost ?>`),
                 // skill_row.data('ranger_cost', `<?php echo $ranger_cost ?>`),
                 // skill_row.data('templar_cost', `<?php echo $templar_cost ?>`),
@@ -197,7 +199,8 @@
                 // skill_row.data('bard_cost', `<?php echo $bard_cost ?>`)
 
                 <?php if($prereq != ''){ ?>
-                  skill_row.hide();
+                  skill_row.addClass('has_req');
+                  skill_row.addClass('locked');
                 <?php } ?>
 
                 jQuery('#skill_list').append(skill_row);
@@ -225,9 +228,18 @@
                 add_skill_to_character(jQuery(this).closest('.skill_row'));
               });
 
-              jQuery('select.mandatory').on('change', function(){
-
+              jQuery('#btn_reset').on('click', function(){
+                jQuery('.mandatory_section').hide();
+                jQuery('#btn_generate').show();
+                jQuery('#cb-race').val('');
+                jQuery('#cb-class').val('');
+                jQuery('#cb-race').attr('disabled', false);
+                jQuery('#cb-class').attr('disabled', false);
                 reset_character();
+                reset_skills();
+              });
+
+              jQuery('select.mandatory').on('change', function(){
 
                 if (jQuery('#cb-class').val() != '' && jQuery('#cb-race').val() != '') {
                   jQuery('#btn_generate').removeClass('locked');
@@ -238,7 +250,9 @@
               });
 
               jQuery('#cb-race').on('change', function(){
+                builder_data.character.frags_spent = 0;
                 builder_data.character.race = jQuery(this).val();
+                builder_data.character.frags_spent = parseInt(jQuery(this).find('option:selected').data('fragCost'));
               });
 
               jQuery('#cb-class').on('change', function(){
@@ -262,6 +276,8 @@
                 reset_character();
                 jQuery('.mandatory_section').show();
                 jQuery(this).hide();
+                jQuery('#cb-race').attr('disabled', true);
+                jQuery('#cb-class').attr('disabled', true);
               });
 
               jQuery('#btn_add_blanket').on('click', function(e){
@@ -307,8 +323,6 @@
                 }
                 builder_data.character.cp_spent = 0;
                 builder_data.character.cp_total = 0;
-                builder_data.character.frags_avail = 0;
-                builder_data.character.frags_spent = 0;
                 builder_data.character.level_data = builder_data.level_chart[0];
                 builder_data.character.blanket_value = builder_data.character.level_data.cppb;
                 builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
@@ -345,7 +359,8 @@
               function update_skills() {
                 jQuery('.skill_row').each(function(){
                   var cost = parseInt(jQuery(this).find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
-                  if (cost > builder_data.character.cp_avail || jQuery(this).hasClass('purchased')) {
+                  var has_req = (jQuery(this).data('requirements') != "");
+                  if (cost > builder_data.character.cp_avail || jQuery(this).hasClass('purchased') || (has_req && !meets_req(jQuery(this)))) {
                     jQuery(this).find('.skill_add').hide();
                     jQuery(this).addClass('locked');
                   } else {
@@ -357,6 +372,63 @@
 
                 //tinysort('#skill_list>.skill_row',{data:'cost'});
 
+              }
+
+              function meets_req(skill_row){
+                var req = skill_row.data('requirements')
+                reqs = [];
+                var times_2 = false;
+                var times_x = false;
+
+                if(req != ""){
+                  items = req.split(', ');
+
+                  for (req in items) {
+                    if (items.hasOwnProperty(req)) {
+                      var conditionals = items[req].split(" OR ");
+                      for (subreq in conditionals) {
+                        if (conditionals.hasOwnProperty(subreq)) {
+                          reqs.push(conditionals[subreq]);
+                          if(conditionals[subreq] == "*2"){
+                            times_2 = true;
+                          } else if (conditionals[subreq] == "*x"){
+                            times_x = true;
+                          }
+                        } else {
+                          if(conditionals[subreq] == "*2"){
+                            times_2 = true;
+                          } else if (conditionals[subreq] == "*x"){
+                            times_x = true;
+                          }
+                          reqs.push(subreq);
+                        }
+                      }
+                    } else {
+                      reqs.push(req);
+                    }
+                  }
+
+                  char_skills = builder_data.character.skills;
+                  for (i = 0; i < reqs.length; i++) {
+                    if(char_skills.hasOwnProperty(reqs[i])){
+                      return true;
+                    }
+                  }
+
+                } else {
+
+                  return false;
+
+                }
+
+                return false;
+              }
+
+              function reset_skills(){
+                jQuery('.skill_row').removeClass('locked');
+                jQuery('.skill_row').removeClass('purchased');
+                jQuery('.skill_add').show();
+                jQuery('.skill_purchased').hide();
               }
 
             });
@@ -373,14 +445,15 @@
               <?php foreach ($races as $race) { ?>
                 <?php
                 $name = $race[0];
+                write_log($race);
                 $frag_string = "";
                 if($race[1] != null){
-                  $frag_string = "(FRAG RACE)";
+                  $frag_string = "({$race[1]} FRAGS)";
                 }
 
                 ?>
 
-                <option value="<?php echo $name; ?>" data-frag-race="<?php echo $name; ?>"><?php echo $name . " " . $frag_string; ?></option>
+                <option value="<?php echo $name; ?>" data-frag-cost="<?php echo $race[1]; ?>"><?php echo $name . " " . $frag_string; ?></option>
               <?php } ?>
             </select>
 
@@ -400,6 +473,10 @@
 
             <div class="blog-post text-center" style="margin-bottom:3rem;">
               <a id="btn_generate" href="#" title="Build Character" class="blog-post-button locked">Start Character</a>
+            </div>
+
+            <div class="blog-post text-center mandatory_section" style="margin-bottom:3rem;">
+              <a id="btn_reset" href="#" title="Reset" class="blog-post-button">Reset Character</a>
             </div>
 
             <div class="blog-post text-center mandatory_section" style="margin-bottom:3rem;">

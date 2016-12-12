@@ -632,10 +632,24 @@ h2.switcher.active {
   text-transformer:uppercase;
   color: darkred;
 }
+.skill_expander {
+  color: darkred;
+  cursor: help;
+}
 .mandatory_section {
   display: none;
+}
+select.mandatory:disabled {
+  background: darkgrey;
+  color: black;
 }
 #btn_generate.locked {
   background: grey !important;
   cursor: not-allowed;
+}
+#btn_reset {
+  font-size: 12px !important;
+  padding: .5rem !important;
+  height: auto !important;
+  line-height: 22px !important;
 }
