@@ -152,6 +152,7 @@
                 skill_ele.append(`
                   <div class="col-xs-1">
                     <i class="fa fa-plus-square skill_add" aria-hidden="true"></i>
+                    <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
                   </div>
                   <div class="col-xs-4">
                     <?php echo $name; ?>&nbsp <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
@@ -280,6 +281,9 @@
               function add_skill_to_character(skill_ele){
                 if(skill_ele.data('multiple') == ""){
                   skill_ele.addClass('purchased');
+                  skill_ele.find('.skill_add').hide();
+                  skill_ele.find('.skill_purchased').slideToggle();
+                  skill_ele.addClass('purchased');
                 }
                 if(builder_data.character.skills.hasOwnProperty(skill_ele.data('name'))) {
                   builder_data.character.skills[skill_ele.data('name')] += 1;
@@ -341,9 +345,11 @@
               function update_skills() {
                 jQuery('.skill_row').each(function(){
                   var cost = parseInt(jQuery(this).find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
-                  if (cost > builder_data.character.cp_avail) {
+                  if (cost > builder_data.character.cp_avail || jQuery(this).hasClass('purchased')) {
+                    jQuery(this).find('.skill_add').hide();
                     jQuery(this).addClass('locked');
                   } else {
+                    jQuery(this).find('.skill_add').show();
                     jQuery(this).removeClass('locked');
                   }
                   jQuery(this).data('cost', cost);
@@ -410,7 +416,8 @@
               <h4>Blankets Spent: <span id="cb_blankets_spent"></span></h4>
               <h4>Frags Spent: <span id="cb_frags_spent"></span></h4>
               <h4>Body Points: <span id="cb_bp"></span></h4>
-
+              <br />
+              <h4>Skills</h4>
               <div id="cb_skills"></div>
 
               <hr />

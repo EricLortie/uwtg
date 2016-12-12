@@ -623,6 +623,11 @@ h2.switcher.active {
 .skill_add:hover {
   color: white;
 }
+.skill_purchased {
+  top: 0;
+  display: none;
+  color: green;
+}
 .skill_closer {
   text-transformer:uppercase;
   color: darkred;
