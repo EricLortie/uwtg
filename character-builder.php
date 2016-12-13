@@ -65,6 +65,21 @@
             {'me_cost': "",'ra_cost': "", 'te_cost': "", 'ni_cost': "", 'as_cost': "", 'wi_cost': "", 'ma_cost': "", 'dr_cost': "", 'ba_cost': ""}
           ]
 
+          builder_data.skill_aliases = {
+            'Weapon Group Proficiency': [
+              'Weapon Group Proficiency: Simple',
+              'Weapon Group Proficiency: Medium',
+              'Weapon Group Proficiency: Large',
+              'Weapon Group Proficiency: Exotic'
+            ],
+            'Specialization +1: Weapon Group': [
+              'Specialization +1: Simple',
+              'Specialization +1: Medium',
+              'Specialization +1: Large',
+              'Specialization +1: Exotic',
+            ]
+          }
+
 
         </script>
 
@@ -282,7 +297,13 @@
                   skill_row.addClass('locked');
                 <?php } ?>
 
-                jQuery('#skill_list').append(skill_row);
+                has_alias = jQuery.grep(builder_data.skill_aliases, function(e){ console.log(e.id); return e.id == '<?php echo $name; ?>'; });
+                if(has_alias.length > 0){
+                  console.log('has_alias');
+                  console.log(has_alias);
+                } else {
+                  jQuery('#skill_list').append(skill_row);
+                }
 
               });
             </script>
