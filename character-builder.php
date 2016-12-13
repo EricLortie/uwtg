@@ -344,6 +344,8 @@
                 builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
                 builder_data.character.skills = {};
 
+                jQuery('span:contains("Weapon Group Proficiency: Simple")').closest('.skill_row').find('.skill_add').trigger('click');
+
                 update_character();
 
               }
@@ -365,7 +367,11 @@
                 html = "<ul>";
                 for (skill in skills) {
                   if (skills.hasOwnProperty(skill)) {
-                    html += "<li>"+skill + " X" + skills[skill] + "</li>";
+                    var skill_string = skill;
+                    if(skills[skill] > 1) {
+                      skill_string = skill_string + " X" + skills[skill];
+                    }
+                    html += "<li>"+skill_string + "</li>";
                   }
                 }
                 html += "</ul>";
@@ -425,6 +431,7 @@
                   char_skills = builder_data.character.skills;
                   for (i = 0; i < reqs.length; i++) {
                     if(char_skills.hasOwnProperty(reqs[i])){
+                      skill_row.find('.skill_req').hide();
                       return true;
                     }
                   }
@@ -437,6 +444,7 @@
               function reset_skills(){
                 jQuery('.skill_row').removeClass('locked');
                 jQuery('.skill_row').removeClass('purchased');
+                jQuery('.skill_req').show();
                 jQuery('.skill_add').show();
                 jQuery('.skill_purchased').hide();
               }
@@ -456,12 +464,10 @@
               <?php foreach ($races as $race) { ?>
                 <?php
                 $name = $race[0];
-                write_log($race);
                 $frag_string = "";
                 if($race[1] != null){
                   $frag_string = "({$race[1]} FRAGS)";
                 }
-
                 ?>
 
                 <option value="<?php echo $name; ?>" data-frag-cost="<?php echo $race[1]; ?>"><?php echo $name . " " . $frag_string; ?></option>
