@@ -117,9 +117,12 @@
 
 
         <?php if( have_rows('skills', 825) ): ?>
+          <?php $s_count = 0; ?>
           <?php while( have_rows('skills', 825) ): the_row(); ?>
 
+
             <?php // vars
+            $s_count++;
             $name = get_sub_field('name');
             $description = get_sub_field('description');
             $prereq = get_sub_field('prerequesites');
@@ -145,23 +148,20 @@
 
             <script type="text/javascript">
               jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_row = jQuery('<div class="row skill_row" data-count="<?php echo $s_count; ?>"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
                   <div class="col-xs-1">
                     <i class="fa fa-plus-square skill_add" aria-hidden="true"></i>
                     <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
                   </div>
-                  <div class="col-xs-4">
-                    <?php echo $name; ?>&nbsp <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
-                  </div>
-                  <div class="col-xs-3">
-                    <?php echo $prereq; ?>
-                  </div>
-                  <div class="col-xs-2">
-                    <?php echo (($multiple) ? "Y" : "N"); ?>
-                  </div>
-                  <div class="col-xs-2">
+                  <div class="col-xs-11">
+                    <span class="name"><?php echo $name; ?></span>
+                    &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
+                    <?php if($prereq != ""){ ?>
+                      &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
+                    <?php } ?>
+                    &nbsp;
                     <span class="me_cost skill_cost"><?php echo $mercenary_cost ?></span>
                     <span class="ra_cost skill_cost"><?php echo $ranger_cost ?></span>
                     <span class="te_cost skill_cost"><?php echo $templar_cost ?></span>
@@ -171,10 +171,11 @@
                     <span class="ma_cost skill_cost"><?php echo $mage_cost ?></span>
                     <span class="dr_cost skill_cost"><?php echo $druid_cost ?></span>
                     <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
+
                   </div>
                   <div class="col-xs-12 skill_desc" style="display:none;">
                     <?php if ($prereq != "") { ?>
-                      <p>Requirements: <?php echo $prereq; ?></p>
+                      <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
                     <?php } ?>
                     <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
                     <?php echo $description; ?>
@@ -294,6 +295,21 @@
                 update_character();
               });
 
+              jQuery('#btn_sort_cost').on('click', function(){
+                console.log('sort by cost');
+                tinysort('.skill_row', {data:'cost'});
+              });
+
+              jQuery('#btn_sort_name').on('click', function(){
+                console.log('sort by name');
+                tinysort('.skill_row', 'span.name');
+              });
+
+              // jQuery('#btn_toggle_skills').on('click', function(){
+              //   jQuery('.locked:not(purchased)').toggle();
+              // });
+
+
               function add_skill_to_character(skill_ele){
                 if(skill_ele.data('multiple') == ""){
                   skill_ele.addClass('purchased');
@@ -359,6 +375,7 @@
               function update_skills() {
                 jQuery('.skill_row').each(function(){
                   var cost = parseInt(jQuery(this).find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
+                  jQuery(this).attr('data-cost', cost);
                   var has_req = (jQuery(this).data('requirements') != "");
                   if (cost > builder_data.character.cp_avail || jQuery(this).hasClass('purchased') || (has_req && !meets_req(jQuery(this)))) {
                     jQuery(this).find('.skill_add').hide();
@@ -370,8 +387,6 @@
                   jQuery(this).data('cost', cost);
                 });
 
-                //tinysort('#skill_list>.skill_row',{data:'cost'});
-
               }
 
               function meets_req(skill_row){
@@ -382,7 +397,6 @@
 
                 if(req != ""){
                   items = req.split(', ');
-
                   for (req in items) {
                     if (items.hasOwnProperty(req)) {
                       var conditionals = items[req].split(" OR ");
@@ -414,13 +428,9 @@
                       return true;
                     }
                   }
-
                 } else {
-
                   return false;
-
                 }
-
                 return false;
               }
 
@@ -430,6 +440,7 @@
                 jQuery('.skill_add').show();
                 jQuery('.skill_purchased').hide();
               }
+
 
             });
           </script>
@@ -504,21 +515,19 @@
           <div class="col-sm-8">
             <div id="skills_section" class="mandatory_section">
               <div id="skill_header" class="row">
-                <div class="col-xs-1">
-                  Add
+                <!--
+                  <div class="col-xs-4 text-center">
+                          <button id="btn_toggle_skills" class="skill_menu btn">Toggle Available</button>
+                  </div>
+                -->
+                <div class="col-xs-2"></div>
+                <div class="col-xs-4 text-center">
+                  <button id="btn_sort_name" class="skill_menu btn btn-danger">Sort by Name</button>
                 </div>
-                <div class="col-xs-4">
-                  Name
+                <div class="col-xs-4 text-center">
+                  <button id="btn_sort_cost" class="skill_menu btn btn-danger">Sort by Cost</button>
                 </div>
-                <div class="col-xs-3">
-                  Requirements
-                </div>
-                <div class="col-xs-2">
-                  Multiple Purchases?
-                </div>
-                <div class="col-xs-2">
-                  Cost
-                </div>
+                <div class="col-xs-2"></div>
               </div>
               <div id="skill_list" class="row">
 

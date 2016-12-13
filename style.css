@@ -583,7 +583,7 @@ h2.switcher.active {
   border: 1px solid darkgrey;
   padding: 1rem;
   margin: 2rem;
-  width: 97.2%;
+  width: 94%;
 }
 
 .skill_header, .skill_row {
@@ -593,7 +593,9 @@ h2.switcher.active {
 #skills_section {
   padding: 3rem;
 }
-
+#skill_header {
+  margin-bottom: 2rem;
+}
 .skill_header {
   text-transform:uppercase;
   font-size: 2rem;
@@ -612,6 +614,7 @@ h2.switcher.active {
 }
 .skill_cost {
   display: none;
+  float:right;
 }
 .skill_meta {
   text-align:right;
@@ -635,6 +638,13 @@ h2.switcher.active {
 .skill_expander {
   color: darkred;
   cursor: help;
+}
+.skill_req {
+  color: yellow !important;
+}
+.skill_menu {
+  width: 80%;
+  font-weight: bolder;
 }
 .mandatory_section {
   display: none;
