@@ -34,6 +34,7 @@
           builder_data.character.frags_spent = 0;
           builder_data.races = [];
           builder_data.pc_classes = [];
+          builder_data.spell_spheres = [];
           builder_data.skills = [];
           builder_data.level_chart = [
             {'cp': 150, 'cppb': 65, 'bp_w': 6, 'bp_r': 4, 'bp_s': 3},
@@ -56,6 +57,12 @@
             {'cp': 1850, 'cppb': 10, 'bp_w': 40, 'bp_r': 21, 'bp_s': 14},
             {'cp': 1950, 'cppb': 10, 'bp_w': 42, 'bp_r': 22, 'bp_s': 15},
             {'cp': 2050, 'cppb': 10, 'bp_w': 44, 'bp_r': 23, 'bp_s': 16},
+          ]
+          builder_data.sphere_chart = [
+            {'me_cost': 100,'ra_cost': 100, 'te_cost': 75, 'ni_cost': 75, 'as_cost': 100, 'wi_cost': 75, 'ma_cost': 25, 'dr_cost': 50, 'ba_cost': 50},
+            {'me_cost': 200,'ra_cost': 200, 'te_cost': 175, 'ni_cost': 175, 'as_cost': 200, 'wi_cost': 175, 'ma_cost': 150, 'dr_cost': 175, 'ba_cost': 175},
+            {'me_cost': 300,'ra_cost': 300, 'te_cost': 275, 'ni_cost': 275, 'as_cost': 300, 'wi_cost': 275, 'ma_cost': 200, 'dr_cost': 225, 'ba_cost': 225},
+            {'me_cost': "",'ra_cost': "", 'te_cost': "", 'ni_cost': "", 'as_cost': "", 'wi_cost': "", 'ma_cost': "", 'dr_cost': "", 'ba_cost': ""}
           ]
 
 
@@ -115,6 +122,77 @@
           <?php endwhile;
         endif; ?>
 
+        <?php if( have_rows('spell_spheres', get_id_by_slug('codex-magic')) ): ?>
+          <?php while( have_rows('spell_spheres', get_id_by_slug('codex-magic')) ): the_row(); ?>
+
+            <?php // vars
+            $name = "Spell Sphere: " . get_sub_field('name');
+            $description = get_sub_field('description');
+            $focus = get_sub_field('focus');
+            $frag_cost = get_sub_field('frag_cost');
+            $spells = get_sub_field('spells');
+            $prereq = 'Read Magic';
+            $multiple = false;
+
+            ?>
+
+
+            <script type="text/javascript">
+              jQuery(document).on('ready', function(){
+                var skill_row = jQuery('<div class="row skill_row spell_sphere"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_ele = skill_row.find('.skill');
+                skill_ele.append(`
+                  <div class="col-xs-1">
+                    <i class="fa fa-plus-square skill_add spell_sphere_add" aria-hidden="true"></i>
+                    <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-xs-11">
+                    <span class="name"><?php echo $name; ?></span>
+                    &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
+                    <?php if($prereq != ""){ ?>
+                      &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
+                    <?php } ?>
+                    &nbsp;
+                    <span class="sphere_cost skill_cost"></span>
+
+                  </div>
+                  <div class="col-xs-12 skill_desc" style="display:none;">
+                    <?php if ($prereq != "") { ?>
+                      <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
+                    <?php } ?>
+                    <?php if ($focus != "") { ?>
+                      <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
+                    <?php } ?>
+                    <?php echo $description; ?>
+                    <hr />
+                    <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                  </div>
+                `);
+
+                skill_row.data('name', `<?php echo $name ?>`),
+                skill_row.data('description', `<?php echo $description ?>`),
+                skill_row.data('requirements', `Read Magic`),
+                skill_row.data('multiple', `<?php echo $multiple ?>`),
+                //skill_row.data('frag_cost', `<?php echo $frag_cost ?>`),
+
+                jQuery('#skill_list').append(skill_row);
+
+              });
+            </script>
+
+            <script type="text/javascript">
+              builder_data.spell_spheres.push({
+                name: `<?php echo $name ?>`,
+                focus: `<?php echo $focus ?>`,
+                spells: `<?php echo $spells ?>`,
+                description: `<?php echo $description ?>`,
+                frag_cost: `<?php echo $frag_cost ?>`
+              });
+            </script>
+
+          <?php endwhile; ?>
+        <?php endif; ?>
+
 
         <?php if( have_rows('skills', get_id_by_slug('codex-skills')) ): ?>
           <?php $s_count = 0; ?>
@@ -148,7 +226,7 @@
 
             <script type="text/javascript">
               jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row" data-count="<?php echo $s_count; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_row = jQuery('<div class="row skill_row"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
                   <div class="col-xs-1">
@@ -226,6 +304,9 @@
               });
 
               jQuery('.skill_add').on('click', function(){
+                if(jQuery(this).hasClass('spell_sphere_add')) {
+                  update_spell_spheres();
+                }
                 add_skill_to_character(jQuery(this).closest('.skill_row'));
               });
 
@@ -296,12 +377,10 @@
               });
 
               jQuery('#btn_sort_cost').on('click', function(){
-                console.log('sort by cost');
                 tinysort('.skill_row', {data:'cost'});
               });
 
               jQuery('#btn_sort_name').on('click', function(){
-                console.log('sort by name');
                 tinysort('.skill_row', 'span.name');
               });
 
@@ -316,6 +395,9 @@
                   skill_ele.find('.skill_add').hide();
                   skill_ele.find('.skill_purchased').slideToggle();
                   skill_ele.addClass('purchased');
+                }
+                if(skill_ele.data('sphere')){
+                  builder_data.character.spell_spheres += 1;
                 }
                 if(builder_data.character.skills.hasOwnProperty(skill_ele.data('name'))) {
                   builder_data.character.skills[skill_ele.data('name')] += 1;
@@ -337,6 +419,8 @@
                 if(builder_data.character.race == "Human"){
                   builder_data.character.cp_avail = 200;
                 }
+
+                builder_data.character.spell_spheres = 0;
                 builder_data.character.cp_spent = 0;
                 builder_data.character.cp_total = 0;
                 builder_data.character.level_data = builder_data.level_chart[0];
@@ -348,19 +432,29 @@
 
                 update_character();
 
+                tinysort('.skill_row', 'span.name');
+
               }
 
               function update_character(){
                 jQuery('#cb_blankets_spent').html(builder_data.character.blankets_spent);
                 jQuery('#cb_blanket_next').html(builder_data.character.blanket_value);
                 jQuery('#cb_cp_avail').html(builder_data.character.cp_avail);
+                console.log(builder_data.character.cp_avail);
                 jQuery('#cb_level').html(builder_data.character.level);
                 jQuery('#cb_cp_spent').html(builder_data.character.cp_spent);
                 jQuery('#cb_frags_spent').html(builder_data.character.frags_spent);
                 jQuery('#cb_bp').html(builder_data.character.body_points);
                 jQuery('#cb_skills').html(output_skills(builder_data.character.skills));
 
+                builder_data.character.sphere_cost = builder_data.sphere_chart[builder_data.character.spell_spheres][jQuery('#cb-class').find('option:selected').data('cost-ele')];
+
+                jQuery('.sphere_cost').show();
+                jQuery('.sphere_cost').closest('.skill_row').attr('data-cost', builder_data.character.sphere_cost)
+                jQuery('.sphere_cost').html(builder_data.character.sphere_cost);
+
                 update_skills();
+
               }
 
               function output_skills(skills) {
@@ -381,7 +475,9 @@
               function update_skills() {
                 jQuery('.skill_row').each(function(){
                   var cost = parseInt(jQuery(this).find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
-                  jQuery(this).attr('data-cost', cost);
+                  if(typeof jQuery(this).attr('data-cost') == undefined){
+                    jQuery(this).attr('data-cost', cost);
+                  }
                   var has_req = (jQuery(this).data('requirements') != "");
                   if (cost > builder_data.character.cp_avail || jQuery(this).hasClass('purchased') || (has_req && !meets_req(jQuery(this)))) {
                     jQuery(this).find('.skill_add').hide();
@@ -447,6 +543,15 @@
                 jQuery('.skill_req').show();
                 jQuery('.skill_add').show();
                 jQuery('.skill_purchased').hide();
+              }
+
+              function update_spell_spheres(){
+
+                builder_data.character.spell_spheres++;
+
+                if(builder_data.character.spell_spheres == 3) {
+                  jQuery('.spell_sphere').addClass('purchased');
+                }
               }
 
 

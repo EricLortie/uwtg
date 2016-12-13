@@ -117,6 +117,66 @@
           </div>
         <?php endif; ?>
 
+        <?php if( have_rows('spell_spheres') ): ?>
+          <div class="race-content switcher-content">
+
+            <div id="cf-magic" class="cf-repeater">
+              <div class="row repeater-content rf-hidden">
+                <div class="col-lg-12 column">
+
+                  <?php while( have_rows('spell_spheres') ): the_row(); ?>
+
+
+
+                    <?php // vars
+                    $name = get_sub_field('name');
+                    $description = get_sub_field('description');
+                    $focus = get_sub_field('focus');
+                    $frag_cost = get_sub_field('frag_cost');
+                    $spells = get_sub_field('spells');
+
+                    ?>
+                    <h2><?php echo $name; ?></h2>
+
+                    <div class="row repeater-row">
+                      <div class="col-sm-4 column">
+
+                        <h5><i>Focus: <?php echo $focus; ?></i></h5>
+                        <?php if ($frag_cost != "") { ?>
+                          <h4><i>Frag Cost: <?php echo $frag_cost; ?></i></h4>
+                        <?php } ?>
+
+                      </div>
+                      <div class="col-sm-8 column">
+
+                        <h4>Description</h4>
+                        <?php echo $description; ?>
+
+                        <?php if ($frag_cost != "") { ?>
+                          <h4>Spells</h4>
+                          <?php echo $spells; ?>
+                        <?php } ?>
+
+                      </div>
+                    </div>
+
+                    <script type="text/javascript">
+                      builder_data.spell_spheres.push({
+                        name: `<?php echo $name ?>`,
+                        focus: `<?php echo $focus ?>`,
+                        spells: `<?php echo $spells ?>`,
+                        description: `<?php echo $description ?>`,
+                        frag_cost: `<?php echo $frag_cost ?>`
+                      });
+                    </script>
+
+                  <?php endwhile; ?>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php endif; ?>
+
         <?php if( have_rows('skills') ): ?>
           <div class="skill-content switcher-content">
 
