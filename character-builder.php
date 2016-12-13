@@ -61,9 +61,9 @@
 
         </script>
 
-        <?php if( have_rows('races', 812) ): ?>
+        <?php if( have_rows('races', get_id_by_slug('codex-races')) ): ?>
           <?php $races = []; ?>
-          <?php while( have_rows('races',812) ): the_row(); ?>
+          <?php while( have_rows('races',get_id_by_slug('codex-races')) ): the_row(); ?>
 
 
             <?php // vars
@@ -95,9 +95,9 @@
           <?php usort($races, 'sortByOption'); ?>
         <?php endif; ?>
 
-        <?php if( have_rows('classes', 815) ): ?>
+        <?php if( have_rows('classes', get_id_by_slug('codex-classes')) ): ?>
           <?php $classes = []; ?>
-          <?php while( have_rows('classes', 815) ): the_row(); ?>
+          <?php while( have_rows('classes', get_id_by_slug('codex-classes')) ): the_row(); ?>
 
             <?php // vars
             $name = get_sub_field('name');
@@ -116,9 +116,9 @@
         endif; ?>
 
 
-        <?php if( have_rows('skills', 825) ): ?>
+        <?php if( have_rows('skills', get_id_by_slug('codex-skills')) ): ?>
           <?php $s_count = 0; ?>
-          <?php while( have_rows('skills', 825) ): the_row(); ?>
+          <?php while( have_rows('skills', get_id_by_slug('codex-skills')) ): the_row(); ?>
 
 
             <?php // vars
