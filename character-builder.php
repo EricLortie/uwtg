@@ -82,6 +82,13 @@
             ]
           }
 
+            builder_data.circles = [
+              "Spell Slot: 1st Circle", "Spell Slot: 2nd Circle", "Spell Slot: 3rd Circle",
+              "Spell Slot: 4th Circle", "Spell Slot: 5th Circle", "Spell Slot: 6th Circle",
+              "Spell Slot: 7th Circle", "Spell Slot: 8th Circle", "Spell Slot: 9th Circle",
+              "Spell Slot: Ritual Base"
+            ]
+
 
         </script>
 
@@ -159,30 +166,35 @@
                 var skill_row = jQuery('<div class="row skill_row spell_sphere"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
-                  <div class="col-xs-1">
-                    <i class="fa fa-plus-square skill_add spell_sphere_add" aria-hidden="true"></i>
-                    <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
-                  </div>
-                  <div class="col-xs-11">
-                    <span class="name"><?php echo $name; ?></span>
-                    &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
-                    <?php if($prereq != ""){ ?>
-                      &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
-                    <?php } ?>
-                    &nbsp;
-                    <span class="sphere_cost skill_cost"></span>
+                  <div class="row">
+                    <div class="col-xs-1">
+                      <i class="fa fa-plus-square skill_add spell_sphere_add" aria-hidden="true"></i>
+                      <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-sm-11 col-xs-10">
+                      <span class="name"><?php echo $name; ?></span>
+                      <br class="visible-sm"/>
+                      &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
+                      <?php if($prereq != ""){ ?>
+                        &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
+                      <?php } ?>
+                      &nbsp;
+                      <span class="sphere_cost skill_cost"></span>
 
+                    </div>
                   </div>
-                  <div class="col-xs-12 skill_desc" style="display:none;">
-                    <?php if ($prereq != "") { ?>
-                      <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
-                    <?php } ?>
-                    <?php if ($focus != "") { ?>
-                      <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
-                    <?php } ?>
-                    <?php echo $description; ?>
-                    <hr />
-                    <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                  <div class="row">
+                    <div class="col-xs-12 skill_desc" style="display:none;">
+                      <?php if ($prereq != "") { ?>
+                        <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
+                      <?php } ?>
+                      <?php if ($focus != "") { ?>
+                        <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
+                      <?php } ?>
+                      <?php echo $description; ?>
+                      <hr />
+                      <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                    </div>
                   </div>
                 `);
 
@@ -246,36 +258,40 @@
                 var skill_row = jQuery('<div class="row skill_row"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
-                  <div class="col-xs-1">
-                    <i class="fa fa-plus-square skill_add" aria-hidden="true"></i>
-                    <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
-                  </div>
-                  <div class="col-xs-11">
-                    <span class="name"><?php echo $name; ?></span>
-                    &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
-                    <?php if($prereq != ""){ ?>
-                      &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
-                    <?php } ?>
-                    &nbsp;
-                    <span class="me_cost skill_cost"><?php echo $mercenary_cost ?></span>
-                    <span class="ra_cost skill_cost"><?php echo $ranger_cost ?></span>
-                    <span class="te_cost skill_cost"><?php echo $templar_cost ?></span>
-                    <span class="ni_cost skill_cost"><?php echo $nightblade_cost ?></span>
-                    <span class="as_cost skill_cost"><?php echo $assassin_cost ?></span>
-                    <span class="wi_cost skill_cost"><?php echo $witchhunter_cost ?></span>
-                    <span class="ma_cost skill_cost"><?php echo $mage_cost ?></span>
-                    <span class="dr_cost skill_cost"><?php echo $druid_cost ?></span>
-                    <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
+                    <div class="row">
+                    <div class="col-xs-1">
+                      <i class="fa fa-plus-square skill_add" aria-hidden="true"></i>
+                      <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-sm-11 col-xs-10">
+                      <span class="name"><?php echo $name; ?></span>
+                      &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
+                      <?php if($prereq != ""){ ?>
+                        &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
+                      <?php } ?>
+                      &nbsp;
+                      <span class="me_cost skill_cost"><?php echo $mercenary_cost ?></span>
+                      <span class="ra_cost skill_cost"><?php echo $ranger_cost ?></span>
+                      <span class="te_cost skill_cost"><?php echo $templar_cost ?></span>
+                      <span class="ni_cost skill_cost"><?php echo $nightblade_cost ?></span>
+                      <span class="as_cost skill_cost"><?php echo $assassin_cost ?></span>
+                      <span class="wi_cost skill_cost"><?php echo $witchhunter_cost ?></span>
+                      <span class="ma_cost skill_cost"><?php echo $mage_cost ?></span>
+                      <span class="dr_cost skill_cost"><?php echo $druid_cost ?></span>
+                      <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
 
+                    </div>
                   </div>
-                  <div class="col-xs-12 skill_desc" style="display:none;">
-                    <?php if ($prereq != "") { ?>
-                      <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
-                    <?php } ?>
-                    <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
-                    <?php echo $description; ?>
-                    <hr />
-                    <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                  <div class="row">
+                    <div class="col-xs-12 skill_desc" style="display:none;">
+                      <?php if ($prereq != "") { ?>
+                        <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
+                      <?php } ?>
+                      <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
+                      <?php echo $description; ?>
+                      <hr />
+                      <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                    </div>
                   </div>
                 `);
 
@@ -463,7 +479,6 @@
                 jQuery('#cb_blankets_spent').html(builder_data.character.blankets_spent);
                 jQuery('#cb_blanket_next').html(builder_data.character.blanket_value);
                 jQuery('#cb_cp_avail').html(builder_data.character.cp_avail);
-                console.log(builder_data.character.cp_avail);
                 jQuery('#cb_level').html(builder_data.character.level);
                 jQuery('#cb_cp_spent').html(builder_data.character.cp_spent);
                 jQuery('#cb_frags_spent').html(builder_data.character.frags_spent);
@@ -502,7 +517,11 @@
                     jQuery(this).attr('data-cost', cost);
                   }
                   var has_req = (jQuery(this).data('requirements') != "");
-                  if (cost > builder_data.character.cp_avail || jQuery(this).hasClass('purchased') || (has_req && !meets_req(jQuery(this)))) {
+                  var spell_circle = is_spell_circle(jQuery(this).find('span.name').html());
+                  if (cost > builder_data.character.cp_avail
+                    || jQuery(this).hasClass('purchased')
+                    || (!spell_circle && has_req && !meets_req(jQuery(this)))
+                    || (spell_circle && !has_circle_req(jQuery(this).find('span.name').html()))) {
                     jQuery(this).find('.skill_add').hide();
                     jQuery(this).addClass('locked');
                   } else {
@@ -512,6 +531,41 @@
                   jQuery(this).data('cost', cost);
                 });
 
+              }
+
+              function is_spell_circle(skill){
+                circle_search = builder_data.circles.indexOf(skill);
+                if(circle_search != -1){
+                  return true;
+                }
+                return false;
+              }
+
+              function has_circle_req(skill) {
+                cur_circle = builder_data.circles.indexOf(skill);
+                prev_circle = builder_data.circles[cur_circle-1];
+                skills = builder_data.character.skills;
+                prev_skill_count = skills[prev_circle];
+                cur_skill_count = skills[skill];
+                if(typeof cur_skill_count == 'undefined'){
+                  cur_skill_count = 0;
+                }
+                if (cur_skill_count >= 5) {
+                  return false;
+                } else if (skill == "Spell Slot: Ritual Base" && skills["Read Magic: Ritual"] == 1 && skills["Spell Slot: 9th Circle"] >= 1) {
+                  return true;
+                } else if(skill == "Spell Slot: 1st Circle" && builder_data.character.spell_spheres == 1){
+                  return true;
+                } else if (skill != "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && circle_math_req(prev_skill_count, cur_skill_count)) {
+                  return true;
+                } else if (skill == "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && skills["Read Magic: Advanced"] == 1 && circle_math_req(prev_skill_count, cur_skill_count)){
+                  return true;
+                }
+                return false;
+              }
+
+              function circle_math_req(prev_skill_count, cur_skill_count){
+                return ((prev_skill_count > (cur_skill_count+1)) || prev_skill_count == 5)
               }
 
               function meets_req(skill_row){
@@ -551,6 +605,9 @@
                   for (i = 0; i < reqs.length; i++) {
                     if(char_skills.hasOwnProperty(reqs[i])){
                       skill_row.find('.skill_req').hide();
+                      return true;
+                    }
+                    if(reqs[i] == "Sphere of Magic: 1st" && builder_data.character.spell_spheres > 0){
                       return true;
                     }
                   }
