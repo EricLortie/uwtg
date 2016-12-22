@@ -75,10 +75,76 @@
               'Weapon Group Proficiency: Exotic'
             ],
             'Specialization +1: Weapon Group': [
-              'Specialization +1: Simple',
-              'Specialization +1: Medium',
-              'Specialization +1: Large',
-              'Specialization +1: Exotic',
+              'Specialization +1: Simple Group',
+              'Specialization +1: Medium Group',
+              'Specialization +1: Large Group',
+              //'Specialization +1: Exotic Group',
+            ],
+            'Specialization +1: Weapon Specific': [
+              'Specialization +1: Simple Weapon',
+              'Specialization +1: Medium Weapon',
+              'Specialization +1: Large Weapon',
+              //'Specialization +1: Exotic Weapon',
+            ],
+            'Critical +2: Group': [
+              'Critical +2: Simple Group',
+              'Critical +2: Medium Group',
+              'Critical +2: Large Group',
+              //'Critical +2: Exotic Group'
+            ],
+            'Critical +2: Specific': [
+              'Critical +2: Specific Simple Weapon',
+              'Critical +2: Specific Medium Weapon',
+              'Critical +2: Specific Large Weapon',
+              //'Critical +2: Specific Exotic Weapon'
+            ],
+            "Execute" : [
+              'Execute: Specific Simple Weapon',
+              'Execute: Specific Medium Weapon',
+              'Execute: Specific Large Weapon',
+              //'Execute: Specific Exotic Weapon',
+            ],
+            "Execute: Subsequent" : [
+              'Execute: Specific Simple Weapon (Subsequent)',
+              'Execute: Specific Medium Weapon (Subsequent)',
+              'Execute: Specific Large Weapon (Subsequent)',
+              //'Execute: Specific Exotic Weapon (Subsequent)',
+            ],
+            "Execute: Master" : [
+              'Execute: Simple Weapon Group',
+              'Execute: Medium Weapon Group',
+              'Execute: Large Weapon Group',
+              //'Execute: Exotic Weapon Group',
+            ],
+            "Execute: Master Subsequent" : [
+              'Execute: Simple Weapon Group (Subsequent)',
+              'Execute: Medium Weapon Group (Subsequent)',
+              'Execute: Large Weapon Group (Subsequent)',
+              //'Execute: Exotic Weapon Group (Subsequent)',
+            ],
+            "Slay / Parry" : [
+              'Slay / Parry: Specific Simple Weapon',
+              'Slay / Parry: Specific Medium Weapon',
+              'Slay / Parry: Specific Large Weapon',
+              'Slay / Parry: Specific Exotic Weapon',
+            ],
+            "Slay / Parry: Subsequent" : [
+              'Slay / Parry: Specific Simple Weapon (Subsequent)',
+              'Slay / Parry: Specific Medium Weapon (Subsequent)',
+              'Slay / Parry: Specific Large Weapon (Subsequent)',
+              'Slay / Parry: Specific Exotic Weapon (Subsequent)',
+            ],
+            "Slay / Parry: Master" : [
+              'Slay / Parry (Master): All Simple Weapons',
+              'Slay / Parry (Master): All Medium Weapons',
+              'Slay / Parry (Master): All Large Weapons',
+              'Slay / Parry (Master): All Exotic Weapons',
+            ],
+            "Slay / Parry: Master Subsequent" : [
+              'Slay / Parry (Master): All Simple Weapons (Subsequent)',
+              'Slay / Parry (Master): All Medium Weapons (Subsequent)',
+              'Slay / Parry (Master): All Large Weapons (Subsequent)',
+              'Slay / Parry (Master): All Exotic Weapons (Subsequent)',
             ]
           }
 
@@ -231,6 +297,11 @@
             <?php // vars
             $s_count++;
             $name = get_sub_field('name');
+
+            if (strpos($name, 'Subsequent') !== false) {
+              continue;
+            }
+
             $description = get_sub_field('description');
             $prereq = get_sub_field('prerequesites');
             $optional_fields = get_sub_field('optional_fields');
@@ -295,30 +366,31 @@
                   </div>
                 `);
 
+                var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+                skill_row.attr('id', row_id)
                 skill_row.data('name', `<?php echo $name ?>`),
                 skill_row.data('description', `<?php echo $description ?>`),
                 skill_row.data('requirements', `<?php echo $prereq ?>`),
                 skill_row.data('multiple', `<?php echo $multiple ?>`),
                 //skill_row.data('frag', `<?php echo $frag_cost ?>`),
-                // skill_row.data('mercenary_cost', `<?php echo $mercenary_cost ?>`),
-                // skill_row.data('ranger_cost', `<?php echo $ranger_cost ?>`),
-                // skill_row.data('templar_cost', `<?php echo $templar_cost ?>`),
-                // skill_row.data('nightblade_cost', `<?php echo $nightblade_cost ?>`),
-                // skill_row.data('assassin_cost', `<?php echo $assassin_cost ?>`),
-                // skill_row.data('witchhunter_cost', `<?php echo $witchhunter_cost ?>`),
-                // skill_row.data('mage_cost', `<?php echo $mage_cost ?>`),
-                // skill_row.data('druid_cost', `<?php echo $druid_cost ?>`),
-                // skill_row.data('bard_cost', `<?php echo $bard_cost ?>`)
 
                 <?php if($prereq != ''){ ?>
                   skill_row.addClass('has_req');
                   skill_row.addClass('locked');
                 <?php } ?>
 
-                has_alias = jQuery.grep(builder_data.skill_aliases, function(e){ console.log(e.id); return e.id == '<?php echo $name; ?>'; });
-                if(has_alias.length > 0){
-                  console.log('has_alias');
-                  console.log(has_alias);
+                //console.log('<?php echo $name; ?>: ' + builder_data.skill_aliases['<?php echo $name; ?>']);
+                aliases = builder_data.skill_aliases['<?php echo $name; ?>'];
+                if(typeof aliases !== 'undefined'){
+                  alias_rows = [];
+                  for (alias in aliases) {
+                    var alias_row = skill_row.clone(true);
+                    var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+                    alias_row.attr('id', row_id)
+                    alias_row.data('name', aliases[alias]);
+                    alias_row.find('span.name').html(aliases[alias]);
+                    alias_row.appendTo("#skill_list");
+                  }
                 } else {
                   jQuery('#skill_list').append(skill_row);
                 }
@@ -519,11 +591,11 @@
                   var has_req = (jQuery(this).data('requirements') != "");
                   var spell_circle = is_spell_circle(jQuery(this).find('span.name').html());
                   if (cost > builder_data.character.cp_avail
-                    || jQuery(this).hasClass('purchased')
-                    || (!spell_circle && has_req && !meets_req(jQuery(this)))
-                    || (spell_circle && !has_circle_req(jQuery(this).find('span.name').html()))) {
-                    jQuery(this).find('.skill_add').hide();
-                    jQuery(this).addClass('locked');
+                      || jQuery(this).hasClass('purchased')
+                      || (!spell_circle && has_req && !meets_req(jQuery(this)))
+                      || (spell_circle && !has_circle_req(jQuery(this).find('span.name').html()))) {
+                        jQuery(this).find('.skill_add').hide();
+                        jQuery(this).addClass('locked');
                   } else {
                     jQuery(this).find('.skill_add').show();
                     jQuery(this).removeClass('locked');
@@ -574,9 +646,11 @@
                 var times_2 = false;
                 var times_x = false;
 
-                if(req != ""){
+                if(typeof req !== 'undefined' && req != ""){
                   items = req.split(', ');
                   for (req in items) {
+                    items[req] = set_req_alias(items[req], skill_row.find('span.name').html());
+
                     if (items.hasOwnProperty(req)) {
                       var conditionals = items[req].split(" OR ");
                       for (subreq in conditionals) {
@@ -603,6 +677,9 @@
 
                   char_skills = builder_data.character.skills;
                   for (i = 0; i < reqs.length; i++) {
+                    if(reqs[i] == "Spell Sphere: Elemental" && char_skills["Elemental Attunement"] >=4){
+                      return false;
+                    }
                     if(char_skills.hasOwnProperty(reqs[i])){
                       skill_row.find('.skill_req').hide();
                       return true;
@@ -615,6 +692,110 @@
                   return false;
                 }
                 return false;
+              }
+
+              function set_req_alias(req, skill) {
+                if(skill == "Slay / Parry: Specific Simple Weapon"){
+                  console.log("THIS IS EXECUTE: SIMPLE WEAPON");
+                  console.log(req);
+                  console.log(builder_data.character.skills);
+                }
+                switch(req) {
+                  case "Elemental Sphere":
+                    return "Spell Sphere: Elemental";
+                    break;
+                  case "Weapon Group Proficiency":
+                  case "Group Proficiency":
+                    switch(skill) {
+                      case "Critical +2: Specific Simple Weapon":
+                      case "Critical +2: Simple Group":
+                      case "Specialization +1: Simple Group":
+                      case "Specialization +1: Simple Weapon":
+                        return "Weapon Group Proficiency: Simple";
+                        break;
+                      case "Critical +2: Specific Medium Weapon":
+                      case "Critical +2: Medium Group":
+                      case "Specialization +1: Medium Group":
+                      case "Specialization +1: Medium Weapon":
+                        return "Weapon Group Proficiency: Medium";
+                        break;
+                      case "Critical +2: Specific Large Weapon":
+                      case "Critical +2: Large Group":
+                      case "Specialization +1: Large Group":
+                      case "Specialization +1: Large Weapon":
+                        return "Weapon Group Proficiency: Large";
+                        break;
+                      case "Critical +2: Specific Exotic Weapon":
+                      case "Critical +2: Exotic Group":
+                      case "Specialization +1: Exotic Group":
+                      case "Specialization +1: Exotic Weapon":
+                        return "Weapon Group Proficiency: Exotic";
+                        break;
+                      }
+                    case "Specialization +1: Weapon Group":
+                      switch(skill) {
+                        case "Slay / Parry: Specific Simple Weapon":
+                          return "Specialization +1: Simple Group"
+                        case "Slay / Parry: Specific Medium Weapon":
+                          return "Specialization +1: Medium Group"
+                        case "Slay / Parry: Specific Large Weapon":
+                          return "Specialization +1: Large Group"
+                        case "Slay / Parry: Specific Exotic Weapon":
+                          return "Specialization +1: Exotic Group"
+                      }
+                    case "Specialization +1: Weapon Specific":
+                      switch(skill) {
+                        case "Slay / Parry":
+                          return "Specialization +1: Simple Weapon"
+                      }
+                  case "Critical +2: Specific":
+                    switch(skill) {
+                      case "Execute: Specific Simple Weapon":
+                        return "Critical +2: Specific Simple Weapon";
+                        break;
+                      case "Execute: Specific Medium Weapon":
+                        return "Critical +2: Specific Medium Weapon";
+                        break;
+                      case "Execute: Specific Large Weapon":
+                        return "Critical +2: Specific Large Weapon";
+                        break;
+                      case "Execute: Specific Exotic Weapon":
+                        return "Critical +2: Specific Exotic Weapon";
+                        break;
+                    }
+                  case "Critical +2: Group":
+                    switch(skill) {
+                      case "Execute: Simple Weapon Group":
+                        return "Critical +2: Simple Group";
+                        break;
+                      case "Execute: Medium Weapon Group":
+                        return "Critical +2: Medium Group";
+                        break;
+                      case "Execute: Large Weapon Group":
+                        return "Critical +2: Large Group";
+                        break;
+                      case "Execute: Exotic Weapon Group":
+                        return "Critical +2: Exotic Group";
+                        break;
+                    }
+                  case "Execute":
+                    switch(skill) {
+                      case "Execute: Specific Simple Weapon (Subsequent)":
+                        return "Execute: Specific Simple Weapon";
+                        break;
+                      case "Execute: Specific Medium Weapon (Subsequent)":
+                        return "Execute: Specific Medium Weapon";
+                        break;
+                      case "Execute: Specific Large Weapon (Subsequent)":
+                        return "Execute: Specific Large Weapon";
+                        break;
+                      case "Execute: Specific Exotic Weapon (Subsequent)":
+                        return "Execute: Specific Exotic Weapon";
+                        break;
+                    }
+
+                }
+                return req;
               }
 
               function reset_skills(){
