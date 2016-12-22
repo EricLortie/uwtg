@@ -229,7 +229,7 @@
 
             <script type="text/javascript">
               jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row spell_sphere"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_row = jQuery('<div class="row skill_row spell_sphere S"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
                   <div class="row">
@@ -238,6 +238,7 @@
                       <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
                     </div>
                     <div class="col-sm-11 col-xs-10">
+                      <span class="cat_label"><i class="fa fa-magic" aria-hidden="true"></i></span>&nbsp;
                       <span class="name"><?php echo $name; ?></span>
                       <br class="visible-sm"/>
                       &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
@@ -303,6 +304,26 @@
             }
 
             $description = get_sub_field('description');
+            $category = get_sub_field('category');
+
+
+            if($category == "Warrior"){
+              $cat_icon = "fa-shield";
+            } else if ($category == "Rogue"){
+              $cat_icon = "fa-bomb";
+            } else if ($category == "Scholar"){
+              $cat_icon = "fa-magic";
+            } else if ($category == "Production"){
+              $cat_icon = "fa-cog";
+            } else if ($category == "Racial Ability"){
+              $category = "Abilities (Racial)";
+              $cat_icon = "fa-users";
+            } else if ($category == "Class Ability"){
+              $cat_icon = "fa-universal-access";
+            }
+
+            $category =  substr($category, 0, 1);
+
             $prereq = get_sub_field('prerequesites');
             $optional_fields = get_sub_field('optional_fields');
             $mercenary_cost = get_sub_field('mercenary_cost');
@@ -326,7 +347,7 @@
 
             <script type="text/javascript">
               jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_row = jQuery('<div class="row skill_row <?php echo $category; ?>"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
                     <div class="row">
@@ -335,6 +356,7 @@
                       <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
                     </div>
                     <div class="col-sm-11 col-xs-10">
+                      <span class="cat_label"><i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i></span>&nbsp;
                       <span class="name"><?php echo $name; ?></span>
                       &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
                       <?php if($prereq != ""){ ?>
@@ -368,10 +390,11 @@
 
                 var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
                 skill_row.attr('id', row_id)
-                skill_row.data('name', `<?php echo $name ?>`),
-                skill_row.data('description', `<?php echo $description ?>`),
-                skill_row.data('requirements', `<?php echo $prereq ?>`),
-                skill_row.data('multiple', `<?php echo $multiple ?>`),
+                skill_row.data('name', `<?php echo $name ?>`);
+                skill_row.data('category', `<?php echo $category; ?>`);
+                skill_row.data('description', `<?php echo $description ?>`);
+                skill_row.data('requirements', `<?php echo $prereq ?>`);
+                skill_row.data('multiple', `<?php echo $multiple ?>`);
                 //skill_row.data('frag', `<?php echo $frag_cost ?>`),
 
                 <?php if($prereq != ''){ ?>
@@ -488,16 +511,36 @@
               });
 
               jQuery('#btn_sort_cost').on('click', function(){
-                tinysort('.skill_row', {data:'cost'});
+                toggleSort('cost');
               });
 
               jQuery('#btn_sort_name').on('click', function(){
-                tinysort('.skill_row', 'span.name');
+                toggleSort('name');
               });
 
-              // jQuery('#btn_toggle_skills').on('click', function(){
-              //   jQuery('.locked:not(purchased)').toggle();
-              // });
+              function toggleSort(type) {
+                jQuery('.btn-sort').toggleClass('active');
+                if(type == "name"){
+                  tinysort('.skill_row', 'span.name');
+                } else {
+                  tinysort('.skill_row', {data:'cost'});
+                }
+              }
+
+              jQuery('#btn_toggle_skills').on('click', function(){
+                 jQuery('#skill_list').toggleClass('avail_only');
+              });
+
+              jQuery('.btn-cat').on('click', function(){
+                var cat = jQuery(this).data('cat');
+                jQuery('#skill_list').removeClass('S');
+                jQuery('#skill_list').removeClass('W');
+                jQuery('#skill_list').removeClass('R');
+                jQuery('#skill_list').removeClass('P');
+                jQuery('#skill_list').removeClass('A');
+                jQuery('#skill_list').removeClass('C');
+                jQuery('#skill_list').addClass(cat);
+              });
 
 
               function add_skill_to_character(skill_ele){
@@ -695,11 +738,6 @@
               }
 
               function set_req_alias(req, skill) {
-                if(skill == "Slay / Parry: Specific Simple Weapon"){
-                  console.log("THIS IS EXECUTE: SIMPLE WEAPON");
-                  console.log(req);
-                  console.log(builder_data.character.skills);
-                }
                 switch(req) {
                   case "Elemental Sphere":
                     return "Spell Sphere: Elemental";
@@ -887,20 +925,63 @@
           <div class="col-sm-8">
             <div id="skills_section" class="mandatory_section">
               <div id="skill_header" class="row">
-                <!--
-                  <div class="col-xs-4 text-center">
-                          <button id="btn_toggle_skills" class="skill_menu btn">Toggle Available</button>
+
+                <div class="col-sm-6 text-center">
+                  <h4>Class</h4>
+                  <div class="row">
+                    <div class="col-xs-2">
+                      <button id="btn_warrior" data-cat="W" class="skill_menu btn-cat btn btn-skill">
+                        <i class="fa fa-shield" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="col-xs-2">
+                      <button id="btn_rogue" data-cat="R" class="skill_menu btn-cat btn btn-skill">
+                        <i class="fa fa-bomb" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="col-xs-2">
+                      <button id="btn_scholar" data-cat="S" class="skill_menu btn-cat btn btn-skill">
+                        <i class="fa fa-magic" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="col-xs-2">
+                      <button id="btn_production" data-cat="P" class="skill_menu btn-cat btn btn-skill">
+                        <i class="fa fa-cog" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="col-xs-2">
+                      <button id="btn_racial" data-cat="A" class="skill_menu btn-cat btn btn-skill">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="col-xs-2">
+                      <button id="btn_class" data-cat="C" class="skill_menu btn-cat btn btn-skill">
+                        <i class="fa fa-universal-access" aria-hidden="true"></i>
+                      </button>
+                    </div>
                   </div>
-                -->
-                <div class="col-xs-2"></div>
-                <div class="col-xs-4 text-center">
-                  <button id="btn_sort_name" class="skill_menu btn btn-danger">Sort by Name</button>
                 </div>
-                <div class="col-xs-4 text-center">
-                  <button id="btn_sort_cost" class="skill_menu btn btn-danger">Sort by Cost</button>
+                <div class="col-sm-3 col-xs-6 text-center">
+                  <h4>Unavailable Skills</h4>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <button id="btn_toggle_skills" class="skill_menu btn btn-skill">Toggle</button>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-xs-2"></div>
+                <div class="col-sm-3 col-xs-6 text-center">
+                  <h4>Sort</h4>
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <button id="btn_sort_cost" class="skill_menu btn-sort btn btn-skill">#</button>
+                    </div>
+                    <div class="col-xs-6">
+                      <button id="btn_sort_name" class="skill_menu btn-sort btn btn-skill active">A-Z</button>
+                    </div>
+                  </div>
+                </div>
               </div>
+
               <div id="skill_list" class="row">
 
               </div>

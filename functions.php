@@ -109,7 +109,7 @@ if(!function_exists('illdy_enqueue_stylesheets')) {
 		wp_enqueue_style( 'illdy-google-fonts' );
 		wp_enqueue_style( 'illdy-bootstrap', get_template_directory_uri() . '/layout/css/bootstrap.min.css', array(), '3.3.6', 'all' );
 		wp_enqueue_style( 'illdy-bootstrap-theme', get_template_directory_uri() . '/layout/css/bootstrap-theme.min.css', array(), '3.3.6', 'all' );
-		wp_enqueue_style( 'illdy-font-awesome', get_template_directory_uri() . '/layout/css/font-awesome.min.css', array(), '4.5.0', 'all' );
+		wp_enqueue_style( 'illdy-font-awesome', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', array(), '4.5.0', 'all' );
 		wp_enqueue_style( 'illdy-owl-carousel', get_template_directory_uri() . '/layout/css/owl-carousel.min.css', array(), '2.0.0', 'all' );
 		wp_enqueue_style( 'tribe-events-full', '/wp-content/plugins/the-events-calendar/src/resources/css/tribe-events-full.min.css', array(), '2.0.0', 'all' );
 		wp_enqueue_style( 'illdy-style', get_stylesheet_uri(), array(), '1.0.0', 'all' );
@@ -325,4 +325,4 @@ if ( ! function_exists('sortByOption')) {
     } else {
         return null;
     }
-} 
+}

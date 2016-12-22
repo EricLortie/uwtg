@@ -602,6 +602,9 @@ h2.switcher.active {
   font-weight:bolder;
   border-bottom: 1px solid darkred;
 }
+#skill_list.avail_only .skill_row.locked, #skill_list.avail_only .skill_row.purchased {
+  display: none;
+}
 .skill_row {
   border-bottom: 1px dotted darkred;
 }
@@ -640,10 +643,9 @@ h2.switcher.active {
   cursor: help;
 }
 .skill_req {
-  color: yellow !important;
+  color: darkgoldenrod !important;
 }
 .skill_menu {
-  width: 80%;
   font-weight: bolder;
 }
 .mandatory_section {
@@ -662,4 +664,38 @@ select.mandatory:disabled {
   padding: .5rem !important;
   height: auto !important;
   line-height: 22px !important;
+}
+.btn-skill {
+  position: relative;
+  margin: 0px auto;
+  background: darkred;
+  color: white;
+}
+.btn-skill:hover {
+  color: whitesmoke;
+  background: red;
+}
+.btn-skill.active {
+  background: whitesmoke;
+  color: darkred;
+}
+.cat_label {
+  text-transform: uppercase;
+  color: darkred;
+}
+#skill_list.W .skill_row.W, #skill_list.R .skill_row.R, #skill_list.S .skill_row.S,
+#skill_list.A .skill_row.A, #skill_list.C .skill_row.C, #skill_list.P .skill_row.P  {
+  display: block;
+}
+
+#skill_list.W .skill_row.S, #skill_list.W .skill_row.R, #skill_list.W .skill_row.P, #skill_list.W .skill_row.C, #skill_list.W .skill_row.A,
+#skill_list.R .skill_row.S, #skill_list.R .skill_row.W, #skill_list.R .skill_row.P, #skill_list.R .skill_row.C, #skill_list.R .skill_row.A,
+#skill_list.S .skill_row.R, #skill_list.R .skill_row.W, #skill_list.S .skill_row.P, #skill_list.S .skill_row.C, #skill_list.S .skill_row.A,
+#skill_list.P .skill_row.S, #skill_list.P .skill_row.W, #skill_list.P .skill_row.R, #skill_list.P .skill_row.C, #skill_list.P .skill_row.A,
+#skill_list.C .skill_row.S, #skill_list.C .skill_row.W, #skill_list.C .skill_row.P, #skill_list.C .skill_row.R, #skill_list.C .skill_row.A,
+#skill_list.A .skill_row.S, #skill_list.A .skill_row.W, #skill_list.A .skill_row.P, #skill_list.A .skill_row.R, #skill_list.A .skill_row.C {
+  display:none;
+}
+.cat_label, .skill_expander {
+  color: darkgoldenrod;
 }
