@@ -31,12 +31,15 @@
 
         <script type="text/javascript">
           var builder_data = {};
+          state_counter = 0;
           builder_data.character = {};
           builder_data.character.frags_avail = 0;
           builder_data.character.frags_spent = 0;
+          builder_data.character.skill_count = 0;
           builder_data.races = [];
           builder_data.pc_classes = [];
           builder_data.spell_spheres = [];
+          builder_data.character_states = [];
           builder_data.skills = [];
           builder_data.level_chart = [
             {'cp': 150, 'cppb': 65, 'bp_w': 6, 'bp_r': 4, 'bp_s': 3},
@@ -60,6 +63,12 @@
             {'cp': 1950, 'cppb': 10, 'bp_w': 42, 'bp_r': 22, 'bp_s': 15},
             {'cp': 2050, 'cppb': 10, 'bp_w': 44, 'bp_r': 23, 'bp_s': 16},
           ]
+          builder_data.human_level_chart = [];
+          for (level in builder_data.level_chart){
+            level_data = builder_data.level_chart[level];
+            level_data['cp'] += 50;
+            builder_data.human_level_chart.push(level_data);
+          };
           builder_data.sphere_chart = [
             {'me_cost': 100,'ra_cost': 100, 'te_cost': 75, 'ni_cost': 75, 'as_cost': 100, 'wi_cost': 75, 'ma_cost': 25, 'dr_cost': 50, 'ba_cost': 50},
             {'me_cost': 200,'ra_cost': 200, 'te_cost': 175, 'ni_cost': 175, 'as_cost': 200, 'wi_cost': 175, 'ma_cost': 150, 'dr_cost': 175, 'ba_cost': 175},
@@ -159,7 +168,7 @@
         </script>
 
         <?php if( have_rows('races', get_id_by_slug('codex-races')) ): ?>
-          <?php $races = []; ?>
+          <?php $races = array(); ?>
           <?php while( have_rows('races',get_id_by_slug('codex-races')) ): the_row(); ?>
 
 
@@ -172,7 +181,7 @@
             $advantages = get_sub_field('advantages');
             $disadvantages = get_sub_field('disadvantages');
 
-            array_push($races, [$name, $frag_cost]);
+            array_push($races, array($name, $frag_cost));
 
             ?>
 
@@ -193,7 +202,7 @@
         <?php endif; ?>
 
         <?php if( have_rows('classes', get_id_by_slug('codex-classes')) ): ?>
-          <?php $classes = []; ?>
+          <?php $classes = array(); ?>
           <?php while( have_rows('classes', get_id_by_slug('codex-classes')) ): the_row(); ?>
 
             <?php // vars
@@ -213,7 +222,9 @@
         endif; ?>
 
         <?php if( have_rows('spell_spheres', get_id_by_slug('codex-magic')) ): ?>
+          <?php $count = 0; ?>
           <?php while( have_rows('spell_spheres', get_id_by_slug('codex-magic')) ): the_row(); ?>
+            <?php $count++; ?>
 
             <?php // vars
             $name = "Spell Sphere: " . get_sub_field('name');
@@ -234,10 +245,10 @@
                 skill_ele.append(`
                   <div class="row">
                     <div class="col-xs-1">
-                      <i class="fa fa-plus-square skill_add spell_sphere_add" aria-hidden="true"></i>
+                      <i id="sphere_<?php echo $count; ?>" class="fa fa-plus-square skill_add spell_sphere_add state_saver" aria-hidden="true"></i>
                       <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
                     </div>
-                    <div class="col-sm-11 col-xs-10">
+                    <div class="col-xs-9">
                       <span class="cat_label"><i class="fa fa-magic" aria-hidden="true"></i></span>&nbsp;
                       <span class="name"><?php echo $name; ?></span>
                       <br class="visible-sm"/>
@@ -246,8 +257,9 @@
                         &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
                       <?php } ?>
                       &nbsp;
+                    </div>
+                    <div class="col-xs-1">
                       <span class="sphere_cost skill_cost"></span>
-
                     </div>
                   </div>
                   <div class="row">
@@ -268,7 +280,9 @@
                 skill_row.data('name', `<?php echo $name ?>`),
                 skill_row.data('description', `<?php echo $description ?>`),
                 skill_row.data('requirements', `Read Magic`),
-                skill_row.data('multiple', `<?php echo $multiple ?>`),
+                skill_row.data('multiple', `<?php echo $multiple ?>`)
+                skill_row.data('category', `S`)
+                skill_row.data('cat_string', `Scholar`)
                 //skill_row.data('frag_cost', `<?php echo $frag_cost ?>`),
 
                 jQuery('#skill_list').append(skill_row);
@@ -322,7 +336,7 @@
               $cat_icon = "fa-universal-access";
             }
 
-            $category =  substr($category, 0, 1);
+            $cat =  substr($category, 0, 1);
 
             $prereq = get_sub_field('prerequesites');
             $optional_fields = get_sub_field('optional_fields');
@@ -347,15 +361,15 @@
 
             <script type="text/javascript">
               jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row <?php echo $category; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_row = jQuery('<div class="row skill_row <?php echo $cat; ?>"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
-                    <div class="row">
+                  <div class="row">
                     <div class="col-xs-1">
-                      <i class="fa fa-plus-square skill_add" aria-hidden="true"></i>
+                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver" aria-hidden="true"></i>
                       <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
                     </div>
-                    <div class="col-sm-11 col-xs-10">
+                    <div class="col-xs-9">
                       <span class="cat_label"><i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i></span>&nbsp;
                       <span class="name"><?php echo $name; ?></span>
                       &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
@@ -363,6 +377,8 @@
                         &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
                       <?php } ?>
                       &nbsp;
+                    </div>
+                    <div class="col-xs-1">
                       <span class="me_cost skill_cost"><?php echo $mercenary_cost ?></span>
                       <span class="ra_cost skill_cost"><?php echo $ranger_cost ?></span>
                       <span class="te_cost skill_cost"><?php echo $templar_cost ?></span>
@@ -372,7 +388,6 @@
                       <span class="ma_cost skill_cost"><?php echo $mage_cost ?></span>
                       <span class="dr_cost skill_cost"><?php echo $druid_cost ?></span>
                       <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
-
                     </div>
                   </div>
                   <div class="row">
@@ -391,7 +406,8 @@
                 var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
                 skill_row.attr('id', row_id)
                 skill_row.data('name', `<?php echo $name ?>`);
-                skill_row.data('category', `<?php echo $category; ?>`);
+                skill_row.data('cat_string', `<?php echo $category; ?>`);
+                skill_row.data('category', `<?php echo $cat; ?>`);
                 skill_row.data('description', `<?php echo $description ?>`);
                 skill_row.data('requirements', `<?php echo $prereq ?>`);
                 skill_row.data('multiple', `<?php echo $multiple ?>`);
@@ -447,8 +463,12 @@
               jQuery('#btn_reset').on('click', function(){
                 jQuery('.mandatory_section').hide();
                 jQuery('#btn_generate').show();
+                jQuery('#btn_generate').addClass('locked');
+                jQuery('#cb_selectors').show();
                 jQuery('#cb-race').val('');
+                jQuery('#cb_race_show').html('');
                 jQuery('#cb-class').val('');
+                jQuery('#cb_class_show').html('');
                 jQuery('#cb-race').attr('disabled', false);
                 jQuery('#cb-class').attr('disabled', false);
                 reset_character();
@@ -468,6 +488,7 @@
               jQuery('#cb-race').on('change', function(){
                 builder_data.character.frags_spent = 0;
                 builder_data.character.race = jQuery(this).val();
+                jQuery('#cb_race_show').html(jQuery(this).val());
                 builder_data.character.frags_spent = parseInt(jQuery(this).find('option:selected').data('fragCost'));
               });
 
@@ -483,17 +504,26 @@
                   builder_data.type = "s";
                 }
 
+                jQuery('#cb_class_show').html(jQuery(this).val());
                 jQuery('.skill_cost').hide();
                 jQuery('.' + jQuery(this).find('option:selected').data('cost-ele')).show();
               });
 
               jQuery('#btn_generate').on('click', function(e){
                 e.preventDefault();
-                reset_character();
-                jQuery('.mandatory_section').show();
-                jQuery(this).hide();
-                jQuery('#cb-race').attr('disabled', true);
-                jQuery('#cb-class').attr('disabled', true);
+                if (jQuery('#cb-class').val() != '' && jQuery('#cb-race').val() != '') {
+                  reset_character();
+                  jQuery('.mandatory_section').show();
+                  jQuery(this).hide();
+                  jQuery('#cb_selectors').hide();
+                  jQuery('#cb-race').attr('disabled', true);
+                  jQuery('#cb-class').attr('disabled', true);
+                }
+              });
+
+              jQuery('.state_saver').on('click', function(e){
+                e.preventDefault();
+                set_state();
               });
 
               jQuery('#btn_add_blanket').on('click', function(e){
@@ -521,29 +551,58 @@
               function toggleSort(type) {
                 jQuery('.btn-sort').toggleClass('active');
                 if(type == "name"){
+                  jQuery('#sort_string').html('NAME');
                   tinysort('.skill_row', 'span.name');
                 } else {
+                  jQuery('#sort_string').html('COST');
                   tinysort('.skill_row', {data:'cost'});
                 }
               }
 
               jQuery('#btn_toggle_skills').on('click', function(){
-                 jQuery('#skill_list').toggleClass('avail_only');
+                if(jQuery('#skill_list').hasClass('avail_only')){
+                  jQuery('#filter_string').html("AVAILABLE");
+                } else {
+                    jQuery('#filter_string').html("ALL");
+                }
+                jQuery(this).toggleClass('active');
+                jQuery('#skill_list').toggleClass('avail_only');
               });
 
               jQuery('.btn-cat').on('click', function(){
                 var cat = jQuery(this).data('cat');
+                var cat_string = jQuery(this).data('catString');
                 jQuery('#skill_list').removeClass('S');
                 jQuery('#skill_list').removeClass('W');
                 jQuery('#skill_list').removeClass('R');
                 jQuery('#skill_list').removeClass('P');
                 jQuery('#skill_list').removeClass('A');
                 jQuery('#skill_list').removeClass('C');
+                jQuery('.btn-cat').removeClass('active');
+                jQuery(this).addClass('active');
                 jQuery('#skill_list').addClass(cat);
+                jQuery('#cat_string').html(cat_string);
+
+              });
+
+              jQuery('#opt-clear').on('click', function(){
+                jQuery('#filter_string').html("ALL");
+                jQuery('#skill_list').removeClass('avail_only');
+                jQuery('#skill_list').removeClass('S');
+                jQuery('#skill_list').removeClass('W');
+                jQuery('#skill_list').removeClass('R');
+                jQuery('#skill_list').removeClass('P');
+                jQuery('#skill_list').removeClass('A');
+                jQuery('#skill_list').removeClass('C');
+                jQuery('.btn-cat').removeClass('active');
+                jQuery('#cat_string').html("");
+                jQuery('#sort_string').html('NAME');
+                tinysort('.skill_row', 'span.name');
               });
 
 
               function add_skill_to_character(skill_ele){
+
                 if(skill_ele.data('multiple') == ""){
                   skill_ele.addClass('purchased');
                   skill_ele.find('.skill_add').hide();
@@ -559,8 +618,11 @@
                   builder_data.character.skills[skill_ele.data('name')] = 1;
                 }
                 var skill_cost = parseInt(skill_ele.find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
+
                 builder_data.character.cp_avail -= skill_cost;
                 builder_data.character.cp_spent += skill_cost;
+                builder_data.character.skill_count += 1
+                jQuery('#cb_skill_count').html(builder_data.character.skill_count);
                 update_character();
                 update_skills();
               }
@@ -572,12 +634,14 @@
                 builder_data.character.cp_avail = 150;
                 if(builder_data.character.race == "Human"){
                   builder_data.character.cp_avail = 200;
+                  builder_data.character.level_data = builder_data.human_level_chart[0];
+                } else {
+                  builder_data.character.level_data = builder_data.level_chart[0];
                 }
 
                 builder_data.character.spell_spheres = 0;
                 builder_data.character.cp_spent = 0;
                 builder_data.character.cp_total = 0;
-                builder_data.character.level_data = builder_data.level_chart[0];
                 builder_data.character.blanket_value = builder_data.character.level_data.cppb;
                 builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
                 builder_data.character.skills = {};
@@ -599,6 +663,7 @@
                 jQuery('#cb_frags_spent').html(builder_data.character.frags_spent);
                 jQuery('#cb_bp').html(builder_data.character.body_points);
                 jQuery('#cb_skills').html(output_skills(builder_data.character.skills));
+                jQuery('#cb_skill_count').html(builder_data.character.skill_count);
 
                 builder_data.character.sphere_cost = builder_data.sphere_chart[builder_data.character.spell_spheres][jQuery('#cb-class').find('option:selected').data('cost-ele')];
 
@@ -608,6 +673,32 @@
 
                 update_skills();
 
+              }
+
+              function set_state(){
+                state_counter += 1;
+                jQuery('#btn_undo').removeClass('locked');
+                builder_data.character_states.unshift({'count': state_counter, 'character': jQuery.extend(true, {}, builder_data.character)});
+                if(builder_data.character_states.length > 5){
+                  builder_data.character_states.splice(4, 1);
+                }
+              }
+
+              jQuery('#btn_undo').on('click', function(e){
+                e.preventDefault();
+                if(!jQuery(this).hasClass('locked')){
+                  undo();
+                }
+              });
+
+              function undo() {
+                builder_data.character = jQuery.extend(true, {}, builder_data.character_states[0]['character']);
+                builder_data.character_states.splice(0, 1);
+                if(builder_data.character_states.length == 0){
+                  jQuery('#btn_undo').addClass('locked');
+                }
+                update_character();
+                update_skills();
               }
 
               function output_skills(skills) {
@@ -628,24 +719,33 @@
               function update_skills() {
                 jQuery('.skill_row').each(function(){
                   var cost = parseInt(jQuery(this).find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
-                  if(typeof jQuery(this).attr('data-cost') == undefined){
+                  if(typeof jQuery(this).attr('data-cost') == 'undefined'){
                     jQuery(this).attr('data-cost', cost);
                   }
                   var has_req = (jQuery(this).data('requirements') != "");
                   var spell_circle = is_spell_circle(jQuery(this).find('span.name').html());
                   if (cost > builder_data.character.cp_avail
-                      || jQuery(this).hasClass('purchased')
+                      || (jQuery(this).hasClass('purchased') && character_has_skill(jQuery(this).find('span.name').html()))
                       || (!spell_circle && has_req && !meets_req(jQuery(this)))
                       || (spell_circle && !has_circle_req(jQuery(this).find('span.name').html()))) {
                         jQuery(this).find('.skill_add').hide();
                         jQuery(this).addClass('locked');
                   } else {
                     jQuery(this).find('.skill_add').show();
+                    jQuery(this).find('.skill_purchased').hide();
                     jQuery(this).removeClass('locked');
+                    jQuery(this).removeClass('purchased');
                   }
                   jQuery(this).data('cost', cost);
                 });
 
+              }
+
+              function character_has_skill(skill){
+                if(builder_data.character.skills[skill] > 0){
+                  return true;
+                }
+                return false;
               }
 
               function is_spell_circle(skill){
@@ -837,6 +937,9 @@
               }
 
               function reset_skills(){
+
+                builder_data.character.skill_count = 0;
+                jQuery('#cb_skill_count').html(0);
                 jQuery('.skill_row').removeClass('locked');
                 jQuery('.skill_row').removeClass('purchased');
                 jQuery('.skill_req').show();
@@ -852,7 +955,29 @@
                   jQuery('.spell_sphere').addClass('purchased');
                 }
               }
+              jQuery('.btn-cb-content ').on('click', function(){
+                jQuery('.btn-cb-content').toggleClass('active');
+                jQuery('.cb_display_content').toggleClass('active');
+              });
 
+              jQuery('.legend_toggler').on('click', function(e){
+                e.preventDefault();
+                jQuery('#legend').toggleClass('opened').toggleClass('closed');
+              });
+
+              // Cache selectors outside callback for performance.
+              var $window = jQuery(window),
+                  $stickyEl = jQuery('#character_data'),
+                  elTop = $stickyEl.offset().top;
+
+              $window.scroll(function() {
+                if(!jQuery('header#header').hasClass('mobile')){
+                   $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
+                 }
+               });
+
+              $stickyEl.css({'max-width': $stickyEl.width()});
+              $stickyEl.css({'width': $stickyEl.width()});
 
             });
           </script>
@@ -862,107 +987,175 @@
         <div class="row">
           <div class="col-sm-4">
 
-            <label>Select Your Race</label>
-            <select id="cb-race" class="gen-opt mandatory">
-              <option value="">Please select a race</option>
-              <?php foreach ($races as $race) { ?>
-                <?php
-                $name = $race[0];
-                $frag_string = "";
-                if($race[1] != null){
-                  $frag_string = "({$race[1]} FRAGS)";
-                }
-                ?>
+            <div id="character_data">
+              <div id="cb_selectors">
+                <label>Select Your Race</label>
+                <select id="cb-race" class="gen-opt mandatory">
+                  <option value="">Please select a race</option>
+                  <?php foreach ($races as $race) { ?>
+                    <?php
+                    $name = $race[0];
+                    $frag_string = "";
+                    if($race[1] != null){
+                      $frag_string = "({$race[1]} FRAGS)";
+                    }
+                    ?>
 
-                <option value="<?php echo $name; ?>" data-frag-cost="<?php echo $race[1]; ?>"><?php echo $name . " " . $frag_string; ?></option>
-              <?php } ?>
-            </select>
+                    <option value="<?php echo $name; ?>" data-frag-cost="<?php echo $race[1]; ?>"><?php echo $name . " " . $frag_string; ?></option>
+                  <?php } ?>
+                </select>
 
-            <hr />
+                <hr />
 
-            <label>Select Your Class</label>
-            <select id="cb-class" class="gen-opt mandatory">
-              <option value="">Please select a class</option>
-              <?php $count = 0; ?>
-              <?php foreach ($classes as $pc_class) { ?>
-                <option value="<?php echo $pc_class; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class, 0, 2)); ?>_cost"><?php echo $pc_class; ?></option>
-                <?php $count++; ?>
-              <?php } ?>
-            </select>
+                <label>Select Your Class</label>
+                <select id="cb-class" class="gen-opt mandatory">
+                  <option value="">Please select a class</option>
+                  <?php $count = 0; ?>
+                  <?php foreach ($classes as $pc_class) { ?>
+                    <option value="<?php echo $pc_class; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class, 0, 2)); ?>_cost"><?php echo $pc_class; ?></option>
+                    <?php $count++; ?>
+                  <?php } ?>
+                </select>
 
-            <hr />
+                <hr />
+              </div>
 
-            <div class="blog-post text-center" style="margin-bottom:3rem;">
-              <a id="btn_generate" href="#" title="Build Character" class="blog-post-button locked">Start Character</a>
-            </div>
+              <div class="blog-post text-center" style="margin-bottom:3rem;">
+                <a id="btn_generate" href="#" title="Build Character" class="blog-post-button state_saver locked">Start Character</a>
+              </div>
 
-            <div class="blog-post text-center mandatory_section" style="margin-bottom:3rem;">
-              <a id="btn_reset" href="#" title="Reset" class="blog-post-button">Reset Character</a>
-            </div>
-
-            <div class="blog-post text-center mandatory_section" style="margin-bottom:3rem;">
-              <a id="btn_add_blanket" href="#" title="Add Blanket" class="blog-post-button">Add Blanket</a>
-            </div>
-
-            <hr />
-
-            <div id="character_section" class="mandatory_section">
-              <h4>Level: <span id="cb_level"></span></h4>
-              <h4>CP Spent: <span id="cb_cp_spent"></span></h4>
-              <h4>CP Available: <span id="cb_cp_avail"></span></h4>
-              <h4>Blankets Value: <span id="cb_blanket_next"></span></h4>
-              <h4>Blankets Spent: <span id="cb_blankets_spent"></span></h4>
-              <h4>Frags Spent: <span id="cb_frags_spent"></span></h4>
-              <h4>Body Points: <span id="cb_bp"></span></h4>
-              <br />
-              <h4>Skills</h4>
-              <div id="cb_skills"></div>
+              <div class="row">
+                <div class="col-xs-3">
+                  <div class="btn_warning text-center mandatory_section" style="margin-bottom:3rem;">
+                    <a id="btn_reset" href="#" title="Reset" class="blog-post-button state_saver"><i class="fa fa-trash" aria-hidden="true"></i> Reset</a>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <div class="btn_warning text-center mandatory_section" style="margin-bottom:3rem;">
+                    <a id="btn_undo" href="#" title="Unto" class="blog-post-button"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="blog-post text-center mandatory_section" style="margin-bottom:3rem;">
+                    <a id="btn_add_blanket" href="#" title="Add Blanket" class="blog-post-button state_saver">+XP</a>
+                  </div>
+                </div>
+              </div>
 
               <hr />
-            </div>
 
-          </div>
+              <div id="character_section" class="mandatory_section">
+
+                <div class="row">
+                  <div class="col-xs-6">
+                    <button id="btn_view_char" class="btn-cb-content btn btn-red active">
+                      Character
+                    </button>
+                  </div>
+                  <div class="col-xs-6">
+                    <button id="btn_view_skills" class="btn-cb-content btn btn-red">
+                      Skills
+                    </button>
+                  </div>
+                </div>
+                <hr />
+                <div class="cb_data">
+                  <div id="cb_character_details" class="cb_display_content active">
+                    <h4>Race: <span id="cb_race_show"></span></h4>
+                    <h4>Class: <span id="cb_class_show"></span></h4>
+                    <h4>Level: <span id="cb_level"></span></h4>
+                    <h4>CP Spent: <span id="cb_cp_spent"></span></h4>
+                    <h4>CP Available: <span id="cb_cp_avail"></span></h4>
+                    <h4>Blankets Value: <span id="cb_blanket_next"></span></h4>
+                    <h4>Blankets Spent: <span id="cb_blankets_spent"></span></h4>
+                    <h4>Frags Spent: <span id="cb_frags_spent"></span></h4>
+                    <h4>Body Points: <span id="cb_bp"></span></h4>
+                    <h4>Skills: <span id="cb_skill_count">0</span></h4>
+                  </div>
+
+                  <div id="cb_skill_details" class="cb_display_content">
+                    <h4>Skills</h4>
+                    <div id="cb_skills"></div>
+
+                  </div>
+                </div>
+              </div>
+            </div><!-- /#character_data -->
+          </div><!-- /#character_container -->
+
           <div class="col-sm-8">
             <div id="skills_section" class="mandatory_section">
               <div id="skill_header" class="row">
+
+              <div class="row">
+                <div id="legend" class="col-xs-12 closed" style="">
+                  <p class="skill_meta">
+                    <a href="#" id="legend_close" class="legend_toggler"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close legend</a>
+                    <a href="#" id="legend_open" class="legend_toggler"><i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp; open legend</a>
+                  </p>
+                  <div id="legend_content" class="row">
+                  <?php
+                    $legend_items = array(
+                      array('shield', 'Warrior Skill'),
+                      array('bomb', 'Rogue Skill'),
+                      array('magic', 'Scholar Skill'),
+                      array('cog', 'Production Skill'),
+                      array('users', 'Racial Skill'),
+                      array('universal-access', 'Class Skill'),
+                      array('exclamation-triangle', 'Requirement Not Met'),
+                      array('info-circle', "Click to view details")
+                    );
+                   ?>
+                   <?php foreach ($legend_items as $li){ ?>
+                      <div class="col-sm-4">
+                        <div class="col-xs-3 text-center">
+                          <i class="fa fa-<?php echo $li[0]?>" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-sm-9 text-left">
+                          <?php echo $li[1]; ?>
+                        </div>
+                      </div>
+                    <?php } ?>
+                  </div></div>
+              </div>
 
                 <div class="col-sm-6 text-center">
                   <h4>Class</h4>
                   <div class="row">
                     <div class="col-xs-2">
-                      <button id="btn_warrior" data-cat="W" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_warrior" data-cat="W" data-cat-string="Warrior" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-shield" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_rogue" data-cat="R" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_rogue" data-cat="R" data-cat-string="Rogue" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-bomb" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_scholar" data-cat="S" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_scholar" data-cat="S" data-cat-string="Scholar" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-magic" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_production" data-cat="P" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_production" data-cat="P" data-cat-string="Production" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-cog" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_racial" data-cat="A" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_racial" data-cat="A"  data-cat-string="Racial" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-users" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_class" data-cat="C" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_class" data-cat="C" data-cat-string="Class" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-universal-access" aria-hidden="true"></i>
                       </button>
                     </div>
                   </div>
                 </div>
                 <div class="col-sm-3 col-xs-6 text-center">
-                  <h4>Unavailable Skills</h4>
+                  <h4>Available</h4>
                   <div class="row">
                     <div class="col-xs-12">
                       <button id="btn_toggle_skills" class="skill_menu btn btn-skill">Toggle</button>
@@ -982,6 +1175,10 @@
                 </div>
               </div>
 
+              <div id="skill_header" class="row">
+                <p id="option_string">Showing <span id="filter_string" class="opt">ALL</span> <span id="cat_string" class="opt"></span> skills, sorted by <span id="sort_string" class="opt">NAME</span>.&nbsp;
+                <i id="opt-clear" class="fa fa-close" aria-hidden="true"></i></p>
+              </div>
               <div id="skill_list" class="row">
 
               </div>
@@ -997,5 +1194,4 @@
 		</div><!--/.col-sm-7-->
 	</div><!--/.row-->
 </div><!--/.container-->
-<link rel="javascript"
 <?php get_footer(); ?>

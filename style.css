@@ -587,14 +587,38 @@ h2.switcher.active {
 }
 
 .skill_header, .skill_row {
-  padding: 1rem 1rem;
+  padding: 1rem;
 }
 
 #skills_section {
-  padding: 3rem;
+  padding: 3rem 0;
 }
 #skill_header {
   margin-bottom: 2rem;
+}
+#legend {
+  padding: 0 4rem;
+  color: whitesmoke;
+  font-weight: bolder;
+}
+#legend a {
+  color: darkred;
+}
+#legend.opened #legend_content {
+  display:block;
+}
+#legend.opened #legend_close, #legend.closed #legend_open {
+  display: block;
+}
+#legend.closed #legend_content {
+  display:none;
+}
+#legend.opened #legend_open, #legend.closed #legend_close {
+  display: none;
+}
+#legend_content {
+  background: black;
+  padding: .5rem 0;
 }
 .skill_header {
   text-transform:uppercase;
@@ -603,7 +627,7 @@ h2.switcher.active {
   border-bottom: 1px solid darkred;
 }
 #skill_list.avail_only .skill_row.locked, #skill_list.avail_only .skill_row.purchased {
-  display: none;
+  display: none !important;
 }
 .skill_row {
   border-bottom: 1px dotted darkred;
@@ -651,6 +675,17 @@ h2.switcher.active {
 .mandatory_section {
   display: none;
 }
+.btn_warning {
+  padding-top: 1rem;
+}
+.btn_warning a {
+  text-transform: uppercase;
+  color: darkred;
+}
+#btn_undo.locked {
+  color: darkgrey;
+  cursor:not-allowed;
+}
 select.mandatory:disabled {
   background: darkgrey;
   color: black;
@@ -660,24 +695,38 @@ select.mandatory:disabled {
   cursor: not-allowed;
 }
 #btn_reset {
-  font-size: 12px !important;
+  /*font-size: 12px !important;
   padding: .5rem !important;
   height: auto !important;
-  line-height: 22px !important;
+  line-height: 22px !important;*/
 }
-.btn-skill {
+.btn-skill, .btn-red {
   position: relative;
   margin: 0px auto;
   background: darkred;
   color: white;
 }
-.btn-skill:hover {
+.btn-skill:hover, btn-red:hover {
   color: whitesmoke;
   background: red;
 }
-.btn-skill.active {
+.btn-skill.active, .btn-red.active {
   background: whitesmoke;
   color: darkred;
+}
+.btn-red {
+  width: 100%;
+  font-weight: bolder;
+}
+.btn-red:hover {
+  color: whitesmoke;
+  background: red;
+}
+.cb_display_content {
+  display: none;
+}
+.cb_display_content.active {
+  display: block;
 }
 .cat_label {
   text-transform: uppercase;
@@ -690,7 +739,7 @@ select.mandatory:disabled {
 
 #skill_list.W .skill_row.S, #skill_list.W .skill_row.R, #skill_list.W .skill_row.P, #skill_list.W .skill_row.C, #skill_list.W .skill_row.A,
 #skill_list.R .skill_row.S, #skill_list.R .skill_row.W, #skill_list.R .skill_row.P, #skill_list.R .skill_row.C, #skill_list.R .skill_row.A,
-#skill_list.S .skill_row.R, #skill_list.R .skill_row.W, #skill_list.S .skill_row.P, #skill_list.S .skill_row.C, #skill_list.S .skill_row.A,
+#skill_list.S .skill_row.R, #skill_list.S .skill_row.W, #skill_list.S .skill_row.P, #skill_list.S .skill_row.C, #skill_list.S .skill_row.A,
 #skill_list.P .skill_row.S, #skill_list.P .skill_row.W, #skill_list.P .skill_row.R, #skill_list.P .skill_row.C, #skill_list.P .skill_row.A,
 #skill_list.C .skill_row.S, #skill_list.C .skill_row.W, #skill_list.C .skill_row.P, #skill_list.C .skill_row.R, #skill_list.C .skill_row.A,
 #skill_list.A .skill_row.S, #skill_list.A .skill_row.W, #skill_list.A .skill_row.P, #skill_list.A .skill_row.R, #skill_list.A .skill_row.C {
@@ -698,4 +747,30 @@ select.mandatory:disabled {
 }
 .cat_label, .skill_expander {
   color: darkgoldenrod;
+}
+
+p#option_string span.opt {
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+#opt-clear {
+  color: darkred;
+  cursor: pointer;
+}
+#character_data.sticky {
+   position: fixed;
+   top: 0;
+}
+#character_section {
+  background: black;
+  border: 1px solid grey;
+  padding: 1rem;
+}
+#character_section hr {
+  color: grey;
+}
+#character_section span {
+  color: white;
+  font-weight: bold;
 }

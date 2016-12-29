@@ -23,11 +23,9 @@ $preloader_enable = get_theme_mod( 'illdy_preloader_enable', 1 );
 		<?php if( $preloader_enable == 1 ): ?>
 			<div class="pace-overlay"></div>
 		<?php endif;
-		if ($show_videos == null) {
-			$show_videos = false;
-		}
+		$show_videos = false;
 		?>
-		<header id="header" class="<?php if (wp_is_mobile() || !$show_videos) { ?>mobile <?php } ?><?php if( is_front_page() ): echo 'header-front-page'; else: echo 'header-blog'; endif; ?>" style="background-image: url('<?php if( is_front_page() ): echo ( ( $jumbotron_general_image ) ? esc_url( $jumbotron_general_image ) : '' ); else: echo esc_url( get_header_image() ); endif; ?>">
+		<header id="header" class="<?php if (wp_is_mobile()) { ?>mobile <?php } ?><?php if( is_front_page() ): echo 'header-front-page'; else: echo 'header-blog'; endif; ?>" style="background-image: url('<?php if( is_front_page() ): echo ( ( $jumbotron_general_image ) ? esc_url( $jumbotron_general_image ) : '' ); else: echo esc_url( get_header_image() ); endif; ?>">
 			<div class="top-header">
 				<div class="container">
 					<div class="row">
