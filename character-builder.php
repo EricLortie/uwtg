@@ -462,6 +462,9 @@
 
               jQuery('#btn_reset').on('click', function(){
                 jQuery('.mandatory_section').hide();
+                jQuery('#character_section').hide();
+                jQuery('#data_fields').hide();
+                jQuery('.non_data_fields:not(#character_section)').show();
                 jQuery('#btn_generate').show();
                 jQuery('#btn_generate').addClass('locked');
                 jQuery('#cb_selectors').show();
@@ -655,6 +658,8 @@
               }
 
               function update_character(){
+                jQuery('#cb_race_show').html(builder_data.character.race);
+                jQuery('#cb_class_show').html(builder_data.character.class);
                 jQuery('#cb_blankets_spent').html(builder_data.character.blankets_spent);
                 jQuery('#cb_blanket_next').html(builder_data.character.blanket_value);
                 jQuery('#cb_cp_avail').html(builder_data.character.cp_avail);
@@ -965,6 +970,61 @@
                 jQuery('#legend').toggleClass('opened').toggleClass('closed');
               });
 
+              jQuery('#btn_data_export, #btn_data_import').on('click', function(e){
+                e.preventDefault();
+                jQuery('.non_data_fields').hide();
+                jQuery('#cb_selectors').hide();
+                jQuery('#data_fields').show();
+              });
+              jQuery('#btn_data_export').on('click', function(e){
+                e.preventDefault();
+                jQuery('#data_fields_export').show();
+                jQuery('#data_fields_import').hide();
+              });
+              jQuery('#btn_data_import').on('click', function(e){
+                e.preventDefault();
+                jQuery('#data_fields_export').hide();
+                jQuery('#data_fields_import').show();
+              });
+              jQuery('#btn_close_data').on('click', function(e){
+                e.preventDefault();
+                console.log(builder_data.character);
+                if(builder_data.character['skill_count'] == 0){
+                  jQuery('#btn_reset').trigger('click');
+                } else {
+                  jQuery('.non_data_fields').show();
+                  jQuery('#data_fields').hide();
+                  jQuery('#char_export_code').val("");
+                  jQuery('#data_import').val("");
+                  jQuery('.mandatory_section').show();
+                  jQuery('#btn_generate').hide();
+                  jQuery('#cb_selectors').hide();
+                }
+              });
+
+              jQuery('#generate_export').on('click', function(e){
+                e.preventDefault();
+                jQuery('#char_export_code').val(JSON.stringify(builder_data.character));
+              });
+              jQuery('#process_import').on('click', function(e){
+                e.preventDefault();
+                var char_import = jQuery('#data_import').val();
+                jQuery('.non_data_fields').show();
+                jQuery('#data_fields').hide();
+                jQuery('#char_export_code').val("");
+                jQuery('#data_import').val("");
+                jQuery('.mandatory_section').show();
+                jQuery('#btn_generate').hide();
+                jQuery('#cb_selectors').hide();
+                var parsed_char = JSON.parse(char_import);
+                builder_data.character = parsed_char;
+                jQuery("#cb-class").val(builder_data.character.class);
+                jQuery("#cb-race").val(builder_data.character.race);
+
+                update_character();
+                update_skills();
+              });
+
               // Cache selectors outside callback for performance.
               var $window = jQuery(window),
                   $stickyEl = jQuery('#character_data'),
@@ -1018,33 +1078,64 @@
                 </select>
 
                 <hr />
-              </div>
 
-              <div class="blog-post text-center" style="margin-bottom:3rem;">
-                <a id="btn_generate" href="#" title="Build Character" class="blog-post-button state_saver locked">Start Character</a>
+                <div class="blog-post text-center" style="margin-bottom:3rem;">
+                  <a id="btn_generate" href="#" title="Build Character" class="blog-post-button state_saver locked">Start Character</a>
+                </div>
+
+                <p class="text-center">- OR -</p>
+
+                <div class="btn_warning text-center" style="margin-bottom:3rem;">
+                  <a id="btn_data_import" href="#" title="Import" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Import</a>
+                </div>
               </div>
 
               <div class="row">
-                <div class="col-xs-3">
+                <div class="col-xs-4 non_data_fields">
                   <div class="btn_warning text-center mandatory_section" style="margin-bottom:3rem;">
                     <a id="btn_reset" href="#" title="Reset" class="blog-post-button state_saver"><i class="fa fa-trash" aria-hidden="true"></i> Reset</a>
                   </div>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-4 non_data_fields">
                   <div class="btn_warning text-center mandatory_section" style="margin-bottom:3rem;">
-                    <a id="btn_undo" href="#" title="Unto" class="blog-post-button"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
+                    <a id="btn_undo" href="#" title="Undo" class="blog-post-button"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
                   </div>
                 </div>
-                <div class="col-xs-6">
-                  <div class="blog-post text-center mandatory_section" style="margin-bottom:3rem;">
-                    <a id="btn_add_blanket" href="#" title="Add Blanket" class="blog-post-button state_saver">+XP</a>
+                <div class="col-xs-4 non_data_fields">
+                  <div class="btn_warning text-center mandatory_section" style="margin-bottom:3rem;">
+                    <a id="btn_data_export" href="#" title="Export" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Export</a>
                   </div>
+                </div>
+                <div id="data_fields" class="col-xs-12">
+                  <div id="data_fields_export">
+                    <label>Click the button below to generate your character export. Copy and paste it into a word document to save it.</label>
+                    <input type="text" id="char_export_code" disabled="disabled" />
+                    <button id="generate_export" class="btn btn-red btn_process_data">Generate Export</button>
+                  </div>
+                  <div id="data_fields_import">
+                    <label>Paste your character data here. Click import to load this character.</label>
+                    <input type="text" id="data_import"/>
+                    <button id="process_import" class="btn btn-red btn_process_data">Process Import</button>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <button id="btn_close_data" class="btn btn-red">Back</button>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-xs-12 non_data_fields">
+
+                  <button id="btn_add_blanket" class="btn btn-red state_saver mandatory_section">
+                    Add Blanket of XP
+                  </button>
                 </div>
               </div>
 
               <hr />
 
-              <div id="character_section" class="mandatory_section">
+              <div id="character_section" class="mandatory_section non_data_fields">
 
                 <div class="row">
                   <div class="col-xs-6">

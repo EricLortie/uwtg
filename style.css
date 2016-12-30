@@ -532,7 +532,7 @@ div#id-changeidname {
 
 div.character-photo img {
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid whitesmoke
 }
 
 .repeater-content h4 {
@@ -542,11 +542,11 @@ div.character-photo img {
   margin-top: 5rem;
   border-top: 3px dotted darkred;
   padding-top: 4rem;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid whitesmoke
   cursor: pointer;
 }
 .switcher-box {
-  border: 1px solid white;
+  border: 1px solid whitesmoke
   border-bottom: none;
   background:#444;
   text-align: center;
@@ -575,7 +575,7 @@ h2.switcher.active {
   width: 100%;
   background: darkred;
   border: none;
-  color: white;
+  color: whitesmoke;
 }
 
 .skill_desc {
@@ -598,7 +598,6 @@ h2.switcher.active {
 }
 #legend {
   padding: 0 4rem;
-  color: whitesmoke;
   font-weight: bolder;
 }
 #legend a {
@@ -651,7 +650,7 @@ h2.switcher.active {
   color: darkred;
 }
 .skill_add:hover {
-  color: white;
+  color: whitesmoke;
 }
 .skill_purchased {
   top: 0;
@@ -704,7 +703,7 @@ select.mandatory:disabled {
   position: relative;
   margin: 0px auto;
   background: darkred;
-  color: white;
+  color: whitesmoke;
 }
 .btn-skill:hover, btn-red:hover {
   color: whitesmoke;
@@ -750,7 +749,7 @@ select.mandatory:disabled {
 }
 
 p#option_string span.opt {
-  color: white;
+  color: whitesmoke;
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -771,6 +770,16 @@ p#option_string span.opt {
   color: grey;
 }
 #character_section span {
-  color: white;
-  font-weight: bold;
+  color: whitesmoke;
+}
+#data_fields {
+  display:none;
+  padding: 0px 2rem;
+}
+#data_fields input {
+  width: 100%;
+  font-size: 80%;
+}
+#data_fields div {
+  padding-top: 2rem;
 }
