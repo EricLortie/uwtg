@@ -744,7 +744,7 @@ select.mandatory:disabled {
 #skill_list.A .skill_row.S, #skill_list.A .skill_row.W, #skill_list.A .skill_row.P, #skill_list.A .skill_row.R, #skill_list.A .skill_row.C {
   display:none;
 }
-.cat_label, .skill_expander {
+.cat_label, .skill_expander, .frag_cost {
   color: darkgoldenrod;
 }
 
@@ -782,4 +782,19 @@ p#option_string span.opt {
 }
 #data_fields div {
   padding-top: 2rem;
+}
+#generate_export, #process_import {
+  margin-bottom: 1rem;
+}
+#load_character_section {
+  padding-top: 0px !important;
+}
+.level_cost {
+  display: block !important;
+}
+.frag_cost {
+  font-weight: bold;
+}
+.cat_restricted {
+  display: none !important;
 }

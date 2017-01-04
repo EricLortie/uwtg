@@ -31,8 +31,12 @@
 
         <script type="text/javascript">
           var builder_data = {};
+
+          var saved_char = localStorage.getItem('saved_character');
+
           state_counter = 0;
           builder_data.character = {};
+          builder_data.character.skills = {};
           builder_data.character.frags_avail = 0;
           builder_data.character.frags_spent = 0;
           builder_data.character.skill_count = 0;
@@ -75,6 +79,11 @@
             {'me_cost': 300,'ra_cost': 300, 'te_cost': 275, 'ni_cost': 275, 'as_cost': 300, 'wi_cost': 275, 'ma_cost': 200, 'dr_cost': 225, 'ba_cost': 225},
             {'me_cost': "",'ra_cost': "", 'te_cost': "", 'ni_cost': "", 'as_cost': "", 'wi_cost': "", 'ma_cost': "", 'dr_cost': "", 'ba_cost': ""}
           ]
+          builder_data.categories = {
+            'Warrior': ['Mercenary', 'Ranger', 'Templar'],
+            'Rogue': ['Assassin', 'Nightblade', 'Witch Hunter'],
+            'Scholar': ['Mage', 'Druid', 'Bard'],
+          }
 
           builder_data.skill_aliases = {
             'Weapon Group Proficiency': [
@@ -260,6 +269,7 @@
                     </div>
                     <div class="col-xs-1">
                       <span class="sphere_cost skill_cost"></span>
+                      <span class="cost" style="display:none"></span>
                     </div>
                   </div>
                   <div class="row">
@@ -283,6 +293,8 @@
                 skill_row.data('multiple', `<?php echo $multiple ?>`)
                 skill_row.data('category', `S`)
                 skill_row.data('cat_string', `Scholar`)
+                skill_row.data('class_skill', false);
+                skill_row.data('spell_sphere', true);
                 //skill_row.data('frag_cost', `<?php echo $frag_cost ?>`),
 
                 jQuery('#skill_list').append(skill_row);
@@ -302,6 +314,205 @@
 
           <?php endwhile; ?>
         <?php endif; ?>
+
+
+        <?php if( have_rows('skills', get_id_by_slug('codex-races')) ): ?>
+          <?php $s_count = 0; ?>
+          <?php while( have_rows('skills', get_id_by_slug('codex-races')) ): the_row(); ?>
+
+
+            <?php // vars
+            $s_count++;
+            $name = get_sub_field('name');
+            $description = get_sub_field('description');
+            $category = get_sub_field('category');
+            $cat_icon = "fa-users";
+            $cat =  "A";
+            $prereq = get_sub_field('prerequesites');
+            $optional_fields = get_sub_field('optional_fields');
+            $race = get_sub_field('race');
+
+            $optional = get_sub_field('optional_fields');
+            $multiple = false;
+            if ( $optional && in_array('multiple', $optional) ) {
+              $multiple = true;
+            }
+            $automatic = false;
+            if ( $optional && in_array('automatic', $optional) ) {
+              $automatic = true;
+            }
+            ?>
+
+            <script type="text/javascript">
+              jQuery(document).on('ready', function(){
+                var skill_row = jQuery('<div class="row skill_row <?php echo $cat; ?> <?php echo $pc_class; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_ele = skill_row.find('.skill');
+                skill_ele.append(`
+                  <div class="row">
+                    <div class="col-xs-1">
+                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver <?php echo (($automatic) ? "automatic_skill" : "" ) ?>" aria-hidden="true"></i>
+                      <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-xs-9">
+                      <span class="cat_label"><i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i></span>&nbsp;
+                      <span class="name"><?php echo $name; ?></span>
+                      &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
+                      <?php if($prereq != ""){ ?>
+                        &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
+                      <?php } ?>
+                      &nbsp;
+                    </div>
+                    <div class="col-xs-1">
+                      <?php if($automatic) { ?>
+                        <span class="racial_cost skill_cost"></span>
+                        <span class="cost" style="display:none">0</span>
+                      <?php } else { ?>
+                        <span class="racial_cost skill_cost">50</span>
+                        <span class="cost" style="display:none">50</span>
+                      <?php } ?>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 skill_desc" style="display:none;">
+                      <h4>Race: <?php echo $race; ?></h4>
+                      <p>Automatic: <?php echo (($automatic) ? "Yes" : "No"); ?></p>
+                      <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
+                      <?php echo $description; ?>
+                      <hr />
+                      <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                    </div>
+                  </div>
+                `);
+
+                var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+                skill_row.attr('id', row_id)
+                skill_row.data('name', `<?php echo $name ?>`);
+                skill_row.data('cat_string', `<?php echo $category; ?>`);
+                skill_row.data('category', `<?php echo $cat; ?>`);
+                skill_row.data('description', `<?php echo $description ?>`);
+                skill_row.data('requirements', `<?php echo $prereq ?>`);
+                skill_row.data('multiple', `<?php echo $multiple ?>`);
+                //skill_row.data('frag', `<?php echo $frag_cost ?>`),
+
+                skill_row.data('race', `<?php echo $race;?>`);
+                skill_row.data('racial_skill', true);
+                skill_row.data('automatic', `<?php echo $automatic;?>`);
+                skill_row.data('cost', `50`)
+
+                jQuery('#skill_list').append(skill_row);
+
+              });
+            </script>
+
+          <?php endwhile; ?>
+        <?php endif; ?>
+
+        <?php if( have_rows('skills', get_id_by_slug('codex-class-skills')) ): ?>
+          <?php $s_count = 0; ?>
+          <?php while( have_rows('skills', get_id_by_slug('codex-class-skills')) ): the_row(); ?>
+
+
+            <?php // vars
+            $s_count++;
+            $name = get_sub_field('name');
+
+            if (strpos($name, 'Subsequent') !== false) {
+              continue;
+            }
+
+            $description = get_sub_field('description');
+            $category = get_sub_field('category');
+            $pc_class = get_sub_field('class');
+            $class_level = get_sub_field('level');
+
+
+            $cat_icon = "fa-universal-access";
+
+            $cat =  substr($category, 0, 1);
+
+            $prereq = get_sub_field('prerequesites');
+            $optional_fields = get_sub_field('optional_fields');
+
+            $level = get_sub_field('level');
+            $level_cost = 0;
+            if($level == 3){
+              $level_cost = 30;
+            } else if ($level == 6) {
+              $level_cost = 60;
+            } else if ($level == 9) {
+              $level_cost = 90;
+            } else if($level == 12){
+              $level_cost = 120;
+            }
+
+            $optional = get_sub_field('optional_fields');
+            $multiple = false;
+            if ( $optional && in_array('multiple', $optional) ) {
+              $multiple = true;
+            }
+
+
+            ?>
+
+            <script type="text/javascript">
+              jQuery(document).on('ready', function(){
+                var skill_row = jQuery('<div class="row skill_row <?php echo $cat; ?> <?php echo $pc_class; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_ele = skill_row.find('.skill');
+                skill_ele.append(`
+                  <div class="row">
+                    <div class="col-xs-1">
+                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver" aria-hidden="true"></i>
+                      <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-xs-9">
+                      <span class="cat_label"><i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i></span>&nbsp;
+                      <span class="name"><?php echo $name; ?></span>
+                      &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
+                      <?php if($prereq != ""){ ?>
+                        &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
+                      <?php } ?>
+                      &nbsp;
+                    </div>
+                    <div class="col-xs-1">
+                      <span class="level_cost skill_cost"><?php echo $level_cost ?></span>
+                      <span class="cost" style="display:none"><?php echo $level_cost ?></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 skill_desc" style="display:none;">
+                      <h4>Class: <?php echo $pc_class; ?></h4>
+                      <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
+                      <?php echo $description; ?>
+                      <hr />
+                      <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                    </div>
+                  </div>
+                `);
+
+                var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+                skill_row.attr('id', row_id)
+                skill_row.data('name', `<?php echo $name ?>`);
+                skill_row.data('cat_string', `<?php echo $category; ?>`);
+                skill_row.data('category', `<?php echo $cat; ?>`);
+                skill_row.data('description', `<?php echo $description ?>`);
+                skill_row.data('requirements', `<?php echo $prereq ?>`);
+                skill_row.data('multiple', `<?php echo $multiple ?>`);
+                //skill_row.data('frag', `<?php echo $frag_cost ?>`),
+
+                skill_row.data('class', `<?php echo $pc_class;?>`);
+                skill_row.data('class_level', `<?php echo $class_level;?>`);
+                skill_row.data('class_skill', true);
+                skill_row.data('cost', `<?php echo $level_cost; ?>`)
+
+                jQuery('#skill_list').append(skill_row);
+
+              });
+            </script>
+
+          <?php endwhile; ?>
+        <?php endif; ?>
+
+
 
 
         <?php if( have_rows('skills', get_id_by_slug('codex-skills')) ): ?>
@@ -388,6 +599,7 @@
                       <span class="ma_cost skill_cost"><?php echo $mage_cost ?></span>
                       <span class="dr_cost skill_cost"><?php echo $druid_cost ?></span>
                       <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
+                      <span class="cost" style="display:none"></span>
                     </div>
                   </div>
                   <div class="row">
@@ -413,12 +625,13 @@
                 skill_row.data('multiple', `<?php echo $multiple ?>`);
                 //skill_row.data('frag', `<?php echo $frag_cost ?>`),
 
+                skill_row.data('class_skill', false);
+
                 <?php if($prereq != ''){ ?>
                   skill_row.addClass('has_req');
                   skill_row.addClass('locked');
                 <?php } ?>
 
-                //console.log('<?php echo $name; ?>: ' + builder_data.skill_aliases['<?php echo $name; ?>']);
                 aliases = builder_data.skill_aliases['<?php echo $name; ?>'];
                 if(typeof aliases !== 'undefined'){
                   alias_rows = [];
@@ -438,577 +651,796 @@
             </script>
 
           <?php endwhile; ?>
+        <?php endif; ?>
 
-          <script type="text/javascript">
-            jQuery(document).on('ready', function(){
+        <?php if( have_rows('skills', get_id_by_slug('codex-frag-skills')) ): ?>
+          <?php $s_count = 0; ?>
+          <?php while( have_rows('skills', get_id_by_slug('codex-frag-skills')) ): the_row(); ?>
 
-              jQuery('.skill_expander').on('click', function(){
-                var desc = jQuery(this).closest('.skill_row').find('.skill_desc');
-                desc.slideToggle();
+
+            <?php // vars
+            $s_count++;
+            $name = get_sub_field('name');
+
+            if (strpos($name, 'Subsequent') !== false) {
+              continue;
+            }
+
+            $description = get_sub_field('description');
+            $category = get_sub_field('category');
+
+
+            if($category == "Warrior"){
+              $cat_icon = "fa-shield";
+            } else if ($category == "Rogue"){
+              $cat_icon = "fa-bomb";
+            } else if ($category == "Scholar"){
+              $cat_icon = "fa-magic";
+            } else if ($category == "Production"){
+              $cat_icon = "fa-cog";
+            } else if ($category == "Racial Ability"){
+              $category = "Abilities (Racial)";
+              $cat_icon = "fa-users";
+            } else if ($category == "Class Ability"){
+              $cat_icon = "fa-universal-access";
+            }
+
+            $cat =  substr($category, 0, 1);
+
+            $prereq = get_sub_field('prerequesites');
+            $optional_fields = get_sub_field('optional_fields');
+            $mercenary_cost = get_sub_field('mercenary_cost');
+            $ranger_cost = get_sub_field('ranger_cost');
+            $templar_cost = get_sub_field('templar_cost');
+            $nightblade_cost = get_sub_field('nightblade_cost');
+            $assassin_cost = get_sub_field('assassin_cost');
+            $witchhunter_cost = get_sub_field('witchblade_cost');
+            $mage_cost = get_sub_field('mage_cost');
+            $druid_cost = get_sub_field('druid_cost');
+            $bard_cost = get_sub_field('bard_cost');
+            $frag_cost = get_sub_field('frag_cost');
+
+            $optional = get_sub_field('optional_fields');
+            $multiple = false;
+            if ( $optional && in_array('multiple', $optional) ) {
+              $multiple = true;
+            }
+
+
+            ?>
+
+            <script type="text/javascript">
+              jQuery(document).on('ready', function(){
+                var skill_row = jQuery('<div class="row skill_row frag_row <?php echo $cat; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_ele = skill_row.find('.skill');
+                skill_ele.append(`
+                  <div class="row">
+                    <div class="col-xs-1">
+                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver" aria-hidden="true"></i>
+                      <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-xs-9">
+                      <span class="cat_label">
+                        <i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i>
+                      </span>&nbsp;
+                      <span class="name"><span class="frag_cost"><?php echo $name; ?> (<?php echo $frag_cost; ?>&nbsp;<i class=" fa fa-diamond" aria-hidden="true"></i>)</span> </span>
+                      &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
+                      <?php if($prereq != ""){ ?>
+                        &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
+                      <?php } ?>
+                      &nbsp;
+                    </div>
+                    <div class="col-xs-1">
+                      <span class="me_cost skill_cost"><?php echo $mercenary_cost ?></span>
+                      <span class="ra_cost skill_cost"><?php echo $ranger_cost ?></span>
+                      <span class="te_cost skill_cost"><?php echo $templar_cost ?></span>
+                      <span class="ni_cost skill_cost"><?php echo $nightblade_cost ?></span>
+                      <span class="as_cost skill_cost"><?php echo $assassin_cost ?></span>
+                      <span class="wi_cost skill_cost"><?php echo $witchhunter_cost ?></span>
+                      <span class="ma_cost skill_cost"><?php echo $mage_cost ?></span>
+                      <span class="dr_cost skill_cost"><?php echo $druid_cost ?></span>
+                      <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
+                      <span class="cost" style="display:none"></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 skill_desc" style="display:none;">
+                      <?php if ($prereq != "") { ?>
+                        <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
+                      <?php } ?>
+                      <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
+                      <p>Frag Cost: <?php echo $frag_cost; ?></p>
+                      <?php echo $description; ?>
+                      <hr />
+                      <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+                    </div>
+                  </div>
+                `);
+
+                var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+                skill_row.attr('id', row_id)
+                skill_row.data('name', `<?php echo $name ?>`);
+                skill_row.data('cat_string', `<?php echo $category; ?>`);
+                skill_row.data('category', `<?php echo $cat; ?>`);
+                skill_row.data('description', `<?php echo $description ?>`);
+                skill_row.data('requirements', `<?php echo $prereq ?>`);
+                skill_row.data('multiple', `<?php echo $multiple ?>`);
+                skill_row.data('frag_cost', `<?php echo $frag_cost ?>`),
+
+                skill_row.data('class_skill', false);
+
+                <?php if($prereq != ''){ ?>
+                  skill_row.addClass('has_req');
+                  skill_row.addClass('locked');
+                <?php } ?>
+
+                jQuery('#skill_list').append(skill_row);
+
               });
+            </script>
 
-              jQuery('.skill_closer').on('click', function(e){
-                e.preventDefault();
-                var desc = jQuery(this).closest('.skill_desc');
-                desc.slideToggle();
-              });
+          <?php endwhile; ?>
+        <?php endif; ?>
 
-              jQuery('.skill_add').on('click', function(){
-                if(jQuery(this).hasClass('spell_sphere_add')) {
-                  update_spell_spheres();
-                }
-                add_skill_to_character(jQuery(this).closest('.skill_row'));
-              });
+        <script type="text/javascript">
+          jQuery(document).on('ready', function(){
 
-              jQuery('#btn_reset').on('click', function(){
-                jQuery('.mandatory_section').hide();
-                jQuery('#character_section').hide();
-                jQuery('#data_fields').hide();
-                jQuery('.non_data_fields:not(#character_section)').show();
-                jQuery('#btn_generate').show();
+            jQuery('.skill_expander').on('click', function(){
+              var desc = jQuery(this).closest('.skill_row').find('.skill_desc');
+              desc.slideToggle();
+            });
+
+            jQuery('.skill_closer').on('click', function(e){
+              e.preventDefault();
+              var desc = jQuery(this).closest('.skill_desc');
+              desc.slideToggle();
+            });
+
+            jQuery('.skill_add').on('click', function(){
+              if(jQuery(this).hasClass('spell_sphere_add')) {
+                update_spell_spheres();
+              }
+              add_skill_to_character(jQuery(this).closest('.skill_row'));
+            });
+
+            jQuery('#btn_reset').on('click', function(){
+              jQuery('.mandatory_section').hide();
+              jQuery('#character_section').hide();
+              jQuery('#data_fields').hide();
+              jQuery('.non_data_fields:not(#character_section)').show();
+              jQuery('#btn_generate').show();
+              jQuery('#btn_generate').addClass('locked');
+              jQuery('#cb_selectors').show();
+              jQuery('#cb-race').val('');
+              jQuery('#cb_race_show').html('');
+              jQuery('#cb-class').val('');
+              jQuery('#cb_class_show').html('');
+              jQuery('#cb-race').attr('disabled', false);
+              jQuery('#cb-class').attr('disabled', false);
+              reset_character();
+              reset_skills();
+            });
+
+            jQuery('select.mandatory').on('change', function(){
+
+              if (jQuery('#cb-class').val() != '' && jQuery('#cb-race').val() != '') {
+                jQuery('#btn_generate').removeClass('locked');
+              } else {
                 jQuery('#btn_generate').addClass('locked');
-                jQuery('#cb_selectors').show();
-                jQuery('#cb-race').val('');
-                jQuery('#cb_race_show').html('');
-                jQuery('#cb-class').val('');
-                jQuery('#cb_class_show').html('');
-                jQuery('#cb-race').attr('disabled', false);
-                jQuery('#cb-class').attr('disabled', false);
+                jQuery('#btn_generate').show();
+              }
+            });
+
+            jQuery('#cb-race').on('change', function(){
+              builder_data.character.frags_spent = 0;
+              builder_data.character.race = jQuery(this).val();
+              jQuery('#cb_race_show').html(jQuery(this).val());
+              var frag_cost = jQuery(this).find('option:selected').data('fragCost');
+              if(typeof frag_cost != 'undefined' && frag_cost != ''){
+                builder_data.character.frags_spent = parseInt(frag_cost);
+              }
+
+              jQuery('.skill_row').each(function(){
+                skill_ele = jQuery(this);
+                set_skill_cost_and_visibility(skill_ele);
+              });
+
+            });
+
+            jQuery('#cb-class').on('change', function(){
+              var pc_class = jQuery(this).val();
+              builder_data.character.class =  pc_class;
+
+              if(pc_class == "Mercenary" || pc_class == "Ranger" || pc_class == "Templar"){
+                builder_data.type = "w";
+                builder_data.type_string = "Warrior";
+              } else if (pc_class == "Assassin" || pc_class == "Nightblade" || pc_class == "Witch Hunter") {
+                builder_data.type = "r";
+                builder_data.type_string = "Rogue";
+              } else {
+                builder_data.type = "s";
+                builder_data.type_string = "Scholar";
+              }
+
+              jQuery('#cb_class_show').html(jQuery(this).val());
+              jQuery('.skill_cost').hide();
+
+              jQuery('.skill_row').each(function(){
+                skill_ele = jQuery(this);
+                set_skill_cost_and_visibility(skill_ele);
+              });
+
+            });
+
+            function set_skill_cost_and_visibility(skill_ele) {
+              if(skill_ele.data('class_skill') == true){
+
+                skill_ele.find('.level_cost').show();
+                if(skill_ele.data('class') != builder_data.character.class ){
+                  skill_ele.data('class_restricted', true);
+                } else {
+                  skill_ele.data('class_restricted', false);
+                }
+                skill_ele.data('cost', parseInt(skill_ele.find('.level_cost').html()));
+
+              } else if (skill_ele.data('spell_sphere')) {
+                skill_ele.data('cost', builder_data.character.sphere_cost);
+              } else if(skill_ele.data('racial_skill') == true){
+                skill_ele.find('.racial_cost').show();
+
+                if(skill_ele.data('race') != builder_data.character.race){
+                  skill_ele.data('race_restricted', true);
+                } else {
+                  skill_ele.data('race_restricted', false);
+                }
+                skill_ele.data('cost', parseInt(skill_ele.find('.cost').html()));
+
+              } else {
+                if (skill_ele.data('frag_cost') > 0) {
+                  if (skill_ele.data('cat_string') != builder_data.type_string){
+                    //skill_ele.data('class_restricted', true);
+                    skill_ele.addClass('cat_restricted');
+                  } else {
+                    //skill_ele.data('class_restricted', false);
+                    skill_ele.removeClass('cat_restricted');
+                  }
+                }
+
+                var cost_ele = jQuery('#cb-class').find('option:selected').data('cost-ele');
+                skill_ele.find('.' + cost_ele).show();
+                skill_ele.data('cost', parseInt(skill_ele.find('.' + cost_ele).html()));
+              }
+              skill_ele.find('span.cost').html(skill_ele.data('cost'));
+            }
+
+            jQuery('#btn_generate').on('click', function(e){
+              e.preventDefault();
+              if (jQuery('#cb-class').val() != '' && jQuery('#cb-race').val() != '') {
                 reset_character();
-                reset_skills();
-              });
-
-              jQuery('select.mandatory').on('change', function(){
-
-                if (jQuery('#cb-class').val() != '' && jQuery('#cb-race').val() != '') {
-                  jQuery('#btn_generate').removeClass('locked');
-                } else {
-                  jQuery('#btn_generate').addClass('locked');
-                  jQuery('#btn_generate').show();
-                }
-              });
-
-              jQuery('#cb-race').on('change', function(){
-                builder_data.character.frags_spent = 0;
-                builder_data.character.race = jQuery(this).val();
-                jQuery('#cb_race_show').html(jQuery(this).val());
-                builder_data.character.frags_spent = parseInt(jQuery(this).find('option:selected').data('fragCost'));
-              });
-
-              jQuery('#cb-class').on('change', function(){
-                var pc_class = jQuery(this).val();
-                builder_data.character.class =  pc_class;
-
-                if(pc_class == "Mercenary" || pc_class == "Ranger" || pc_class == "Templar"){
-                  builder_data.type = "w";
-                } else if (pc_class == "Assassin" || pc_class == "Nightblade" || pc_class == "Witchhunter") {
-                  builder_data.type = "r";
-                } else {
-                  builder_data.type = "s";
-                }
-
-                jQuery('#cb_class_show').html(jQuery(this).val());
-                jQuery('.skill_cost').hide();
-                jQuery('.' + jQuery(this).find('option:selected').data('cost-ele')).show();
-              });
-
-              jQuery('#btn_generate').on('click', function(e){
-                e.preventDefault();
-                if (jQuery('#cb-class').val() != '' && jQuery('#cb-race').val() != '') {
-                  reset_character();
-                  jQuery('.mandatory_section').show();
-                  jQuery(this).hide();
-                  jQuery('#cb_selectors').hide();
-                  jQuery('#cb-race').attr('disabled', true);
-                  jQuery('#cb-class').attr('disabled', true);
-                }
-              });
-
-              jQuery('.state_saver').on('click', function(e){
-                e.preventDefault();
-                set_state();
-              });
-
-              jQuery('#btn_add_blanket').on('click', function(e){
-                e.preventDefault();
-                builder_data.character.blankets_spent += 1;
-                builder_data.character.cp_avail += builder_data.character.blanket_value;
-                builder_data.character.cp_total = (builder_data.character.cp_avail + builder_data.character.cp_spent);
-                if(builder_data.character.cp_total >= (builder_data.character.level_data['cp']+100)){
-                  builder_data.character.level += 1;
-                  builder_data.character.level_data = builder_data.level_chart[builder_data.character.level-1];
-                  builder_data.character.blanket_value = builder_data.character.level_data.cppb;
-                  builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
-                }
-                update_character();
-              });
-
-              jQuery('#btn_sort_cost').on('click', function(){
-                toggleSort('cost');
-              });
-
-              jQuery('#btn_sort_name').on('click', function(){
-                toggleSort('name');
-              });
-
-              function toggleSort(type) {
-                jQuery('.btn-sort').toggleClass('active');
-                if(type == "name"){
-                  jQuery('#sort_string').html('NAME');
-                  tinysort('.skill_row', 'span.name');
-                } else {
-                  jQuery('#sort_string').html('COST');
-                  tinysort('.skill_row', {data:'cost'});
-                }
+                jQuery('.mandatory_section').show();
+                jQuery(this).hide();
+                jQuery('#cb_selectors').hide();
+                jQuery('#cb-race').attr('disabled', true);
+                jQuery('#cb-class').attr('disabled', true);
+                add_automatic_skills();
               }
+            });
 
-              jQuery('#btn_toggle_skills').on('click', function(){
-                if(jQuery('#skill_list').hasClass('avail_only')){
-                  jQuery('#filter_string').html("AVAILABLE");
-                } else {
-                    jQuery('#filter_string').html("ALL");
-                }
-                jQuery(this).toggleClass('active');
-                jQuery('#skill_list').toggleClass('avail_only');
-              });
+            jQuery('.state_saver').on('click', function(e){
+              e.preventDefault();
+              set_state();
+            });
 
-              jQuery('.btn-cat').on('click', function(){
-                var cat = jQuery(this).data('cat');
-                var cat_string = jQuery(this).data('catString');
-                jQuery('#skill_list').removeClass('S');
-                jQuery('#skill_list').removeClass('W');
-                jQuery('#skill_list').removeClass('R');
-                jQuery('#skill_list').removeClass('P');
-                jQuery('#skill_list').removeClass('A');
-                jQuery('#skill_list').removeClass('C');
-                jQuery('.btn-cat').removeClass('active');
-                jQuery(this).addClass('active');
-                jQuery('#skill_list').addClass(cat);
-                jQuery('#cat_string').html(cat_string);
-
-              });
-
-              jQuery('#opt-clear').on('click', function(){
-                jQuery('#filter_string').html("ALL");
-                jQuery('#skill_list').removeClass('avail_only');
-                jQuery('#skill_list').removeClass('S');
-                jQuery('#skill_list').removeClass('W');
-                jQuery('#skill_list').removeClass('R');
-                jQuery('#skill_list').removeClass('P');
-                jQuery('#skill_list').removeClass('A');
-                jQuery('#skill_list').removeClass('C');
-                jQuery('.btn-cat').removeClass('active');
-                jQuery('#cat_string').html("");
-                jQuery('#sort_string').html('NAME');
-                tinysort('.skill_row', 'span.name');
-              });
-
-
-              function add_skill_to_character(skill_ele){
-
-                if(skill_ele.data('multiple') == ""){
-                  skill_ele.addClass('purchased');
-                  skill_ele.find('.skill_add').hide();
-                  skill_ele.find('.skill_purchased').slideToggle();
-                  skill_ele.addClass('purchased');
-                }
-                if(skill_ele.data('sphere')){
-                  builder_data.character.spell_spheres += 1;
-                }
-                if(builder_data.character.skills.hasOwnProperty(skill_ele.data('name'))) {
-                  builder_data.character.skills[skill_ele.data('name')] += 1;
-                } else {
-                  builder_data.character.skills[skill_ele.data('name')] = 1;
-                }
-                var skill_cost = parseInt(skill_ele.find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
-
-                builder_data.character.cp_avail -= skill_cost;
-                builder_data.character.cp_spent += skill_cost;
-                builder_data.character.skill_count += 1
-                jQuery('#cb_skill_count').html(builder_data.character.skill_count);
-                update_character();
-                update_skills();
-              }
-
-              function reset_character() {
-
-                builder_data.character.level = 1;
-                builder_data.character.blankets_spent = 0;
-                builder_data.character.cp_avail = 150;
-                if(builder_data.character.race == "Human"){
-                  builder_data.character.cp_avail = 200;
-                  builder_data.character.level_data = builder_data.human_level_chart[0];
-                } else {
-                  builder_data.character.level_data = builder_data.level_chart[0];
-                }
-
-                builder_data.character.spell_spheres = 0;
-                builder_data.character.cp_spent = 0;
-                builder_data.character.cp_total = 0;
+            jQuery('#btn_add_blanket').on('click', function(e){
+              e.preventDefault();
+              builder_data.character.blankets_spent += 1;
+              builder_data.character.cp_avail += builder_data.character.blanket_value;
+              builder_data.character.cp_total = (builder_data.character.cp_avail + builder_data.character.cp_spent);
+              if(builder_data.character.cp_total >= (builder_data.character.level_data['cp']+100)){
+                builder_data.character.level += 1;
+                builder_data.character.level_data = builder_data.level_chart[builder_data.character.level-1];
                 builder_data.character.blanket_value = builder_data.character.level_data.cppb;
                 builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
-                builder_data.character.skills = {};
+              }
+              update_character();
+            });
 
-                jQuery('span:contains("Weapon Group Proficiency: Simple")').closest('.skill_row').find('.skill_add').trigger('click');
+            jQuery('#btn_sort_cost').on('click', function(){
+              toggleSort('cost');
+            });
 
-                update_character();
+            jQuery('#btn_sort_name').on('click', function(){
+              toggleSort('name');
+            });
 
+            function toggleSort(type) {
+              jQuery('.btn-sort').toggleClass('active');
+              if(type == "name"){
+                jQuery('#sort_string').html('NAME');
                 tinysort('.skill_row', 'span.name');
+              } else {
+                jQuery('#sort_string').html('COST');
+                tinysort('.skill_row', 'span.cost');
+              }
+            }
 
+            jQuery('#btn_toggle_skills').on('click', function(){
+              if(jQuery('#skill_list').hasClass('avail_only')){
+                jQuery('#filter_string').html("AVAILABLE");
+              } else {
+                  jQuery('#filter_string').html("ALL");
+              }
+              jQuery(this).toggleClass('active');
+              jQuery('#skill_list').toggleClass('avail_only');
+            });
+
+            jQuery('.btn-cat').on('click', function(){
+              var cat = jQuery(this).data('cat');
+              var cat_string = jQuery(this).data('catString');
+              builder_data.toggle = cat_string;
+              jQuery('.skill_row').css('display', '');
+              jQuery('#skill_list').removeClass('S');
+              jQuery('#skill_list').removeClass('W');
+              jQuery('#skill_list').removeClass('R');
+              jQuery('#skill_list').removeClass('P');
+              jQuery('#skill_list').removeClass('A');
+              jQuery('#skill_list').removeClass('C');
+              jQuery('.btn-cat').removeClass('active');
+              jQuery(this).addClass('active');
+              jQuery('#skill_list').addClass(cat);
+              jQuery('#cat_string').html(cat_string);
+
+            });
+
+            jQuery('#btn_frag').on('click', function(){
+              jQuery('.skill_row').hide();
+              jQuery('.frag_row').show();
+            });
+
+            jQuery('#opt-clear').on('click', function(){
+              builder_data.toggle = "";
+              jQuery('#filter_string').html("ALL");
+              jQuery('#skill_list').removeClass('avail_only');
+              jQuery('#skill_list').removeClass('S');
+              jQuery('#skill_list').removeClass('W');
+              jQuery('#skill_list').removeClass('R');
+              jQuery('#skill_list').removeClass('P');
+              jQuery('#skill_list').removeClass('A');
+              jQuery('#skill_list').removeClass('C');
+              jQuery('.btn-cat').removeClass('active');
+              jQuery('#cat_string').html("");
+              jQuery('#sort_string').html('NAME');
+              tinysort('.skill_row', 'span.name');
+            });
+
+
+            function add_skill_to_character(skill_ele){
+              if(skill_ele.data('multiple') == ""){
+                skill_ele.addClass('purchased');
+                skill_ele.find('.skill_add').hide();
+                skill_ele.find('.skill_purchased').slideToggle();
+                skill_ele.addClass('purchased');
+              }
+              if(skill_ele.data('sphere')){
+                builder_data.character.spell_spheres += 1;
+              }
+              if(builder_data.character.skills.hasOwnProperty(skill_ele.data('name'))) {
+                builder_data.character.skills[skill_ele.data('name')] += 1;
+              } else {
+                builder_data.character.skills[skill_ele.data('name')] = 1;
               }
 
-              function update_character(){
-                jQuery('#cb_race_show').html(builder_data.character.race);
-                jQuery('#cb_class_show').html(builder_data.character.class);
-                jQuery('#cb_blankets_spent').html(builder_data.character.blankets_spent);
-                jQuery('#cb_blanket_next').html(builder_data.character.blanket_value);
-                jQuery('#cb_cp_avail').html(builder_data.character.cp_avail);
-                jQuery('#cb_level').html(builder_data.character.level);
-                jQuery('#cb_cp_spent').html(builder_data.character.cp_spent);
-                jQuery('#cb_frags_spent').html(builder_data.character.frags_spent);
-                jQuery('#cb_bp').html(builder_data.character.body_points);
-                jQuery('#cb_skills').html(output_skills(builder_data.character.skills));
-                jQuery('#cb_skill_count').html(builder_data.character.skill_count);
-
-                builder_data.character.sphere_cost = builder_data.sphere_chart[builder_data.character.spell_spheres][jQuery('#cb-class').find('option:selected').data('cost-ele')];
-
-                jQuery('.sphere_cost').show();
-                jQuery('.sphere_cost').closest('.skill_row').attr('data-cost', builder_data.character.sphere_cost)
-                jQuery('.sphere_cost').html(builder_data.character.sphere_cost);
-
-                update_skills();
-
+              builder_data.character.cp_avail -= skill_ele.data('cost');
+              builder_data.character.cp_spent += skill_ele.data('cost');
+              if(typeof skill_ele.data('frag_cost') != 'undefined'){
+                builder_data.character.frags_spent += parseInt(skill_ele.data('frag_cost'));
               }
-
-              function set_state(){
-                state_counter += 1;
-                jQuery('#btn_undo').removeClass('locked');
-                builder_data.character_states.unshift({'count': state_counter, 'character': jQuery.extend(true, {}, builder_data.character)});
-                if(builder_data.character_states.length > 5){
-                  builder_data.character_states.splice(4, 1);
-                }
+              builder_data.character.skill_count += 1
+              if(builder_data.character.last_class_skill_level < skill_ele.data('class_level')){
+                builder_data.character.last_class_skill_level = skill_ele.data('class_level');
               }
+              jQuery('#cb_skill_count').html(builder_data.character.skill_count);
+              update_character();
+              update_skills();
+            }
 
-              jQuery('#btn_undo').on('click', function(e){
-                e.preventDefault();
-                if(!jQuery(this).hasClass('locked')){
-                  undo();
+            function reset_character() {
+
+              builder_data.character.level = 1;
+              builder_data.character.blankets_spent = 0;
+              builder_data.character.cp_avail = 150;
+              if(builder_data.character.race == "Human"){
+                builder_data.character.cp_avail = 200;
+                builder_data.character.level_data = builder_data.human_level_chart[0];
+              } else {
+                builder_data.character.level_data = builder_data.level_chart[0];
+              }
+              builder_data.character.last_class_skill_level = 0;
+              builder_data.character.spell_spheres = 0;
+              builder_data.character.cp_spent = 0;
+              builder_data.character.cp_total = 0;
+              builder_data.character.blanket_value = builder_data.character.level_data.cppb;
+              builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
+              builder_data.character.skills = {};
+
+              jQuery('span:contains("Weapon Group Proficiency: Simple")').closest('.skill_row').find('.skill_add').trigger('click');
+
+              update_character();
+
+              tinysort('.skill_row', 'span.name');
+
+            }
+
+            function add_automatic_skills(){
+              jQuery('.automatic_skill').each(function(){
+                var $btn_add = jQuery(this);
+                if(jQuery(this).closest('.skill_row').data('race') == builder_data.character.race){
+                  $btn_add.trigger('click');
                 }
               });
+            }
 
-              function undo() {
-                builder_data.character = jQuery.extend(true, {}, builder_data.character_states[0]['character']);
-                builder_data.character_states.splice(0, 1);
-                if(builder_data.character_states.length == 0){
-                  jQuery('#btn_undo').addClass('locked');
-                }
-                update_character();
-                update_skills();
+            function update_character(){
+              jQuery('#cb_race_show').html(builder_data.character.race);
+              jQuery('#cb_class_show').html(builder_data.character.class);
+              jQuery('#cb_blankets_spent').html(builder_data.character.blankets_spent);
+              jQuery('#cb_blanket_next').html(builder_data.character.blanket_value);
+              jQuery('#cb_cp_avail').html(builder_data.character.cp_avail);
+              jQuery('#cb_level').html(builder_data.character.level);
+              jQuery('#cb_cp_spent').html(builder_data.character.cp_spent);
+              jQuery('#cb_frags_spent').html(builder_data.character.frags_spent);
+              jQuery('#cb_bp').html(builder_data.character.body_points);
+              jQuery('#cb_skills').html(output_skills(builder_data.character.skills));
+              jQuery('#cb_skill_count').html(builder_data.character.skill_count);
+
+              builder_data.character.sphere_cost = builder_data.sphere_chart[builder_data.character.spell_spheres][jQuery('#cb-class').find('option:selected').data('cost-ele')];
+              jQuery('.sphere_cost').show();
+              jQuery('.sphere_cost').closest('.skill_row').data('cost', builder_data.character.sphere_cost);
+              jQuery('.sphere_cost').closest('.skill_row').find('span.cost').html(builder_data.character.sphere_cost);
+              jQuery('.sphere_cost').html(builder_data.character.sphere_cost);
+
+              update_skills();
+
+            }
+
+            function set_state(){
+              state_counter += 1;
+              jQuery('#btn_undo').removeClass('locked');
+              builder_data.character_states.unshift({'count': state_counter, 'character': jQuery.extend(true, {}, builder_data.character)});
+              if(builder_data.character_states.length > 5){
+                builder_data.character_states.splice(4, 1);
               }
+            }
 
-              function output_skills(skills) {
-                html = "<ul>";
-                for (skill in skills) {
-                  if (skills.hasOwnProperty(skill)) {
-                    var skill_string = skill;
-                    if(skills[skill] > 1) {
-                      skill_string = skill_string + " X" + skills[skill];
-                    }
-                    html += "<li>"+skill_string + "</li>";
+            jQuery('#btn_undo').on('click', function(e){
+              e.preventDefault();
+              if(!jQuery(this).hasClass('locked')){
+                undo();
+              }
+            });
+
+            function undo() {
+              builder_data.character = jQuery.extend(true, {}, builder_data.character_states[0]['character']);
+              builder_data.character_states.splice(0, 1);
+              if(builder_data.character_states.length == 0){
+                jQuery('#btn_undo').addClass('locked');
+              }
+              update_character();
+              update_skills();
+            }
+
+            function output_skills(skills) {
+              html = "<ul>";
+              for (skill in skills) {
+                if (skills.hasOwnProperty(skill)) {
+                  var skill_string = skill;
+                  if(skills[skill] > 1) {
+                    skill_string = skill_string + " X" + skills[skill];
                   }
+                  html += "<li>"+skill_string + "</li>";
                 }
-                html += "</ul>";
-                return html;
               }
+              html += "</ul>";
+              return html;
+            }
 
-              function update_skills() {
-                jQuery('.skill_row').each(function(){
-                  var cost = parseInt(jQuery(this).find('.' + jQuery("#cb-class").find('option:selected').data('cost-ele')).html());
-                  if(typeof jQuery(this).attr('data-cost') == 'undefined'){
-                    jQuery(this).attr('data-cost', cost);
-                  }
-                  var has_req = (jQuery(this).data('requirements') != "");
-                  var spell_circle = is_spell_circle(jQuery(this).find('span.name').html());
-                  if (cost > builder_data.character.cp_avail
-                      || (jQuery(this).hasClass('purchased') && character_has_skill(jQuery(this).find('span.name').html()))
-                      || (!spell_circle && has_req && !meets_req(jQuery(this)))
-                      || (spell_circle && !has_circle_req(jQuery(this).find('span.name').html()))) {
-                        jQuery(this).find('.skill_add').hide();
-                        jQuery(this).addClass('locked');
-                  } else {
-                    jQuery(this).find('.skill_add').show();
-                    jQuery(this).find('.skill_purchased').hide();
-                    jQuery(this).removeClass('locked');
-                    jQuery(this).removeClass('purchased');
-                  }
-                  jQuery(this).data('cost', cost);
-                });
-
-              }
-
-              function character_has_skill(skill){
-                if(builder_data.character.skills[skill] > 0){
-                  return true;
-                }
-                return false;
-              }
-
-              function is_spell_circle(skill){
-                circle_search = builder_data.circles.indexOf(skill);
-                if(circle_search != -1){
-                  return true;
-                }
-                return false;
-              }
-
-              function has_circle_req(skill) {
-                cur_circle = builder_data.circles.indexOf(skill);
-                prev_circle = builder_data.circles[cur_circle-1];
-                skills = builder_data.character.skills;
-                prev_skill_count = skills[prev_circle];
-                cur_skill_count = skills[skill];
-                if(typeof cur_skill_count == 'undefined'){
-                  cur_skill_count = 0;
-                }
-                if (cur_skill_count >= 5) {
-                  return false;
-                } else if (skill == "Spell Slot: Ritual Base" && skills["Read Magic: Ritual"] == 1 && skills["Spell Slot: 9th Circle"] >= 1) {
-                  return true;
-                } else if(skill == "Spell Slot: 1st Circle" && builder_data.character.spell_spheres == 1){
-                  return true;
-                } else if (skill != "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && circle_math_req(prev_skill_count, cur_skill_count)) {
-                  return true;
-                } else if (skill == "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && skills["Read Magic: Advanced"] == 1 && circle_math_req(prev_skill_count, cur_skill_count)){
-                  return true;
-                }
-                return false;
-              }
-
-              function circle_math_req(prev_skill_count, cur_skill_count){
-                return ((prev_skill_count > (cur_skill_count+1)) || prev_skill_count == 5)
-              }
-
-              function meets_req(skill_row){
-                var req = skill_row.data('requirements')
-                reqs = [];
-                var times_2 = false;
-                var times_x = false;
-
-                if(typeof req !== 'undefined' && req != ""){
-                  items = req.split(', ');
-                  for (req in items) {
-                    items[req] = set_req_alias(items[req], skill_row.find('span.name').html());
-
-                    if (items.hasOwnProperty(req)) {
-                      var conditionals = items[req].split(" OR ");
-                      for (subreq in conditionals) {
-                        if (conditionals.hasOwnProperty(subreq)) {
-                          reqs.push(conditionals[subreq]);
-                          if(conditionals[subreq] == "*2"){
-                            times_2 = true;
-                          } else if (conditionals[subreq] == "*x"){
-                            times_x = true;
-                          }
-                        } else {
-                          if(conditionals[subreq] == "*2"){
-                            times_2 = true;
-                          } else if (conditionals[subreq] == "*x"){
-                            times_x = true;
-                          }
-                          reqs.push(subreq);
-                        }
-                      }
+            function update_skills() {
+              jQuery('.skill_row').each(function(){
+                var cost = parseInt(jQuery(this).data('cost'));
+                var has_req = (jQuery(this).data('requirements') != "");
+                var spell_circle = is_spell_circle(jQuery(this).find('span.name').html());
+                if (jQuery(this).data('class_skill')) {
+                  if (builder_data.toggle == "class") {
+                    if(jQuery(this).data('class_restricted')){
+                      jQuery(this).hide();
                     } else {
-                      reqs.push(req);
+                      jQuery(this).show();
                     }
                   }
 
-                  char_skills = builder_data.character.skills;
-                  for (i = 0; i < reqs.length; i++) {
-                    if(reqs[i] == "Spell Sphere: Elemental" && char_skills["Elemental Attunement"] >=4){
-                      return false;
-                    }
-                    if(char_skills.hasOwnProperty(reqs[i])){
-                      skill_row.find('.skill_req').hide();
-                      return true;
-                    }
-                    if(reqs[i] == "Sphere of Magic: 1st" && builder_data.character.spell_spheres > 0){
-                      return true;
-                    }
+                  if (cost > builder_data.character.cp_avail || !meets_class_req(jQuery(this))) {
+                    jQuery(this).find('.skill_add').hide();
+                    jQuery(this).addClass('locked');
+                  } else {
+                      jQuery(this).find('.skill_add').show();
+                      jQuery(this).find('.skill_purchased').hide();
+                      jQuery(this).removeClass('locked');
+                      jQuery(this).removeClass('purchased');
                   }
+
+                } else if (cost > builder_data.character.cp_avail
+                    || (jQuery(this).hasClass('purchased') && character_has_skill(jQuery(this).find('span.name').html()))
+                    || (!spell_circle && has_req && !meets_req(jQuery(this)))
+                    || (spell_circle && !has_circle_req(jQuery(this).find('span.name').html()))
+                    || jQuery(this).data('class_restricted')) {
+                      jQuery(this).find('.skill_add').hide();
+                      jQuery(this).addClass('locked');
                 } else {
+                  jQuery(this).find('.skill_add').show();
+                  jQuery(this).find('.skill_purchased').hide();
+                  jQuery(this).removeClass('locked');
+                  jQuery(this).removeClass('purchased');
+                }
+                jQuery(this).data('cost', cost);
+              });
+
+            }
+
+            function meets_class_req(skill_row){
+              level = parseInt(skill_row.data('class_level'));
+              if(builder_data.character.level >= level && (level == 3 || builder_data.character.last_class_skill_level >= (level-3))){
+                return true;
+              }
+              return false;
+            }
+
+            function character_has_skill(skill){
+              if(builder_data.character.skills[skill] > 0){
+                return true;
+              }
+              return false;
+            }
+
+            function is_spell_circle(skill){
+              circle_search = builder_data.circles.indexOf(skill);
+              if(circle_search != -1){
+                return true;
+              }
+              return false;
+            }
+
+            function has_circle_req(skill) {
+              cur_circle = builder_data.circles.indexOf(skill);
+              prev_circle = builder_data.circles[cur_circle-1];
+              skills = builder_data.character.skills;
+              prev_skill_count = skills[prev_circle];
+              cur_skill_count = skills[skill];
+              if(typeof cur_skill_count == 'undefined'){
+                cur_skill_count = 0;
+              }
+              if (cur_skill_count >= 5) {
+                return false;
+              } else if (skill == "Spell Slot: Ritual Base" && skills["Read Magic: Ritual"] == 1 && skills["Spell Slot: 9th Circle"] >= 1) {
+                return true;
+              } else if(skill == "Spell Slot: 1st Circle" && builder_data.character.spell_spheres == 1){
+                return true;
+              } else if (skill != "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && circle_math_req(prev_skill_count, cur_skill_count)) {
+                return true;
+              } else if (skill == "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && skills["Read Magic: Advanced"] == 1 && circle_math_req(prev_skill_count, cur_skill_count)){
+                return true;
+              }
+              return false;
+            }
+
+            function circle_math_req(prev_skill_count, cur_skill_count){
+              return ((prev_skill_count > (cur_skill_count+1)) || prev_skill_count == 5)
+            }
+
+            function meets_req(skill_row){
+              var req = skill_row.data('requirements')
+              reqs = [];
+
+              if(typeof req !== 'undefined' && req != ""){
+                items = req.split(', ');
+                for (req in items) {
+                  items[req] = set_req_alias(items[req], skill_row.find('span.name').html());
+
+                  if (items.hasOwnProperty(req)) {
+                    var conditionals = items[req].split(" OR ");
+                    for (subreq in conditionals) {
+                      if (conditionals.hasOwnProperty(subreq)) {
+                        reqs.push(conditionals[subreq]);
+                      } else {
+                        reqs.push(subreq);
+                      }
+                    }
+                  } else {
+                    reqs.push(req);
+                  }
+                }
+
+                char_skills = builder_data.character.skills;
+                var returns = [];
+                for (i = 0; i < reqs.length; i++) {
+                  if(reqs[i] == "Spell Sphere: Elemental" && char_skills["Elemental Attunement"] >=4){
+                    return false;
+                  }
+                  if(reqs[i] == builder_data.type_string ){
+                    skill_row.find('.skill_req').hide();
+                    returns.push(true);
+                  }
+                  if(char_skills.hasOwnProperty(reqs[i])){
+                    skill_row.find('.skill_req').hide();
+                    returns.push(true);
+                  }
+                  if(reqs[i] == "Sphere of Magic: 1st" && builder_data.character.spell_spheres > 0){
+                    skill_row.find('.skill_req').hide();
+                    returns.push(true);
+                  }
+                }
+                var unique = returns.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+                if(returns.length != reqs.length){
                   return false;
                 }
+                if(unique.length == 1 && unique[0] == true) {
+                  return true;
+                }
+              } else {
                 return false;
               }
+              return false;
+            }
 
-              function set_req_alias(req, skill) {
-                switch(req) {
-                  case "Elemental Sphere":
-                    return "Spell Sphere: Elemental";
-                    break;
-                  case "Weapon Group Proficiency":
-                  case "Group Proficiency":
-                    switch(skill) {
-                      case "Critical +2: Specific Simple Weapon":
-                      case "Critical +2: Simple Group":
-                      case "Specialization +1: Simple Group":
-                      case "Specialization +1: Simple Weapon":
-                        return "Weapon Group Proficiency: Simple";
-                        break;
-                      case "Critical +2: Specific Medium Weapon":
-                      case "Critical +2: Medium Group":
-                      case "Specialization +1: Medium Group":
-                      case "Specialization +1: Medium Weapon":
-                        return "Weapon Group Proficiency: Medium";
-                        break;
-                      case "Critical +2: Specific Large Weapon":
-                      case "Critical +2: Large Group":
-                      case "Specialization +1: Large Group":
-                      case "Specialization +1: Large Weapon":
-                        return "Weapon Group Proficiency: Large";
-                        break;
-                      case "Critical +2: Specific Exotic Weapon":
-                      case "Critical +2: Exotic Group":
-                      case "Specialization +1: Exotic Group":
-                      case "Specialization +1: Exotic Weapon":
-                        return "Weapon Group Proficiency: Exotic";
-                        break;
-                      }
-                    case "Specialization +1: Weapon Group":
-                      switch(skill) {
-                        case "Slay / Parry: Specific Simple Weapon":
-                          return "Specialization +1: Simple Group"
-                        case "Slay / Parry: Specific Medium Weapon":
-                          return "Specialization +1: Medium Group"
-                        case "Slay / Parry: Specific Large Weapon":
-                          return "Specialization +1: Large Group"
-                        case "Slay / Parry: Specific Exotic Weapon":
-                          return "Specialization +1: Exotic Group"
-                      }
-                    case "Specialization +1: Weapon Specific":
-                      switch(skill) {
-                        case "Slay / Parry":
-                          return "Specialization +1: Simple Weapon"
-                      }
-                  case "Critical +2: Specific":
-                    switch(skill) {
-                      case "Execute: Specific Simple Weapon":
-                        return "Critical +2: Specific Simple Weapon";
-                        break;
-                      case "Execute: Specific Medium Weapon":
-                        return "Critical +2: Specific Medium Weapon";
-                        break;
-                      case "Execute: Specific Large Weapon":
-                        return "Critical +2: Specific Large Weapon";
-                        break;
-                      case "Execute: Specific Exotic Weapon":
-                        return "Critical +2: Specific Exotic Weapon";
-                        break;
+            function set_req_alias(req, skill) {
+              switch(req) {
+                case "Elemental Sphere":
+                  return "Spell Sphere: Elemental";
+                  break;
+                case "Weapon Group Proficiency":
+                case "Group Proficiency":
+                  switch(skill) {
+                    case "Critical +2: Specific Simple Weapon":
+                    case "Critical +2: Simple Group":
+                    case "Specialization +1: Simple Group":
+                    case "Specialization +1: Simple Weapon":
+                      return "Weapon Group Proficiency: Simple";
+                      break;
+                    case "Critical +2: Specific Medium Weapon":
+                    case "Critical +2: Medium Group":
+                    case "Specialization +1: Medium Group":
+                    case "Specialization +1: Medium Weapon":
+                      return "Weapon Group Proficiency: Medium";
+                      break;
+                    case "Critical +2: Specific Large Weapon":
+                    case "Critical +2: Large Group":
+                    case "Specialization +1: Large Group":
+                    case "Specialization +1: Large Weapon":
+                      return "Weapon Group Proficiency: Large";
+                      break;
+                    case "Critical +2: Specific Exotic Weapon":
+                    case "Critical +2: Exotic Group":
+                    case "Specialization +1: Exotic Group":
+                    case "Specialization +1: Exotic Weapon":
+                      return "Weapon Group Proficiency: Exotic";
+                      break;
                     }
-                  case "Critical +2: Group":
+                  case "Specialization +1: Weapon Group":
                     switch(skill) {
-                      case "Execute: Simple Weapon Group":
-                        return "Critical +2: Simple Group";
-                        break;
-                      case "Execute: Medium Weapon Group":
-                        return "Critical +2: Medium Group";
-                        break;
-                      case "Execute: Large Weapon Group":
-                        return "Critical +2: Large Group";
-                        break;
-                      case "Execute: Exotic Weapon Group":
-                        return "Critical +2: Exotic Group";
-                        break;
+                      case "Slay / Parry: Specific Simple Weapon":
+                        return "Specialization +1: Simple Group"
+                      case "Slay / Parry: Specific Medium Weapon":
+                        return "Specialization +1: Medium Group"
+                      case "Slay / Parry: Specific Large Weapon":
+                        return "Specialization +1: Large Group"
+                      case "Slay / Parry: Specific Exotic Weapon":
+                        return "Specialization +1: Exotic Group"
                     }
-                  case "Execute":
+                  case "Specialization +1: Weapon Specific":
                     switch(skill) {
-                      case "Execute: Specific Simple Weapon (Subsequent)":
-                        return "Execute: Specific Simple Weapon";
-                        break;
-                      case "Execute: Specific Medium Weapon (Subsequent)":
-                        return "Execute: Specific Medium Weapon";
-                        break;
-                      case "Execute: Specific Large Weapon (Subsequent)":
-                        return "Execute: Specific Large Weapon";
-                        break;
-                      case "Execute: Specific Exotic Weapon (Subsequent)":
-                        return "Execute: Specific Exotic Weapon";
-                        break;
+                      case "Slay / Parry":
+                        return "Specialization +1: Simple Weapon"
                     }
+                case "Critical +2: Specific":
+                  switch(skill) {
+                    case "Execute: Specific Simple Weapon":
+                      return "Critical +2: Specific Simple Weapon";
+                      break;
+                    case "Execute: Specific Medium Weapon":
+                      return "Critical +2: Specific Medium Weapon";
+                      break;
+                    case "Execute: Specific Large Weapon":
+                      return "Critical +2: Specific Large Weapon";
+                      break;
+                    case "Execute: Specific Exotic Weapon":
+                      return "Critical +2: Specific Exotic Weapon";
+                      break;
+                  }
+                case "Critical +2: Group":
+                  switch(skill) {
+                    case "Execute: Simple Weapon Group":
+                      return "Critical +2: Simple Group";
+                      break;
+                    case "Execute: Medium Weapon Group":
+                      return "Critical +2: Medium Group";
+                      break;
+                    case "Execute: Large Weapon Group":
+                      return "Critical +2: Large Group";
+                      break;
+                    case "Execute: Exotic Weapon Group":
+                      return "Critical +2: Exotic Group";
+                      break;
+                  }
+                case "Execute":
+                  switch(skill) {
+                    case "Execute: Specific Simple Weapon (Subsequent)":
+                      return "Execute: Specific Simple Weapon";
+                      break;
+                    case "Execute: Specific Medium Weapon (Subsequent)":
+                      return "Execute: Specific Medium Weapon";
+                      break;
+                    case "Execute: Specific Large Weapon (Subsequent)":
+                      return "Execute: Specific Large Weapon";
+                      break;
+                    case "Execute: Specific Exotic Weapon (Subsequent)":
+                      return "Execute: Specific Exotic Weapon";
+                      break;
+                  }
 
-                }
-                return req;
               }
+              return req;
+            }
 
-              function reset_skills(){
+            function reset_skills(){
 
-                builder_data.character.skill_count = 0;
-                jQuery('#cb_skill_count').html(0);
-                jQuery('.skill_row').removeClass('locked');
-                jQuery('.skill_row').removeClass('purchased');
-                jQuery('.skill_req').show();
-                jQuery('.skill_add').show();
-                jQuery('.skill_purchased').hide();
+              builder_data.character.skill_count = 0;
+              jQuery('#cb_skill_count').html(0);
+              jQuery('.skill_row').removeClass('locked');
+              jQuery('.skill_row').removeClass('purchased');
+              jQuery('.skill_req').show();
+              jQuery('.skill_add').show();
+              jQuery('.skill_purchased').hide();
+            }
+
+            function update_spell_spheres(){
+
+              builder_data.character.spell_spheres++;
+
+              if(builder_data.character.spell_spheres == 3) {
+                jQuery('.spell_sphere').addClass('purchased');
               }
+            }
+            jQuery('.btn-cb-content ').on('click', function(){
+              jQuery('.btn-cb-content').toggleClass('active');
+              jQuery('.cb_display_content').toggleClass('active');
+            });
 
-              function update_spell_spheres(){
+            jQuery('.legend_toggler').on('click', function(e){
+              e.preventDefault();
+              jQuery('#legend').toggleClass('opened').toggleClass('closed');
+            });
 
-                builder_data.character.spell_spheres++;
+            jQuery('#btn_data_export, #btn_data_import').on('click', function(e){
+              e.preventDefault();
+              jQuery('.non_data_fields').hide();
+              jQuery('#cb_selectors').hide();
+              jQuery('#data_fields').show();
+            });
+            jQuery('#btn_data_export').on('click', function(e){
+              e.preventDefault();
+              jQuery('#data_fields_export').show();
+              jQuery('#data_fields_import').hide();
+            });
+            jQuery('#btn_data_import').on('click', function(e){
+              e.preventDefault();
+              jQuery('#data_fields_export').hide();
+              jQuery('#data_fields_import').show();
+            });
 
-                if(builder_data.character.spell_spheres == 3) {
-                  jQuery('.spell_sphere').addClass('purchased');
-                }
-              }
-              jQuery('.btn-cb-content ').on('click', function(){
-                jQuery('.btn-cb-content').toggleClass('active');
-                jQuery('.cb_display_content').toggleClass('active');
-              });
-
-              jQuery('.legend_toggler').on('click', function(e){
-                e.preventDefault();
-                jQuery('#legend').toggleClass('opened').toggleClass('closed');
-              });
-
-              jQuery('#btn_data_export, #btn_data_import').on('click', function(e){
-                e.preventDefault();
-                jQuery('.non_data_fields').hide();
-                jQuery('#cb_selectors').hide();
-                jQuery('#data_fields').show();
-              });
-              jQuery('#btn_data_export').on('click', function(e){
-                e.preventDefault();
-                jQuery('#data_fields_export').show();
-                jQuery('#data_fields_import').hide();
-              });
-              jQuery('#btn_data_import').on('click', function(e){
-                e.preventDefault();
-                jQuery('#data_fields_export').hide();
-                jQuery('#data_fields_import').show();
-              });
-              jQuery('#btn_close_data').on('click', function(e){
-                e.preventDefault();
-                console.log(builder_data.character);
-                if(builder_data.character['skill_count'] == 0){
-                  jQuery('#btn_reset').trigger('click');
-                } else {
-                  jQuery('.non_data_fields').show();
-                  jQuery('#data_fields').hide();
-                  jQuery('#char_export_code').val("");
-                  jQuery('#data_import').val("");
-                  jQuery('.mandatory_section').show();
-                  jQuery('#btn_generate').hide();
-                  jQuery('#cb_selectors').hide();
-                }
-              });
-
-              jQuery('#generate_export').on('click', function(e){
-                e.preventDefault();
-                jQuery('#char_export_code').val(JSON.stringify(builder_data.character));
-              });
-              jQuery('#process_import').on('click', function(e){
-                e.preventDefault();
-                var char_import = jQuery('#data_import').val();
+            jQuery('#btn_close_data').on('click', function(e){
+              e.preventDefault();
+              if(builder_data.character['skill_count'] == 0){
+                jQuery('#btn_reset').trigger('click');
+              } else {
                 jQuery('.non_data_fields').show();
                 jQuery('#data_fields').hide();
                 jQuery('#char_export_code').val("");
@@ -1016,33 +1448,82 @@
                 jQuery('.mandatory_section').show();
                 jQuery('#btn_generate').hide();
                 jQuery('#cb_selectors').hide();
-                var parsed_char = JSON.parse(char_import);
-                builder_data.character = parsed_char;
-                jQuery("#cb-class").val(builder_data.character.class);
-                jQuery("#cb-race").val(builder_data.character.race);
-
-                update_character();
-                update_skills();
-              });
-
-              // Cache selectors outside callback for performance.
-              var $window = jQuery(window),
-                  $stickyEl = jQuery('#character_data'),
-                  elTop = $stickyEl.offset().top;
-
-              $window.scroll(function() {
-                if(!jQuery('header#header').hasClass('mobile')){
-                   $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
-                 }
-               });
-
-              $stickyEl.css({'max-width': $stickyEl.width()});
-              $stickyEl.css({'width': $stickyEl.width()});
-
+              }
             });
-          </script>
 
-        <?php endif; ?>
+            jQuery('#generate_export').on('click', function(e){
+              e.preventDefault();
+              jQuery('#char_export_code').val(JSON.stringify(builder_data.character));
+            });
+
+            jQuery('#save_character').on('click', function(){
+              localStorage.setItem('saved_character', JSON.stringify(builder_data.character));
+              jQuery('#load_character_section').show();
+              if(builder_data.character['skill_count'] == 0){
+                jQuery('#btn_reset').trigger('click');
+              } else {
+                jQuery('.non_data_fields').show();
+                jQuery('#data_fields').hide();
+                jQuery('#char_export_code').val("");
+                jQuery('#data_import').val("");
+                jQuery('.mandatory_section').show();
+                jQuery('#btn_generate').hide();
+                jQuery('#cb_selectors').hide();
+              }
+            });
+
+            jQuery('#load_character').on('click', function(){
+              saved_char = localStorage.getItem('saved_character');
+              parsed_char = JSON.parse(saved_char);
+              load_character(parsed_char);
+            });
+
+            jQuery('#process_import').on('click', function(e){
+              e.preventDefault();
+              var char_import = jQuery('#data_import').val();
+              var parsed_char = JSON.parse(char_import);
+              load_character(parsed_char)
+            });
+
+            function load_character(character){
+
+              builder_data.character = character;
+
+              jQuery('.non_data_fields').show();
+              jQuery('#data_fields').hide();
+              jQuery('#char_export_code').val("");
+              jQuery('#data_import').val("");
+              jQuery('.mandatory_section').show();
+              jQuery('#btn_generate').hide();
+              jQuery('#cb_selectors').hide();
+              jQuery("#cb-class").val(builder_data.character.class);
+              jQuery("#cb-race").val(builder_data.character.race);
+
+              update_character();
+              update_skills();
+
+            }
+
+            // Cache selectors outside callback for performance.
+            var $window = jQuery(window),
+                $stickyEl = jQuery('#character_data'),
+                elTop = $stickyEl.offset().top;
+
+            $window.scroll(function() {
+              if(!jQuery('header#header').hasClass('mobile')){
+                 $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
+               }
+             });
+
+            $stickyEl.css({'max-width': $stickyEl.width()});
+            $stickyEl.css({'width': $stickyEl.width()});
+
+            if(typeof saved_char !== 'undefined'){
+              jQuery('#load_character_section').show();
+            }
+
+          });
+        </script>
 
         <div class="row">
           <div class="col-sm-4">
@@ -1111,11 +1592,22 @@
                     <label>Click the button below to generate your character export. Copy and paste it into a word document to save it.</label>
                     <input type="text" id="char_export_code" disabled="disabled" />
                     <button id="generate_export" class="btn btn-red btn_process_data">Generate Export</button>
+
+                    <p class="text-center">- OR -</p>
+
+                    <button id="save_character" class="btn btn-red btn_process_data">Save</button>
+                    <p id="save_warning">Note: This character was saved only to this browser on this device.</p>
                   </div>
                   <div id="data_fields_import">
                     <label>Paste your character data here. Click import to load this character.</label>
                     <input type="text" id="data_import"/>
                     <button id="process_import" class="btn btn-red btn_process_data">Process Import</button>
+
+                    <div id="load_character_section">
+                      <p class="text-center">- OR -</p>
+
+                      <button id="load_character" class="btn btn-red btn_process_data">Load Saved Character</button>
+                    </div>
                   </div>
 
                   <div class="row">
@@ -1193,6 +1685,7 @@
                       array('cog', 'Production Skill'),
                       array('users', 'Racial Skill'),
                       array('universal-access', 'Class Skill'),
+                      array('diamond', 'Frag Skill'),
                       array('exclamation-triangle', 'Requirement Not Met'),
                       array('info-circle', "Click to view details")
                     );
@@ -1246,10 +1739,15 @@
                   </div>
                 </div>
                 <div class="col-sm-3 col-xs-6 text-center">
-                  <h4>Available</h4>
+                  <h4>&nbsp;</h4>
                   <div class="row">
-                    <div class="col-xs-12">
-                      <button id="btn_toggle_skills" class="skill_menu btn btn-skill">Toggle</button>
+                    <div class="col-xs-6">
+                      <button id="btn_toggle_skills" class="skill_menu btn btn-skill">Available</button>
+                    </div>
+                    <div class="col-xs-6">
+                      <button id="btn_frag" class="skill_menu btn btn-skill">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
