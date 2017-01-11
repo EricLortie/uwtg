@@ -367,6 +367,19 @@ ul.forums li {
 #blog .blog-post .blog-post-button {
     background-color: darkred;
 }
+#blog .blog-post .blog-post-button.selected {
+    background-color: green;
+}
+.blog-post-button .passed {
+  display:none;
+  float: right;
+  font-size: 28px;
+  margin-top: 9px;
+}
+.blog-post-button.selected .passed {
+  display:block;
+}
+
 
 
 .person-content-social {
@@ -679,7 +692,7 @@ h2.switcher.active {
 }
 .btn_warning a {
   text-transform: uppercase;
-  color: darkred;
+  color: whitesmoke;
 }
 #btn_undo.locked {
   color: darkgrey;
@@ -797,4 +810,181 @@ p#option_string span.opt {
 }
 .cat_restricted {
   display: none !important;
+}
+div#race_selector, div#class_selector {
+  display:none;
+}
+.race.content, .class.content {
+  display:none;
+}
+
+div.nav-ele {
+  margin: 1rem;
+  padding: 2rem;
+  background: #242424;
+  color: white;
+  height: 84px;
+  border: 1px solid darkred;
+}
+
+.race_info.desktop {
+  height: 450px;
+  overflow:scroll;
+}
+.slider_selector {
+  text-transform:uppercase;
+  text-align:center;
+}
+.builder_photo {
+  border-radius: 50%;
+  border: 2px solid whitesmoke;
+  max-height: 300px;
+  position: relative;
+  margin: 0px auto;
+  background: black;
+  min-height: 200px;
+}
+.builder_selector {
+  margin-top: 2rem;
+}
+#menu_launcher {
+  padding-top: 6rem;
+}
+#menu_launcher.bg_1 {
+  background: url('./inc/builder_bg1.jpg') no-repeat center center fixed;
+}
+#menu_launcher.bg_2 {
+  background: url('./inc/builder_bg2.jpg') no-repeat center center fixed;
+}
+#menu_launcher.bg_3 {
+  background: url('./inc/builder_bg3.jpg') no-repeat center center fixed;
+}
+#menu_launcher.bg_4 {
+  background: url('./inc/builder_bg4.jpg') no-repeat center center fixed;
+}
+#menu_launcher.bg_5 {
+  background: url('./inc/builder_bg5.jpg') no-repeat center center fixed;
+}
+
+#menu_items {
+  max-width: 300px;
+  position: relative;
+  padding 3rem;
+  border: 1px solid #222;
+  box-shadow: 5px 5px 10px black;
+  margin: 0px auto;
+  background: url('./inc/bg_black.png');
+  border-radius: 1rem;
+  margin-bottom: 6rem;
+  padding-top: 2rem;
+}
+
+.race-slider-nav.mobile .race.slick-slide {
+  width: 150px !important;
+}
+
+.custom-dropdown--large {
+	font-size: 1.5em;
+}
+
+.custom-dropdown--small {
+	font-size: .7em;
+}
+
+.custom-dropdown__select{
+	font-size: inherit; /* inherit size from .custom-dropdown */
+	padding: .5em; /* add some space*/
+	margin: 0; /* remove default margins */
+}
+
+.custom-dropdown__select--red {
+	background-color: darkred;
+	color: whitesmoke;
+}
+
+@supports (pointer-events: none) and
+	  ((-webkit-appearance: none) or
+	  (-moz-appearance: none) or
+	  (appearance: none)) {
+
+	.custom-dropdown {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.custom-dropdown__select {
+		padding-right: 2.5em; /* accommodate with the pseudo elements for the dropdown arrow */
+		border: 0;
+		border-radius: 3px;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+	}
+
+	.custom-dropdown::before,
+	.custom-dropdown::after {
+		content: "";
+		position: absolute;
+		pointer-events: none;
+    color: whitesmoke;
+	}
+
+	.custom-dropdown::after { /*  Custom dropdown arrow */
+		content: "\25BC";
+		height: 1em;
+		font-size: .625em;
+		line-height: 1;
+		right: 1.2em;
+		top: 50%; margin-top: -.5em;
+    color: whitesmoke;
+	}
+
+	.custom-dropdown::before { /*  Custom dropdown arrow cover */
+		width: 2em;
+		right: 0; top: 0; bottom: 0;
+		border-radius: 0 3px 3px 0;
+	}
+
+	.custom-dropdown__select[disabled] {
+		color: rgba(0,0,0,.3);
+	}
+
+	.custom-dropdown.custom-dropdown--disabled::after {
+		color: rgba(0,0,0,.1);
+	}
+
+	/* White dropdown style */
+	.custom-dropdown--red::before {
+		background-color: darkred;
+		border-left: 1px solid rgba(0,0,0,.1);
+	}
+
+	.custom-dropdown--red::after {
+		color: rgba(0,0,0,.9);
+	}
+
+	/* FF only temp fix */
+	@-moz-document url-prefix() {
+		.custom-dropdown__select 			 { padding-right: .9em }
+		.custom-dropdown--large .custom-dropdown__select { padding-right: 1.3em }
+		.custom-dropdown--small .custom-dropdown__select { padding-right: .5em }
+	}
+}
+
+#race-menu p, #class-menu p {
+  text-align:center;
+}
+
+.styled-dropdown {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 18px;
+}
+.builder_selector {
+  text-align: left;
+  text-transform: uppercase;
+}
+.full-width {
+  width:100%;
 }
