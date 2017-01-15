@@ -185,7 +185,7 @@
 
             <?php // vars
             $name = get_sub_field('name');
-            $lifespan = get_sub_field('lifespan');
+            $life_span = get_sub_field('life_span');
             $frag_cost = get_sub_field('frag_cost');
             $description = get_sub_field('description');
             $racial_characteristics = get_sub_field('racial_characteristics');
@@ -194,7 +194,7 @@
             $photo = get_sub_field('photo');
             $race = new stdClass();
             $race->name = $name;
-            $race->lifespan = $lifespan;
+            $race->life_span = $life_span;
             $race->frag_cost = $frag_cost;
             if ($frag_cost != "") {
               $race->race_string = preg_replace('/ \(.*/', "", $name) . " (" . $frag_cost . " frags)";
@@ -217,7 +217,7 @@
             <script type="text/javascript">
               builder_data.races[`<?php echo $name; ?>`] = {
                 name: `<?php echo $name ?>`,
-                lifespan: `<?php echo $lifespan ?>`,
+                lifespan: `<?php echo $life_span ?>`,
                 racial_characteristics: `<?php echo $racial_characteristics ?>`,
                 description: `<?php echo $description ?>`,
                 advantages: `<?php echo $advantages ?>`,
@@ -347,9 +347,9 @@
         <?php endif; ?>
 
 
-        <?php if( have_rows('skills', get_id_by_slug('codex-races')) ): ?>
+        <?php if( have_rows('skills', get_id_by_slug('codex-racial-abilities')) ): ?>
           <?php $s_count = 0; ?>
-          <?php while( have_rows('skills', get_id_by_slug('codex-races')) ): the_row(); ?>
+          <?php while( have_rows('skills', get_id_by_slug('codex-racial-abilities')) ): the_row(); ?>
 
 
             <?php // vars
@@ -831,7 +831,7 @@
                       <p style="margin-bottom:3rem;"><span class="full-width styled-dropdown custom-dropdown custom-dropdown--red">
                         <select id="category-dropdown" class="full-width builder_selector custom-dropdown__select custom-dropdown__select--red">
                         <option>SELECT A CATEGORY</option>
-                        <?php $categories = ["Crafter", "Defender", "Attacker", "Damage Dealer", "Tank", "Guard", "Healer", "Passifist", "Hero", "Villain", "Storyteller", "Politician", "Merchant", "Jack of All Trades", "Specialist", "Observer", "Other"]; ?>
+                        <?php $categories = array("Crafter", "Defender", "Attacker", "Damage Dealer", "Tank", "Guard", "Healer", "Passifist", "Hero", "Villain", "Storyteller", "Politician", "Merchant", "Jack of All Trades", "Specialist", "Observer", "Other"); ?>
                           <?php foreach ($categories as $category) { ?>
                             <option value="<?php echo $category; ?>"><?php echo $category; ?></option>
                           <?php } ?>
@@ -916,7 +916,7 @@
 
                           <h4>Lifespan</h4>
 
-                          <p><?php echo $race->lifespan; ?></p>
+                          <p><?php echo $race->life_span; ?></p>
 
                           <h4>Racial Characteristics</h4>
 

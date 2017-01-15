@@ -51,6 +51,7 @@ $number_of_posts = get_theme_mod( 'illdy_testimonials_number_of_posts', absint( 
                         $character_entry['biography'] = get_the_excerpt();
                         $character_entry['race'] = uit_get_post_custom_value('race');
                         $character_entry['class'] = uit_get_post_custom_value('class');
+                        $character_entry['bg-color'] = uit_get_post_custom_value('bg-color');
                         if (is_null($character_entry['bg-color'])) {
                             $character_entry['bg-color'] = '#a6ce39';
                         }
