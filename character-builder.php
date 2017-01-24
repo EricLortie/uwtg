@@ -43,6 +43,7 @@
           builder_data.character.frags_spent = 0;
           builder_data.character.skill_count = 0;
           builder_data.races = [];
+          builder_data.vocations = [];
           builder_data.pc_classes = [];
           builder_data.spell_spheres = [];
           builder_data.character_states = [];
@@ -235,10 +236,14 @@
           <?php while( have_rows('classes', get_id_by_slug('codex-classes')) ): the_row(); ?>
 
             <?php // vars
+
             $name = get_sub_field('name');
+            $frag_cost = get_sub_field('frag_cost');
+
             $description = get_sub_field('description');
             $photo = get_sub_field('photo');
             $frag_cost = get_sub_field('frag_cost');
+
             $pc_class = new stdClass();
             $pc_class->name = $name;
             $pc_class->description = $description;
@@ -248,15 +253,31 @@
             } else {
               $pc_class->photo = $photo;
             }
-            array_push($classes, $pc_class);
-            ?>
 
-            <script type="text/javascript">
-              builder_data.pc_classes[`<?php echo $name; ?>`] = {
-                name: `<?php echo $name ?>`,
-                description: `<?php echo $description ?>`
-              }
-            </script>
+            $optional = get_sub_field('optional_fields');
+            $vocation = false;
+            if ( $optional && in_array('vocation', $optional) ) {
+              $vocation = true;
+              array_push($vocations, $pc_class); ?>
+              <script type="text/javascript">
+                builder_data.vocations[`<?php echo $name; ?>`] = {
+                  name: `<?php echo $name ?>`,
+                  description: `<?php echo $description ?>`
+                }
+              </script>
+              <?php
+            } else {
+              array_push($classes, $pc_class); ?>
+
+              <script type="text/javascript">
+                builder_data.pc_classes[`<?php echo $name; ?>`] = {
+                  name: `<?php echo $name ?>`,
+                  description: `<?php echo $description ?>`
+                }
+              </script>
+
+            <?php } ?>
+
 
           <?php endwhile;
         endif; ?>
@@ -439,6 +460,8 @@
           <?php endwhile; ?>
         <?php endif; ?>
 
+
+
         <?php if( have_rows('skills', get_id_by_slug('codex-class-skills')) ): ?>
           <?php $s_count = 0; ?>
           <?php while( have_rows('skills', get_id_by_slug('codex-class-skills')) ): the_row(); ?>
@@ -448,6 +471,18 @@
             $s_count++;
             $name = get_sub_field('name');
 
+
+            $optional = get_sub_field('optional_fields');
+            $vocation_ability = false;
+            if ( $optional && in_array('vocation', $optional) ) {
+              continue;
+              $vocation_ability = true;
+            }
+            $multiple = false;
+            if ( $optional && in_array('multiple', $optional) ) {
+              $multiple = true;
+            }
+
             if (strpos($name, 'Subsequent') !== false) {
               continue;
             }
@@ -455,13 +490,13 @@
             $description = get_sub_field('description');
             $category = get_sub_field('category');
             $pc_class = get_sub_field('class');
+            $pc_class_string = str_replace(" ", "", $pc_class);
             $class_level = get_sub_field('level');
             $cat_icon = "fa-universal-access";
 
             $cat =  substr($category, 0, 1);
 
             $prereq = get_sub_field('prerequesites');
-            $optional_fields = get_sub_field('optional_fields');
 
             $level = get_sub_field('level');
             $level_cost = 0;
@@ -475,18 +510,11 @@
               $level_cost = 120;
             }
 
-            $optional = get_sub_field('optional_fields');
-            $multiple = false;
-            if ( $optional && in_array('multiple', $optional) ) {
-              $multiple = true;
-            }
-
-
             ?>
 
             <script type="text/javascript">
               jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row <?php echo $cat; ?> <?php echo $pc_class; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_row = jQuery('<div class="row skill_row <?php echo $cat; ?> <?php echo $pc_class_string; ?>"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
                   <div class="row">
@@ -532,6 +560,7 @@
                 skill_row.data('class', `<?php echo $pc_class;?>`);
                 skill_row.data('class_level', `<?php echo $class_level;?>`);
                 skill_row.data('class_skill', true);
+                skill_row.data('vocation_skill', `<?php echo $vocation_ability; ?>`)
                 skill_row.data('cost', `<?php echo $level_cost; ?>`)
 
                 jQuery('#skill_list').append(skill_row);
@@ -1014,7 +1043,6 @@
                   </div>
                 </div>
 
-                </div>
                 <div class="col-xs-12 non_data_fields">
 
                   <button id="btn_add_blanket" class="btn btn-red state_saver mandatory_section" style="margin: 2rem 0;">
@@ -1062,6 +1090,8 @@
               </div>
             </div><!-- /#character_data -->
 
+            </div>
+
           <div class="col-sm-8" style="padding:0 4rem;">
             <div id="skills_section" class="mandatory_section">
               <div id="skill_header" class="row">
@@ -1100,7 +1130,7 @@
               </div>
 
                 <div class="col-sm-6 text-center">
-                  <h4>Class</h4>
+                  <h4>Filter</h4>
                   <div class="row">
                     <div class="col-xs-2">
                       <button id="btn_warrior" data-cat="W" data-cat-string="Warrior" class="skill_menu btn-cat btn btn-skill">
@@ -1135,10 +1165,12 @@
                   </div>
                 </div>
                 <div class="col-sm-3 col-xs-6 text-center">
-                  <h4>&nbsp;</h4>
+                  <h4>Toggle</h4>
                   <div class="row">
                     <div class="col-xs-6">
-                      <button id="btn_toggle_skills" class="skill_menu btn btn-skill">Available</button>
+                      <button id="btn_toggle_skills" class="skill_menu btn btn-skill">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                      </button>
                     </div>
                     <div class="col-xs-6">
                       <button id="btn_frag" class="skill_menu btn btn-skill">

@@ -45,8 +45,6 @@ jQuery(document).on('ready', function(){
       skill_ele = jQuery(this);
       set_skill_cost_and_visibility(skill_ele);
     });
-    console.log(builder_data.character.race);
-    console.log(builder_data.character.class);
     if (builder_data.character.race != '' && builder_data.character.class != '') {
       jQuery('#btn_generate').removeClass('locked');
     } else {
@@ -95,6 +93,11 @@ jQuery(document).on('ready', function(){
         skill_ele.data('class_restricted', true);
       } else {
         skill_ele.data('class_restricted', false);
+      }
+      if(skill_ele.data('race') != builder_data.character.race ){
+        skill_ele.data('race_restricted', true);
+      } else {
+        skill_ele.data('race_restricted', false);
       }
       skill_ele.data('cost', parseInt(skill_ele.find('.level_cost').html()));
 
@@ -362,30 +365,30 @@ jQuery(document).on('ready', function(){
       var cost = parseInt(jQuery(this).data('cost'));
       var has_req = (jQuery(this).data('requirements') != "");
       var spell_circle = is_spell_circle(jQuery(this).find('span.name').html());
-      if (jQuery(this).data('class_skill')) {
-        if (builder_data.toggle == "class") {
-          if(jQuery(this).data('class_restricted')){
-            jQuery(this).hide();
-          } else {
-            jQuery(this).show();
-          }
-        }
 
-        if (cost > builder_data.character.cp_avail || !meets_class_req(jQuery(this))) {
-          jQuery(this).find('.skill_add').hide();
-          jQuery(this).addClass('locked');
-        } else {
-            jQuery(this).find('.skill_add').show();
-            jQuery(this).find('.skill_purchased').hide();
-            jQuery(this).removeClass('locked');
-            jQuery(this).removeClass('purchased');
+      if(jQuery(this).data('class_skill')){
+        if(jQuery(this).data('class_restricted')){
+          jQuery(this).addClass('restricted');
+          jQuery(this).hide();
+        } else if(builder_data.toggle == "Class" || builder_data.toggle == "") {
+          jQuery(this).show();
         }
+      }
 
-      } else if (cost > builder_data.character.cp_avail
+      if(jQuery(this).data('racial_skill')){
+        if(jQuery(this).data('race_restricted')){
+          jQuery(this).addClass('restricted');
+          jQuery(this).hide();
+        } else if(builder_data.toggle == "Race" || builder_data.toggle == "") {
+          jQuery(this).show();
+        }
+      }
+
+      if (cost > builder_data.character.cp_avail
           || (jQuery(this).hasClass('purchased') && character_has_skill(jQuery(this).find('span.name').html()))
           || (!spell_circle && has_req && !meets_req(jQuery(this)))
           || (spell_circle && !has_circle_req(jQuery(this).find('span.name').html()))
-          || jQuery(this).data('class_restricted')) {
+          || (jQuery(this).data('class_skill') && !meets_class_req(jQuery(this)))) {
             jQuery(this).find('.skill_add').hide();
             jQuery(this).addClass('locked');
       } else {

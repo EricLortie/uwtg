@@ -365,7 +365,9 @@ ul.forums li {
 }
 
 #blog .blog-post .blog-post-button {
-    background-color: darkred;
+  height: auto;
+  text-align:center;
+  background-color: darkred;
 }
 #blog .blog-post .blog-post-button.selected {
     background-color: green;
@@ -987,4 +989,10 @@ div.nav-ele {
 }
 .full-width {
   width:100%;
+}
+.skill_row.restricted {
+  display: none !important;
+}
+#race-content, #class-content {
+  min-height: 400px;
 }
