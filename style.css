@@ -364,12 +364,12 @@ ul.forums li {
     font-weight: bolder;
 }
 
-#blog .blog-post .blog-post-button {
+.blog-post .blog-post-button {
   height: auto;
   text-align:center;
-  background-color: darkred;
+  background-color: darkred !important;
 }
-#blog .blog-post .blog-post-button.selected {
+.blog-post .blog-post-button.selected {
     background-color: green;
 }
 .blog-post-button .passed {
@@ -655,7 +655,8 @@ h2.switcher.active {
 }
 .skill_cost {
   display: none;
-  float:right;
+}
+.cost_strings .skill_cost {
 }
 .skill_meta {
   text-align:right;
@@ -813,7 +814,7 @@ p#option_string span.opt {
 .cat_restricted {
   display: none !important;
 }
-div#race_selector, div#class_selector {
+div#race_selector, div#class_selector, div#occupation_selector, div#vocation_selector {
   display:none;
 }
 .race.content, .class.content {
@@ -974,7 +975,7 @@ div.nav-ele {
 	}
 }
 
-#race-menu p, #class-menu p {
+#race-menu p, #class-menu p, #occupation-menu p, #vocation-menu p {
   text-align:center;
 }
 
@@ -993,6 +994,10 @@ div.nav-ele {
 .skill_row.restricted {
   display: none !important;
 }
-#race-content, #class-content {
+#race-content, #class-content, #occupation-content, #vocation-content {
   min-height: 400px;
+}
+#occupation_selector, #vocation_selector {
+  position:relative;
+  margin:0px auto;
 }

@@ -44,6 +44,7 @@
           builder_data.character.skill_count = 0;
           builder_data.races = [];
           builder_data.vocations = [];
+          builder_data.occupations = [];
           builder_data.pc_classes = [];
           builder_data.spell_spheres = [];
           builder_data.character_states = [];
@@ -77,15 +78,15 @@
             builder_data.human_level_chart.push(level_data);
           };
           builder_data.sphere_chart = [
-            {'me_cost': 100,'ra_cost': 100, 'te_cost': 75, 'ni_cost': 75, 'as_cost': 100, 'wi_cost': 75, 'ma_cost': 25, 'dr_cost': 50, 'ba_cost': 50},
-            {'me_cost': 200,'ra_cost': 200, 'te_cost': 175, 'ni_cost': 175, 'as_cost': 200, 'wi_cost': 175, 'ma_cost': 150, 'dr_cost': 175, 'ba_cost': 175},
-            {'me_cost': 300,'ra_cost': 300, 'te_cost': 275, 'ni_cost': 275, 'as_cost': 300, 'wi_cost': 275, 'ma_cost': 200, 'dr_cost': 225, 'ba_cost': 225},
-            {'me_cost': "",'ra_cost': "", 'te_cost': "", 'ni_cost': "", 'as_cost': "", 'wi_cost': "", 'ma_cost': "", 'dr_cost': "", 'ba_cost': ""}
+            {'mer_cost': 100,'ran_cost': 100, 'tem_cost': 75, 'nig_cost': 75, 'ass_cost': 100, 'wit_cost': 75, 'mag_cost': 25, 'dru_cost': 50, 'bar_cost': 50, 'cha_cost': 50, 'dem_cost': 50},
+            {'mer_cost': 200,'ran_cost': 200, 'tem_cost': 175, 'nig_cost': 175, 'ass_cost': 200, 'wit_cost': 175, 'mag_cost': 150, 'dru_cost': 175, 'bar_cost': 175, 'cha_cost': 200, 'dem_cost': 175},
+            {'mer_cost': 300,'ran_cost': 300, 'tem_cost': 275, 'nig_cost': 275, 'ass_cost': 300, 'wit_cost': 275, 'mag_cost': 200, 'dru_cost': 225, 'bar_cost': 225, 'cha_cost': 300, 'dem_cost': 225},
+            {'mer_cost': "",'ran_cost': "", 'tem_cost': "", 'nig_cost': "", 'ass_cost': "", 'wit_cost': "", 'mag_cost': "", 'dru_cost': "", 'bar_cost': "", 'cha_cost': "", 'dem_cost': ""}
           ]
           builder_data.categories = {
-            'Warrior': ['Mercenary', 'Ranger', 'Templar'],
+            'Warrior': ['Mercenary', 'Ranger', 'Templar', 'Paladin', 'Dread Knight'],
             'Rogue': ['Assassin', 'Nightblade', 'Witch Hunter'],
-            'Scholar': ['Mage', 'Druid', 'Bard'],
+            'Scholar': ['Mage', 'Druid', 'Bard', 'Darkweaver', 'Lightweaver', 'Dragon Knight'],
           }
 
           builder_data.skill_aliases = {
@@ -192,11 +193,13 @@
             $racial_characteristics = get_sub_field('racial_characteristics');
             $advantages = get_sub_field('advantages');
             $disadvantages = get_sub_field('disadvantages');
+            $appendix = get_sub_field('appendix');
             $photo = get_sub_field('photo');
             $race = new stdClass();
             $race->name = $name;
             $race->life_span = $life_span;
             $race->frag_cost = $frag_cost;
+            $race->appendix = $appendix;
             if ($frag_cost != "") {
               $race->race_string = preg_replace('/ \(.*/', "", $name) . " (" . $frag_cost . " frags)";
             } else {
@@ -233,6 +236,8 @@
 
         <?php if( have_rows('classes', get_id_by_slug('codex-classes')) ): ?>
           <?php $classes = array(); ?>
+          <?php $vocations = array(); ?>
+          <?php $occupations = array(); ?>
           <?php while( have_rows('classes', get_id_by_slug('codex-classes')) ): the_row(); ?>
 
             <?php // vars
@@ -254,13 +259,21 @@
               $pc_class->photo = $photo;
             }
 
-            $optional = get_sub_field('optional_fields');
-            $vocation = false;
+            $optional = get_sub_field('optional');
+            write_log($optional);
             if ( $optional && in_array('vocation', $optional) ) {
-              $vocation = true;
               array_push($vocations, $pc_class); ?>
               <script type="text/javascript">
                 builder_data.vocations[`<?php echo $name; ?>`] = {
+                  name: `<?php echo $name ?>`,
+                  description: `<?php echo $description ?>`
+                }
+              </script>
+              <?php
+            } else if($optional && in_array('occupation', $optional)) {
+              array_push($occupations, $pc_class); ?>
+              <script type="text/javascript">
+                builder_data.occupations[`<?php echo $name; ?>`] = {
                   name: `<?php echo $name ?>`,
                   description: `<?php echo $description ?>`
                 }
@@ -609,6 +622,7 @@
             $cat =  substr($category, 0, 1);
 
             $prereq = get_sub_field('prerequesites');
+
             $optional_fields = get_sub_field('optional_fields');
             $mercenary_cost = get_sub_field('mercenary_cost');
             $ranger_cost = get_sub_field('ranger_cost');
@@ -619,6 +633,8 @@
             $mage_cost = get_sub_field('mage_cost');
             $druid_cost = get_sub_field('druid_cost');
             $bard_cost = get_sub_field('bard_cost');
+            $demagogue_cost = get_sub_field('demagogue_cost');
+            $champion_cost = get_sub_field('champion_cost');
 
             $optional = get_sub_field('optional_fields');
             $multiple = false;
@@ -649,15 +665,19 @@
                       &nbsp;
                     </div>
                     <div class="col-xs-1">
-                      <span class="me_cost skill_cost"><?php echo $mercenary_cost ?></span>
-                      <span class="ra_cost skill_cost"><?php echo $ranger_cost ?></span>
-                      <span class="te_cost skill_cost"><?php echo $templar_cost ?></span>
-                      <span class="ni_cost skill_cost"><?php echo $nightblade_cost ?></span>
-                      <span class="as_cost skill_cost"><?php echo $assassin_cost ?></span>
-                      <span class="wi_cost skill_cost"><?php echo $witchhunter_cost ?></span>
-                      <span class="ma_cost skill_cost"><?php echo $mage_cost ?></span>
-                      <span class="dr_cost skill_cost"><?php echo $druid_cost ?></span>
-                      <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
+                      <div class="cost_strings">
+                        <span class="mer_cost skill_cost"><?php echo $mercenary_cost ?></span>
+                        <span class="ran_cost skill_cost"><?php echo $ranger_cost ?></span>
+                        <span class="tem_cost skill_cost"><?php echo $templar_cost ?></span>
+                        <span class="nig_cost skill_cost"><?php echo $nightblade_cost ?></span>
+                        <span class="ass_cost skill_cost"><?php echo $assassin_cost ?></span>
+                        <span class="wit_cost skill_cost"><?php echo $witchhunter_cost ?></span>
+                        <span class="mag_cost skill_cost"><?php echo $mage_cost ?></span>
+                        <span class="dru_cost skill_cost"><?php echo $druid_cost ?></span>
+                        <span class="bar_cost skill_cost"><?php echo $bard_cost ?></span>
+                        <span class="dem_cost skill_cost"><?php echo $demagogue_cost ?></span>
+                        <span class="cha_cost skill_cost"><?php echo $champion_cost ?></span>
+                      </div>
                       <span class="cost" style="display:none"></span>
                     </div>
                   </div>
@@ -703,6 +723,34 @@
                     alias_row.appendTo("#skill_list");
                   }
                 } else {
+                  var name = '<?php echo $name?>';
+                  if(~name.indexOf("Circle")){
+                    var cost_string = `<span class="mer_cost skill_cost"><?php echo $mercenary_cost+10; ?></span>
+                    <span class="ran_cost skill_cost"><?php echo $ranger_cost+10; ?></span>
+                    <span class="tem_cost skill_cost"><?php echo $templar_cost+10; ?></span>
+                    <span class="nig_cost skill_cost"><?php echo $nightblade_cost+10; ?></span>
+                    <span class="ass_cost skill_cost"><?php echo $assassin_cost+10; ?></span>
+                    <span class="wit_cost skill_cost"><?php echo $witchhunter_cost+10; ?></span>
+                    <span class="mag_cost skill_cost"><?php echo $mage_cost+10; ?></span>
+                    <span class="dru_cost skill_cost"><?php echo $druid_cost+10; ?></span>
+                    <span class="bar_cost skill_cost"><?php echo $bard_cost+10; ?></span>
+                    <span class="dem_cost skill_cost"><?php echo $demagogue_cost+10; ?></span>
+                    <span class="cha_cost skill_cost"><?php echo $champion_cost+10; ?></span>`;
+
+                    var alias_row = skill_row.clone(true);
+                    var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+                    alias_row.attr('id', row_id)
+                    alias_row.find('.cost_strings').html(cost_string);
+                    alias_row.data('name', "Spell Versatility: " + name);
+                    var name_string = "<span class='frag_cost'>"+"Spell Versatility: " + name+" ("+cost_string+"&nbsp;<i class='fa fa-diamond' aria-hidden='true'></i>)</span>"
+                    alias_row.find('span.name').html(name_string);
+                    alias_row.appendTo("#skill_list");
+                    alias_row.find('.row').addClass('frag_row');
+                    alias_row.data('requirements', name);
+                    alias_row.data('max', 5);
+                    alias_row.data('multiple', true);
+                    jQuery('#skill_list').append(alias_row);
+                  }
                   jQuery('#skill_list').append(skill_row);
                 }
 
@@ -721,7 +769,7 @@
             $s_count++;
             $name = get_sub_field('name');
 
-            if (strpos($name, 'Subsequent') !== false) {
+            if (strpos($name, 'Subsequent') !== false || $name == "Spell Versatility") {
               continue;
             }
 
@@ -758,6 +806,11 @@
             $druid_cost = get_sub_field('druid_cost');
             $bard_cost = get_sub_field('bard_cost');
             $frag_cost = get_sub_field('frag_cost');
+            $demagogue_cost = get_sub_field('demagogue_cost');
+            $champion_cost = get_sub_field('champion_cost');
+
+            $pc_class = get_sub_field('class');
+            $pc_class_string = str_replace(" ", "", $pc_class);
 
             $optional = get_sub_field('optional_fields');
             $multiple = false;
@@ -770,12 +823,12 @@
 
             <script type="text/javascript">
               jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row frag_row <?php echo $cat; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+                var skill_row = jQuery('<div class="row skill_row frag_row <?php echo $cat; ?> <?php echo $pc_class_string; ?>"><div class="col-sm-12 skill" style=""></div></div>');
                 var skill_ele = skill_row.find('.skill');
                 skill_ele.append(`
                   <div class="row">
                     <div class="col-xs-1">
-                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver" aria-hidden="true"></i>
+                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver <?php echo (($name == "Favoured") ? "favoured" : ""); ?>" aria-hidden="true"></i>
                       <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
                     </div>
                     <div class="col-xs-9">
@@ -790,15 +843,17 @@
                       &nbsp;
                     </div>
                     <div class="col-xs-1">
-                      <span class="me_cost skill_cost"><?php echo $mercenary_cost ?></span>
-                      <span class="ra_cost skill_cost"><?php echo $ranger_cost ?></span>
-                      <span class="te_cost skill_cost"><?php echo $templar_cost ?></span>
-                      <span class="ni_cost skill_cost"><?php echo $nightblade_cost ?></span>
-                      <span class="as_cost skill_cost"><?php echo $assassin_cost ?></span>
-                      <span class="wi_cost skill_cost"><?php echo $witchhunter_cost ?></span>
-                      <span class="ma_cost skill_cost"><?php echo $mage_cost ?></span>
-                      <span class="dr_cost skill_cost"><?php echo $druid_cost ?></span>
-                      <span class="ba_cost skill_cost"><?php echo $bard_cost ?></span>
+                      <span class="mer_cost skill_cost"><?php echo $mercenary_cost ?></span>
+                      <span class="ran_cost skill_cost"><?php echo $ranger_cost ?></span>
+                      <span class="tem_cost skill_cost"><?php echo $templar_cost ?></span>
+                      <span class="nig_cost skill_cost"><?php echo $nightblade_cost ?></span>
+                      <span class="ass_cost skill_cost"><?php echo $assassin_cost ?></span>
+                      <span class="wit_cost skill_cost"><?php echo $witchhunter_cost ?></span>
+                      <span class="mag_cost skill_cost"><?php echo $mage_cost ?></span>
+                      <span class="dru_cost skill_cost"><?php echo $druid_cost ?></span>
+                      <span class="bar_cost skill_cost"><?php echo $bard_cost ?></span>
+                      <span class="dem_cost skill_cost"><?php echo $demagogue_cost ?></span>
+                      <span class="cha_cost skill_cost"><?php echo $champion_cost ?></span>
                       <span class="cost" style="display:none"></span>
                     </div>
                   </div>
@@ -827,6 +882,7 @@
                 skill_row.data('frag_cost', `<?php echo $frag_cost ?>`),
 
                 skill_row.data('class_skill', false);
+                skill_row.data('class', `<?php echo $pc_class; ?>`);
 
                 <?php if($prereq != ''){ ?>
                   skill_row.addClass('has_req');
@@ -855,7 +911,7 @@
                     <a id="btn_choose_class" href="#" title="Choose Class" class="full-width blog-post-button state_saver locked">Select Class <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
                   </div>
 
-                  <div class="blog-post text-center" style="">
+                  <div class="blog-post text-center" style=" display:none;">
                     <div id="category-menu" class="col-sm-12 <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
                       <p style="margin-bottom:3rem;"><span class="full-width styled-dropdown custom-dropdown custom-dropdown--red">
                         <select id="category-dropdown" class="full-width builder_selector custom-dropdown__select custom-dropdown__select--red">
@@ -920,7 +976,13 @@
                     <select id="race-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red">
                     <option>Select a race</option>
                       <?php foreach ($races as $race) { ?>
-                        <?php $race_string = ($race->frag_cost > 0) ? $race->name . " (" . $race->frag_cost . " FRAGS)" : $race->name; ?>
+                        <?php
+                        $race_string = ($race->frag_cost > 0) ? $race->name . " (" . $race->frag_cost . " FRAGS)" : $race->name;
+                        if(is_array($race->appendix)) {
+                          $race_string .= " (APPENDIX RULEBOOK)";
+                        }
+                        ?>
+
                         <option value="<?php echo $race->name; ?>"><?php echo $race_string ?></option>
                       <?php  }?>
                     </select>
@@ -970,6 +1032,7 @@
 
 
               </div>
+
               <div id="class_selector" class="row">
 
                 <div id="class-menu" class="col-sm-12 <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
@@ -1002,7 +1065,7 @@
 
 
                           <div class="blog-post text-center" style="margin-bottom:3rem;">
-                            <a id="select_class" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 2)); ?>_cost" class="builder_selector blog-post-button state_saver locked">Select <?php echo $pc_class->name; ?></a>
+                            <a id="select_class" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector blog-post-button state_saver locked">Select <?php echo $pc_class->name; ?></a>
                           </div>
 
                         </div>
@@ -1010,18 +1073,14 @@
                     </div>
                   <?php } ?>
                 </div>
-
-            </div>
-
-            <div id="class_selector" class="row">
-              <div class="col-sm-12">
-
               </div>
+
             </div>
+
           </div>
         </div>
 
-        <div class="row">
+        <div id="details_section" class="row">
           <div class="col-sm-4">
 
             <div id="character_data">
@@ -1071,6 +1130,7 @@
                   <div id="cb_character_details" class="cb_display_content active">
                     <h4>Race: <span id="cb_race_show"></span></h4>
                     <h4>Class: <span id="cb_class_show"></span></h4>
+                    <h4 id="char_vocation">Vocation: <span id="cb_vocation_show"></span></h4>
                     <h4>Level: <span id="cb_level"></span></h4>
                     <h4>CP Spent: <span id="cb_cp_spent"></span></h4>
                     <h4>CP Available: <span id="cb_cp_avail"></span></h4>
@@ -1205,6 +1265,7 @@
           </div>
         </div>
 
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tinysort/2.3.6/tinysort.js"></script>
 
         <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
@@ -1215,4 +1276,95 @@
 		</div><!--/.col-sm-7-->
 	</div><!--/.row-->
 </div><!--/.container-->
+
+<div id="blog">
+
+    <div id="occupation_selector" class="row">
+
+      <div id="occupation-menu" class="col-sm-12 <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
+        <p><span class="custom-dropdown custom-dropdown--red">
+          <select id="occupation-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red">
+          <option>Select a Renowned Occupation</option>
+            <?php foreach ($occupations as $class) { ?>
+              <?php $class_string = ($class->frag_cost > 0) ? $class->name . " (" . $class->frag_cost . " FRAGS)" : $class->name; ?>
+              <option value="<?php echo $class->name; ?>"><?php echo $class_string ?></option>
+            <?php } ?>
+          </select>
+        </span></p>
+      </div>
+
+      <div id="occupation-content" class="col-sm-12">
+        <?php foreach ($occupations as $pc_class) { ?>
+          <div class="occupation content repeater-content" data-name="<?php echo $pc_class->name; ?>">
+            <h2><?php echo $pc_class->name; ?></h2>
+
+            <div class="row repeater-row">
+              <div class="col-sm-4 column class_meta">
+
+                <img src="<?php echo $pc_class->photo ?>" class="img-responsive builder_photo" alt="<?php echo $pc_class->name ?>" title="<?php echo $pc_class->name ?>"/>
+
+              </div>
+              <div class="col-sm-8 column class_info">
+
+                <h4>Descriptipn</h4>
+                <?php echo $pc_class->description; ?>
+
+
+                <div class="blog-post text-center" style="margin-bottom:3rem;">
+                  <a id="select_occupation" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector occupation blog-post-button state_saver locked">Select <?php echo $pc_class->name; ?></a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        <?php } ?>
+      </div>
+
+    </div>
+    <div id="vocation_selector" class="row">
+
+      <div id="vocation-menu" class="col-sm-12 <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
+        <p><span class="custom-dropdown custom-dropdown--red">
+          <select id="vocation-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red">
+          <option>Select a Vocation</option>
+            <?php foreach ($vocations as $class) { ?>
+              <?php $class_string = ($class->frag_cost > 0) ? $class->name . " (" . $class->frag_cost . " FRAGS)" : $class->name; ?>
+              <option value="<?php echo $class->name; ?>"><?php echo $class_string ?></option>
+            <?php } ?>
+          </select>
+        </span></p>
+      </div>
+
+      <div id="occupation-content" class="col-sm-12">
+        <?php foreach ($vocations as $pc_class) { ?>
+          <div class="vocation content repeater-content" data-name="<?php echo $pc_class->name; ?>">
+            <h2><?php echo $pc_class->name; ?></h2>
+
+            <div class="row repeater-row">
+              <div class="col-sm-4 column class_meta">
+
+                <img src="<?php echo $pc_class->photo ?>" class="img-responsive builder_photo" alt="<?php echo $pc_class->name ?>" title="<?php echo $pc_class->name ?>"/>
+
+              </div>
+              <div class="col-sm-8 column class_info">
+
+                <h4>Descriptipn</h4>
+                <?php echo $pc_class->description; ?>
+
+
+                <div class="blog-post text-center" style="margin-bottom:3rem;">
+                  <a id="select_vocation" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector vocation blog-post-button state_saver locked">Select <?php echo $pc_class->name; ?></a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        <?php } ?>
+      </div>
+
+    </div>
+
+
+
+</div>
 <?php get_footer(); ?>
