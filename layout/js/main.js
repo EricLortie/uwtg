@@ -299,7 +299,7 @@ jQuery(document).on('ready', function(){
 
 
   function add_skill_to_character(skill_ele){
-    if(skill_ele.data('multiple') == false || skill_ele.data('multiple') == "" || skill_ele.data('multiple') == 0){
+    if(skill_ele.data('multiple') == false || skill_ele.data('multiple') == "" || skill_ele.data('multiple') == 0 || skill_ele.data('multiple') == "0"){
       skill_ele.find('.skill_add').hide();
       skill_ele.find('.skill_purchased').slideToggle();
       skill_ele.addClass('purchased');
@@ -311,6 +311,13 @@ jQuery(document).on('ready', function(){
       builder_data.character.skills[skill_ele.data('name')] += 1;
     } else {
       builder_data.character.skills[skill_ele.data('name')] = 1;
+    }
+    if(skill_ele.data('class_skill')){
+      if(builder_data.character.class_skills.hasOwnProperty(skill_ele.data('name'))) {
+        builder_data.character.class_skills[skill_ele.data('level')] += 1;
+      } else {
+        builder_data.character.class_skills[skill_ele.data('level')] = 1;
+      }
     }
 
     builder_data.character.cp_avail -= skill_ele.data('cost');
@@ -468,7 +475,7 @@ jQuery(document).on('ready', function(){
         }
       }
       if (cost > builder_data.character.cp_avail
-          || ((jQuery(this).data('multiple') !== true) && character_has_skill(name))
+          || ((jQuery(this).data('multiple') == false || jQuery(this).data('multiple') == "0" || jQuery(this).data('multiple') == 0) && character_has_skill(name))
           || (!spell_circle && has_req && !meets_req(jQuery(this)))
           || (spell_circle && !has_circle_req(name))
           || (jQuery(this).data('class_skill') && !meets_class_req(jQuery(this)))
@@ -610,8 +617,6 @@ jQuery(document).on('ready', function(){
         break;
       case "Weapon Group Proficiency":
       case "Group Proficiency":
-      console.log("GROUP");
-      console.log(skill);
         switch(skill) {
           case "Critical +2: Specific Simple Weapon":
           case "Critical +2: Simple Group":
@@ -856,7 +861,7 @@ jQuery(document).on('ready', function(){
   function scrollTo(ele) {
 
     jQuery('html, body').animate({
-        scrollTop: ele.offset().top
+        scrollTop: (ele.offset().top -100)
     }, 300);
 
   }
