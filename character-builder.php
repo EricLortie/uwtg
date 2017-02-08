@@ -74,7 +74,7 @@
           ]
           builder_data.human_level_chart = [];
           for (level in builder_data.level_chart){
-            level_data = builder_data.level_chart[level];
+            var level_data =  jQuery.extend({}, builder_data.level_chart[level]);
             level_data['cp'] += 50;
             builder_data.human_level_chart.push(level_data);
           };
@@ -1160,8 +1160,8 @@
               <div class="row">
                 <div id="legend" class="col-xs-12 closed" style="">
                   <p class="skill_meta">
-                    <a href="#" id="legend_close" class="legend_toggler"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close legend</a>
-                    <a href="#" id="legend_open" class="legend_toggler"><i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp; open legend</a>
+                    <a href="#" id="legend_close" class="legend_toggler"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close icon legend</a>
+                    <a href="#" id="legend_open" class="legend_toggler"><i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp; open icon legend</a>
                   </p>
                   <div id="legend_content" class="row">
                   <?php
@@ -1194,32 +1194,32 @@
                   <h4>Filter</h4>
                   <div class="row">
                     <div class="col-xs-2">
-                      <button id="btn_warrior" data-cat="W" data-cat-string="Warrior" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_warrior" title="Warrior Skills" data-cat="W" data-cat-string="Warrior" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-shield" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_rogue" data-cat="R" data-cat-string="Rogue" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_rogue" title="Rogue Skills" data-cat="R" data-cat-string="Rogue" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-bomb" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_scholar" data-cat="S" data-cat-string="Scholar" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_scholar" title="Scholar Skills" data-cat="S" data-cat-string="Scholar" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-magic" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_production" data-cat="P" data-cat-string="Production" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_production" title="Production Skills" data-cat="P" data-cat-string="Production" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-cog" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_racial" data-cat="A"  data-cat-string="Racial" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_racial" title="Racial Skills" data-cat="A"  data-cat-string="Racial" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-users" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-2">
-                      <button id="btn_class" data-cat="C" data-cat-string="Class" class="skill_menu btn-cat btn btn-skill">
+                      <button id="btn_class" title="Class Skills" data-cat="C" data-cat-string="Class" class="skill_menu btn-cat btn btn-skill">
                         <i class="fa fa-universal-access" aria-hidden="true"></i>
                       </button>
                     </div>
@@ -1229,12 +1229,12 @@
                   <h4>Toggle</h4>
                   <div class="row">
                     <div class="col-xs-6">
-                      <button id="btn_toggle_skills" class="skill_menu btn btn-skill">
+                      <button id="btn_toggle_skills" title="Toggle Available Skills" class="skill_menu btn btn-skill">
                         <i class="fa fa-eye" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-xs-6">
-                      <button id="btn_frag" class="skill_menu btn btn-skill">
+                      <button id="btn_frag" title="Frag Skills" class="skill_menu btn btn-skill">
                         <i class="fa fa-diamond" aria-hidden="true"></i>
                       </button>
                     </div>
@@ -1244,10 +1244,10 @@
                   <h4>Sort</h4>
                   <div class="row">
                     <div class="col-xs-6">
-                      <button id="btn_sort_cost" class="skill_menu btn-sort btn btn-skill">#</button>
+                      <button id="btn_sort_cost" title="Sort by Cost" class="skill_menu btn-sort btn btn-skill">#</button>
                     </div>
                     <div class="col-xs-6">
-                      <button id="btn_sort_name" class="skill_menu btn-sort btn btn-skill active">A-Z</button>
+                      <button id="btn_sort_name" title="Sort by Name" class="skill_menu btn-sort btn btn-skill active">A-Z</button>
                     </div>
                   </div>
                 </div>

@@ -614,6 +614,11 @@ h2.switcher.active {
 #legend {
   padding: 0 4rem;
   font-weight: bolder;
+  text-align: center;
+  text-transform: uppercase;
+  background: black;
+  width: 100%;
+  padding-top: 8px;
 }
 #legend a {
   color: darkred;
@@ -776,6 +781,13 @@ p#option_string span.opt {
 #character_data.sticky {
    position: fixed;
    top: 0;
+}
+.character-meta {
+  font-weight: bold;
+  text-transform: uppercase;
+  width: 100%;
+  border-bottom: 1px solid red;
+  margin-bottom: 1rem;
 }
 #character_section {
   background: black;

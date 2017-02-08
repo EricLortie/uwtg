@@ -728,8 +728,10 @@ jQuery(document).on('ready', function(){
   }
 
   jQuery('.btn-cb-content ').on('click', function(){
-    jQuery('.btn-cb-content').toggleClass('active');
-    jQuery('.cb_display_content').toggleClass('active');
+    if(!jQuery(this).hasClass('active')) {
+      jQuery('.btn-cb-content').toggleClass('active');
+      jQuery('.cb_display_content').toggleClass('active');
+    }
   });
 
   jQuery('.legend_toggler').on('click', function(e){
@@ -898,5 +900,8 @@ jQuery(document).on('ready', function(){
   jQuery(document).on('click', '#select_vocation', function(){
     set_vocation(jQuery(this).data('class'), jQuery(this).data('cost-ele'));
   });
+
+
+  jQuery( document ).tooltip();
 
 });
