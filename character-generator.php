@@ -113,10 +113,10 @@
           </div>
 
           <div class="row">
-            <div class="col-xs-2">
+            <div class="col-sm-2">
               <strong>Backstory:</strong>
             </div>
-            <div class="col-xs-10">
+            <div class="col-sm-10">
               <p>
                 <span id="arrival-container">You <span id="arrival-holder"></span>&nbsp;</span>
                 <span id="purpose-container">You are here the purpose of <span id="purpose-holder"></span>&nbsp;</span>
@@ -139,68 +139,106 @@
           builder_data.professions = [];
         </script>
 
-        <?php if( have_rows('races') ): ?>
-          <div class="race-content">
+        <?php if( have_rows('races', get_id_by_slug('codex-races')) ): ?>
+          <?php $races = array(); ?>
+          <?php while( have_rows('races',get_id_by_slug('codex-races')) ): the_row(); ?>
 
-            <div id="cf-races" class="cf-repeater">
-              <div class="row repeater-content rf-hidden">
-                <div class="col-lg-12 column">
 
-                  <?php while( have_rows('races') ): the_row(); ?>
+            <?php // vars
+            $name = get_sub_field('name');
+            $life_span = get_sub_field('life_span');
+            $frag_cost = get_sub_field('frag_cost');
+            $description = get_sub_field('description');
+            $racial_characteristics = get_sub_field('racial_characteristics');
+            $advantages = get_sub_field('advantages');
+            $disadvantages = get_sub_field('disadvantages');
+            $appendix = get_sub_field('appendix');
+            if($appendix != "") {
+              continue;
+            }
+            $photo = get_sub_field('photo');
+            $race = new stdClass();
+            $race->name = $name;
+            $race->life_span = $life_span;
+            $race->frag_cost = $frag_cost;
+            $race->appendix = $appendix;
+            if ($frag_cost != "") {
+              $race->race_string = preg_replace('/ \(.*/', "", $name) . " (" . $frag_cost . " frags)";
+            } else {
+              $race->race_string = preg_replace('/ \(.*/', "", $name);
+            }
+            $race->description = $description;
+            $race->racial_characteristics = $racial_characteristics;
+            $race->advantages = $advantages;
+            $race->disadvantages = $disadvantages;
+            if($photo == ""){
+              $race->photo = site_url() . "/wp-content/uploads/2016/06/UWL_logo.png";
+            } else {
+              $race->photo = $photo;
+            }
+            array_push($races, $race);
 
-                    <?php // vars
-                    $name = get_sub_field('name');
-                    $lifespan = get_sub_field('lifespan');
-                    $description = get_sub_field('description');
-                    $racial_characteristics = get_sub_field('racial_characteristics');
-                    $advantages = get_sub_field('advantages');
-                    $disadvantages = get_sub_field('disadvantages');
+            ?>
 
-                    ?>
+            <script type="text/javascript">
+              builder_data.races.push({
+                name: `<?php echo $name ?>`,
+                lifespan: `<?php echo $life_span ?>`,
+                racial_characteristics: `<?php echo $racial_characteristics ?>`,
+                description: `<?php echo $description ?>`,
+                advantages: `<?php echo $advantages ?>`,
+                disadvantages: `<?php echo $disadvantages ?>`,
+                frag_cost: `<?php  echo $frag_cost; ?>`
+              });
+            </script>
 
-                    <div class="race" data-race="<?php echo $name; ?>" style="display:none;">
+          <?php endwhile; ?>
+          <?php //usort($races, 'sortByOption'); ?>
+        <?php endif; ?>
 
-                      <h2><?php echo $name; ?></h2>
+        <div id="race-content" class="col-sm-12">
+          <?php foreach ($races as $race) { ?>
+            <div class="race content repeater-content" data-name="<?php echo $race->name; ?>">
+              <h2><?php echo $race->name; ?></h2>
 
-                      <div class="row repeater-row">
-                        <div class="col-sm-4 column">
+              <div class="row repeater-row">
+                <div class="col-sm-4 column race_meta">
 
-                          <h4>Lifespan: <?php echo $lifespan; ?></h4>
+                  <img src="<?php echo $race->photo ?>" class="img-responsive builder_photo" alt="<?php echo $race->name ?>" title="<?php echo $race->name ?>"/>
 
-                          <p><?php echo $racial_characteristics; ?></p>
-                        </div>
-                        <div class="col-sm-8 column">
+                  <?php if($race->frag_cost != ""){ ?>
+                    <h4>Frag Cost</h4>
 
-                          <h4>Descriptipn</h4>
-                          <?php echo $description; ?>
+                    <p><?php echo $race->frag_cost; ?></p>
+                  <?php } ?>
 
-                          <h4>Advantages</h4>
-                          <?php echo $advantages; ?>
+                  <h4>Lifespan</h4>
 
-                          <h4>Disadvantages:</h4>
-                          <?php echo $disadvantages; ?>
+                  <p><?php echo $race->life_span; ?></p>
 
-                        </div>
-                      </div>
+                  <h4>Racial Characteristics</h4>
 
-                      <script type="text/javascript">
-                        builder_data.races.push({
-                          name: `<?php echo $name ?>`,
-                          lifespan: `<?php echo $lifespan ?>`,
-                          racial_characteristics: `<?php echo $racial_characteristics ?>`,
-                          description: `<?php echo $description ?>`,
-                          advantages: `<?php echo $advantages ?>`,
-                          disadvantages: `<?php echo $disadvantages ?>`
-                        });
-                      </script>
-                    </div>
+                  <p><?php echo $race->racial_characteristics; ?></p>
+                </div>
+                <div class="col-sm-8 column race_info <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
 
-                    <?php endwhile; ?>
-                  </div>
+                  <h4>Descriptipn</h4>
+                  <?php echo $race->description; ?>
+
+                  <h4>Advantages</h4>
+                  <?php echo $race->advantages; ?>
+
+                  <h4>Disadvantages:</h4>
+                  <?php echo $race->disadvantages; ?>
+
                 </div>
               </div>
             </div>
-        <?php endif; ?>
+          <?php } ?>
+        </div>
+        
+        <hr/>
+
         <?php if( have_rows('classes') ): ?>
           <div class="pc_class-content">
 
@@ -215,7 +253,7 @@
                     $description = get_sub_field('description');
                     ?>
 
-                    <div class="pc_class" data-pc-class="<?php echo $name; ?>" style="display:none;">
+                    <div class="pc_class" data-name="<?php echo $name; ?>" style="display:none;">
 
 
                     <h2><?php echo $name; ?></h2>
@@ -336,8 +374,9 @@
 
               jQuery('.pc_class').hide();
               jQuery('.race').hide();
-              jQuery('.race[data-race="'+race.name+'"]').show();
-              jQuery('.pc_class[data-pc-class="'+pc_class.name+'"]').show();
+              console.log(race.name);
+              jQuery('.race[data-name="'+race.name+'"]').show();
+              jQuery('.pc_class[data-name="'+pc_class.name+'"]').show();
               jQuery('#'+makeSafeForCSS(race.name)).show();
 
             });
