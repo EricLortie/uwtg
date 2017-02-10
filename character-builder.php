@@ -1271,7 +1271,7 @@
 
         <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
         <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
-        <script type="text/javascript" src="<?php site_url(); ?>/wp-content/themes/illdy/layout/js/main.js"></script>
+        <script type="text/javascript" src="<?php site_url(); ?>/wp-content/themes/illdy/layout/js/character-builder.js"></script>
 
 			</section><!--/#blog-->
 		</div><!--/.col-sm-7-->

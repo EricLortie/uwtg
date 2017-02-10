@@ -572,7 +572,6 @@ h2.switcher.active {
   color: red !important;
 }
 #generated-character {
-  display:none;
   margin-bottom: 3rem;
   background: #222;
   padding: 2rem;
@@ -719,6 +718,15 @@ select.mandatory:disabled {
   padding: .5rem !important;
   height: auto !important;
   line-height: 22px !important;*/
+}
+#generator-tabs {
+  display: none;
+}
+#generator-tabs a.gen-tab {
+  border-bottom: darkred !important;
+}
+#generator-tabs li.active a.gen_tab {
+  background-color: darkred !important;
 }
 .btn-skill, .btn-red {
   position: relative;
