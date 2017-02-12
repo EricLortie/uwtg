@@ -140,3 +140,66 @@ $wp_customize->add_control(
         'priority'      => 5
     )
 );
+
+
+/***********************************************/
+/**************** Background *******************/
+/***********************************************/
+
+// Type of Background
+$wp_customize->add_setting( $prefix . '_latest_news_background_type', array(
+    'default'           => 'image',
+    'sanitize_callback' => 'illdy_sanitize_radio_buttons',
+    'transport'         => 'postMessage'
+) );
+$wp_customize->add_control( $prefix . '_latest_news_background_type', array(
+    'label'     => __( 'Type of Background', 'illdy' ),
+    'section'       => $prefix . '_latest_news_general',
+    'type'      => 'radio',
+    'choices'   => array(
+        'image'     => __( 'Image', 'illdy' ),
+        'color'     => __( 'Color', 'illdy' )
+    ),
+    'priority'  => 6
+) );
+
+// Image
+$wp_customize->add_setting(
+    $prefix . '_latest_news_background_image',
+    array(
+        'sanitize_callback' => 'esc_url_raw',
+        'default'           => esc_url( get_template_directory_uri() . '/layout/images/front-page/front-page-counter.jpg' ),
+        'transport'         => 'postMessage'
+    )
+);
+$wp_customize->add_control(
+    new WP_Customize_Image_Control(
+        $wp_customize, $prefix . '_latest_news_background_image',
+        array(
+            'label'     => __( 'Image', 'illdy' ),
+            'section'       => $prefix . '_latest_news_general',
+            'priority'  => 7
+        )
+    )
+);
+
+
+// Color
+$wp_customize->add_setting(
+    $prefix . '_latest_news_background_color',
+    array(
+        'sanitize_callback' => 'sanitize_hex_color',
+        'default'           => '#000000',
+        'transport'         => 'postMessage'
+    )
+);
+$wp_customize->add_control(
+    new WP_Customize_Color_Control(
+    $wp_customize,
+    $prefix . '_latest_news_background_color',
+    array(
+        'label'     => __( 'Color', 'illdy' ),
+        'section'       => $prefix . '_latest_news_general',
+        'priority'  => 3
+    ) )
+);

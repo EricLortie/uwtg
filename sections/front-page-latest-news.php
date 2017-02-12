@@ -9,13 +9,23 @@
 
 <?php
 
+$general_background_type = get_theme_mod( 'illdy_latest_news_background_type', 'image' );
+$general_background_image = get_theme_mod( 'illdy_latest_news_background_image', esc_url( get_template_directory_uri() . '/inc/medieval-bg.jpg' ) );
+$general_background_color = get_theme_mod( 'illdy_latest_news_background_color', '#000000' );
 $general_title = get_theme_mod( 'illdy_latest_news_general_title', esc_html__( 'Latest News', 'illdy' ) );
 $general_entry = get_theme_mod( 'illdy_latest_news_general_entry', esc_html__( 'If you are interested in the latest articles in the industry, take a sneak peek at our blog. You’ve got nothing to loose!', 'illdy' ) );
 $button_text = get_theme_mod( 'illdy_latest_news_button_text', esc_html__( 'See blog', 'illdy' ) );
 $button_url = get_theme_mod( 'illdy_latest_news_button_url', esc_url( '#' ) );
 $number_of_posts = get_theme_mod( 'illdy_latest_news_number_of_posts', absint( 3 ) );
 ?>
-<section id="latest-news" class="front-page-section">
+<?php
+if( $general_background_type == 'image' ):
+	$counter_style = 'background: url('. esc_url( $general_background_image ) .') no-repeat center center fixed;background-size: 100%;';
+elseif( $general_background_type == 'color' ):
+	$counter_style = 'background-color:' . $general_background_color;
+endif;
+?>
+<section id="latest-news" class="front-page-section" style="<?php echo $counter_style; ?>">
 
 	<?php if( $button_text && $button_url ): ?>
 		<a href="<?php echo esc_url( $button_url ); ?>" title="<?php echo esc_attr( $button_text ); ?>" class="latest-news-button"><i class="fa fa-chevron-circle-right"></i><?php echo esc_html( $button_text ); ?></a>
