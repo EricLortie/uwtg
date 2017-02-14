@@ -10,7 +10,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col-sm-12">
-			<section id="blog">
+			<section id="blog" class="characters">
 				<h1>Characters</h1>
 				<p>Here you'll find a list of all currently listed Tempest Grove characters.
 					This list includes <strong>Player Characters</strong> and <strong>Non-Player Characters</strong>.<p>
@@ -24,6 +24,7 @@
 				// Args
 				$args = array(
 						'post_type'         => 'characters',
+						'posts_per_page'         => -1,
 						'orderby'						=> 'title',
 						'order' 						=> 'ASC'
 

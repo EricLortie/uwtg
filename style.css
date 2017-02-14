@@ -1021,6 +1021,10 @@ div.nav-ele {
   position:relative;
   margin:0px auto;
 }
+
+#blog.character .paginate-links {
+  display:none;
+}
 #blog .paginate-links {
     width: 100%;
     background: grey;
