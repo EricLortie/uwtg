@@ -14,7 +14,7 @@
 				<h1>Characters</h1>
 				<p>Here you'll find a list of all currently listed Tempest Grove characters.
 					This list includes <strong>Player Characters</strong> and <strong>Non-Player Characters</strong>.<p>
-				<p>If you'd like to see your character listed with a detailed biography please <a href="/new-character-form" target="_blank">fill out this form.</a></p>
+				<p>If you'd like to see your character listed with a detailed biography please <a href="/character-biography-form/" target="_blank">fill out this form.</a></p>
 				<br/>
 				<hr/>
 				<br/>
