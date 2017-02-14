@@ -24,7 +24,6 @@
 				// Args
 				$args = array(
 						'post_type'         => 'characters',
-						'posts_per_page'         => -1,
 						'orderby'						=> 'title',
 						'order' 						=> 'ASC'
 
