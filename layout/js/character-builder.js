@@ -825,18 +825,21 @@ jQuery(document).on('ready', function(){
   }
 
   // Cache selectors outside callback for performance.
-  var $window = jQuery(window),
-      $stickyEl = jQuery('#character_data'),
-      elTop = $stickyEl.offset().top;
+  console.log(jQuery('#character_data').length);
+  if(jQuery('#character_data').length > 0){
+    var $window = jQuery(window),
+        $stickyEl = jQuery('#character_data'),
+        elTop = $stickyEl.offset().top;
 
-  $window.scroll(function() {
-    if(!jQuery('header#header').hasClass('mobile')){
-       $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
-     }
-  });
+    $window.scroll(function() {
+      if(!jQuery('header#header').hasClass('mobile')){
+         $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
+       }
+    });
 
-  $stickyEl.css({'max-width': $stickyEl.width()});
-  $stickyEl.css({'width': $stickyEl.width()});
+    $stickyEl.css({'max-width': $stickyEl.width()});
+    $stickyEl.css({'width': $stickyEl.width()});
+  }
 
   if(typeof saved_char !== 'undefined'){
     jQuery('#load_character_section').show();
@@ -901,7 +904,8 @@ jQuery(document).on('ready', function(){
     set_vocation(jQuery(this).data('class'), jQuery(this).data('cost-ele'));
   });
 
-
-  jQuery( document ).tooltip();
+  if(jQuery('.tooltip').length > 0){
+    jQuery( document ).tooltip();
+  }
 
 });
