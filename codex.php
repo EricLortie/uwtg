@@ -338,7 +338,7 @@
         <?php if(count($races) > 0 ) { ?>
           <div id="" class="row">
 
-            <div id="race-menu" class="col-sm-12 <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
+            <div id="race-menu" class="col-sm-12 mobile">
               <p><span class="custom-dropdown custom-dropdown--red">
                 <select id="race-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red">
                 <option>Select a race</option>
@@ -396,7 +396,7 @@
         <?php if(count($classes) > 0 ) { ?>
           <div id="" class="row">
 
-            <div id="class-menu" class="col-sm-12 <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
+            <div id="class-menu" class="col-sm-12 mobile">
               <p><span class="custom-dropdown custom-dropdown--red">
                 <select id="class-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red">
                 <option>Select a class</option>
