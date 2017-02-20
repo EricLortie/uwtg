@@ -825,7 +825,6 @@ jQuery(document).on('ready', function(){
   }
 
   // Cache selectors outside callback for performance.
-  console.log(jQuery('#character_data').length);
   if(jQuery('#character_data').length > 0){
     var $window = jQuery(window),
         $stickyEl = jQuery('#character_data'),
