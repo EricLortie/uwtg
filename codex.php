@@ -261,6 +261,8 @@
 
                     <?php // vars
                     $name = get_sub_field('name');
+
+                    $category = get_sub_field('category');
                     $description = get_sub_field('description');
                     $prereq = get_sub_field('prerequesites');
                     $mercenary_cost = get_sub_field('mercenary_cost');

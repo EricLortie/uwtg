@@ -1135,7 +1135,7 @@
                     <h4>Level: <span id="cb_level"></span></h4>
                     <h4>CP Spent: <span id="cb_cp_spent"></span></h4>
                     <h4>CP Available: <span id="cb_cp_avail"></span></h4>
-                    <h4>Blankets Value: <span id="cb_blanket_next"></span></h4>
+                    <h4>CP Applied per Blanket: <span id="cb_blanket_next"></span></h4>
                     <h4>Blankets Spent: <span id="cb_blankets_spent"></span></h4>
                     <h4>Frags Spent: <span id="cb_frags_spent"></span></h4>
                     <h4>Body Points: <span id="cb_bp"></span></h4>

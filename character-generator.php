@@ -119,7 +119,7 @@
                 <div class="col-sm-10">
                   <p>
                     <span id="arrival-container">You <span id="arrival-holder"></span>&nbsp;</span>
-                    <span id="purpose-container">You are here the purpose of <span id="purpose-holder"></span>&nbsp;</span>
+                    <span id="purpose-container">You are here for the purpose of <span id="purpose-holder"></span>&nbsp;</span>
                     <span id="profession-container">You are <span id="profession-holder">&nbsp;</span>
                     <span id="quirk-container">You <span id="quirk-holder"></span>&nbsp;</span>
                   </p>
@@ -146,6 +146,12 @@
                   $name = get_sub_field('name');
                   $life_span = get_sub_field('life_span');
                   $frag_cost = get_sub_field('frag_cost');
+
+                  $frag_cost = get_sub_field('frag_cost');
+                  if ($frag_cost != "") {
+                    continue;
+                  }
+
                   $description = get_sub_field('description');
                   $racial_characteristics = get_sub_field('racial_characteristics');
                   $advantages = get_sub_field('advantages');
@@ -238,7 +244,7 @@
             </div>
             <div id="class_list" class="tab-pane">
 
-              <?php if( have_rows('classes') ): ?>
+              <?php if( have_rows('classes', get_id_by_slug('codex-classes')) ): ?>
                 <div class="pc_class-content">
 
                   <div id="cf-pc_classes" class="cf-repeater">
@@ -246,16 +252,20 @@
                       <div class="col-lg-12 column">
 
                         <?php $classes = array(); ?>
-                        <?php while( have_rows('classes') ): the_row(); ?>
+                        <?php while( have_rows('classes', get_id_by_slug('codex-classes')) ): the_row(); ?>
 
                           <?php // vars
+
+                          $frag_cost = get_sub_field('frag_cost');
+                          if ($frag_cost != "") {
+                            continue;
+                          }
 
                           $name = get_sub_field('name');
                           $frag_cost = get_sub_field('frag_cost');
 
                           $description = get_sub_field('description');
                           $photo = get_sub_field('photo');
-                          $frag_cost = get_sub_field('frag_cost');
 
                           $pc_class = new stdClass();
                           $pc_class->name = $name;
