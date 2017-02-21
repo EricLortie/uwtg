@@ -319,20 +319,6 @@
             </div>
           </div>
 
-          <script type="text/javascript">
-            jQuery(document).on('ready', function(){
-              jQuery('.skill_expander').on('click', function(){
-                var desc = jQuery(this).closest('.skill_row').find('.skill_desc');
-                desc.slideToggle();
-              });
-              jQuery('.skill_closer').on('click', function(e){
-                e.preventDefault();
-                var desc = jQuery(this).closest('.skill_desc');
-                desc.slideToggle();
-              });
-            });
-          </script>
-
         <?php endif; ?>
 
         <?php if(count($races) > 0 ) { ?>
