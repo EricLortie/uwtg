@@ -87,14 +87,14 @@
         <div id="generator-tabs">
           <ul class="nav nav-tabs nav-justified" data-tabs="tabs">
             <li role="presentation" class="active"><a href="#generated-character" class="gen-tab" data-toggle="tab">DETAILS</a></li>
-            <li role="presentation"><a href="#race_list" class="gen-tab" data-toggle="tab">RACE</a></li>
-            <li role="presentation"><a href="#class_list" class="gen-tab" data-toggle="tab">CLASS</a></li>
+            <li id="race-tab" role="presentation"><a href="#race_list" class="gen-tab" data-toggle="tab">RACE</a></li>
+            <li id="class-tab" role="presentation"><a href="#class_list" class="gen-tab" data-toggle="tab">CLASS</a></li>
           </ul>
 
           <div class="tab-content clearfix">
             <div id="generated-character" class="tab-pane active">
 
-              <div id="" class="row">
+              <div id="pc_race-container" class="row">
                 <div class="col-xs-2">
                   <strong>Race:</strong>
                 </div>
@@ -120,7 +120,7 @@
                   <p>
                     <span id="arrival-container">You <span id="arrival-holder"></span>&nbsp;</span>
                     <span id="purpose-container">You are here for the purpose of <span id="purpose-holder"></span>&nbsp;</span>
-                    <span id="profession-container">You are <span id="profession-holder">&nbsp;</span>
+                    <span id="profession-container">You are <span id="profession-holder"></span>&nbsp;</span>
                     <span id="quirk-container">You <span id="quirk-holder"></span>&nbsp;</span>
                   </p>
                 </div>

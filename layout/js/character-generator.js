@@ -48,6 +48,26 @@
 
     });
 
+    jQuery('#cg-pc_class').on('change', function(){
+      if(jQuery(this).val() == "hide"){
+        jQuery('#class-tab').hide();
+        jQuery('#pc_class-container').hide();
+      } else {
+        jQuery('#class-tab').show();
+        jQuery('#pc_class-container').show();
+      }
+    });
+
+    jQuery('#cg-race').on('change', function(){
+      if(jQuery(this).val() == "hide"){
+        jQuery('#race-tab').hide();
+        jQuery('#pc_race-container').hide();
+      } else {
+        jQuery('#race-tab').show();
+        jQuery('#pc_race-container').show();
+      }
+    });
+
     jQuery('.gen-opt').on('change', function(){
       var holder = jQuery(this).data('eleHolder');
       if(jQuery(this).val() == 'hide') {
