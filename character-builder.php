@@ -261,7 +261,6 @@
             }
 
             $optional = get_sub_field('optional');
-            write_log($optional);
             if ( $optional && in_array('vocation', $optional) ) {
               array_push($vocations, $pc_class); ?>
               <script type="text/javascript">

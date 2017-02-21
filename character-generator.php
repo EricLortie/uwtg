@@ -260,7 +260,7 @@
                           if ($frag_cost != "") {
                             continue;
                           }
-                          $optional = get_sub_field('optional_fields');
+                          $optional = get_sub_field('optional');
                           if ( $optional && (in_array('vocation', $optional) || in_array('occupation', $optional)) ) {
                             continue;
                           }
