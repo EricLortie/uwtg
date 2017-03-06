@@ -541,7 +541,7 @@ jQuery(document).on('ready', function(){
       return false;
     } else if (skill == "Spell Slot: Ritual Base" && skills["Read Magic: Ritual"] == 1 && skills["Spell Slot: 9th Circle"] >= 1) {
       return true;
-    } else if(skill == "Spell Slot: 1st Circle" && builder_data.character.spell_spheres == 1){
+    } else if(skill == "Spell Slot: 1st Circle" && builder_data.character.spell_spheres >= 1){
       return true;
     } else if (skill != "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && circle_math_req(prev_skill_count, cur_skill_count)) {
       return true;
