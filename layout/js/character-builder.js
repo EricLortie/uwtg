@@ -39,6 +39,8 @@ jQuery(document).on('ready', function(){
     jQuery('#cb_selectors').show();
     jQuery('#cb_race_show').html('');
     jQuery('#cb_class_show').html('');
+    jQuery('#details_section').hide();
+    jQuery('#menu_primary').show();
     jQuery('#menu_launcher').show();
     reset_character();
     reset_skills();
@@ -206,6 +208,7 @@ jQuery(document).on('ready', function(){
       jQuery(this).hide();
       jQuery('#cb_selectors').hide();
       jQuery('#menu_launcher').hide();
+      jQuery('#details_section').show();
       add_automatic_skills();
     }
   });
@@ -283,6 +286,8 @@ jQuery(document).on('ready', function(){
 
   jQuery('#opt-clear').on('click', function(){
     builder_data.toggle = "";
+    jQuery('.frag_row').hide();
+    jQuery('.skill_row').show();
     jQuery('#filter_string').html("ALL");
     jQuery('#skill_list').removeClass('avail_only');
     jQuery('#skill_list').removeClass('S');
@@ -319,6 +324,9 @@ jQuery(document).on('ready', function(){
         builder_data.character.class_skills[skill_ele.data('level')] = 1;
       }
     }
+    if(skill_ele.data('racial_skill')){
+      builder_data.character.racial_skills += 1;
+    }
 
     builder_data.character.cp_avail -= skill_ele.data('cost');
     builder_data.character.cp_spent += skill_ele.data('cost');
@@ -332,6 +340,10 @@ jQuery(document).on('ready', function(){
     jQuery('#cb_skill_count').html(builder_data.character.skill_count);
     update_character();
     update_skills();
+    if((!skill_ele.find('.skill_add').hasClass('automatic_skill'))){
+      builder_data.step += 1;
+      push_to_remote(builder_data.character, builder_data.step, skill_ele.data('name'));
+    }
   }
 
   function reset_character() {
@@ -343,8 +355,11 @@ jQuery(document).on('ready', function(){
     jQuery('#char_vocation').hide();
     jQuery('#cb_vocation_show').html("");
 
+    builder_data.character.character_id = generateUUID();
     builder_data.character.level = 1;
     builder_data.character.blankets_spent = 0;
+    builder_data.character.racial_skills = 0;
+    builder_data.character.automatic_racial_skills = 0;
     builder_data.character.cp_avail = 150;
     if(builder_data.character.race == "Human"){
       builder_data.character.cp_avail = 200;
@@ -375,6 +390,7 @@ jQuery(document).on('ready', function(){
     jQuery('.automatic_skill').each(function(){
       var $btn_add = jQuery(this);
       if(jQuery(this).closest('.skill_row').data('race') == builder_data.character.race){
+        builder_data.character.automatic_racial_skills += 1;
         $btn_add.trigger('click');
       }
     });
@@ -479,6 +495,7 @@ jQuery(document).on('ready', function(){
           || (!spell_circle && has_req && !meets_req(jQuery(this)))
           || (spell_circle && !has_circle_req(name))
           || (jQuery(this).data('class_skill') && !meets_class_req(jQuery(this)))
+          || (jQuery(this).data('racial_skill') && !meets_racial_req(jQuery(this)))
           || (limit_exceeded(jQuery(this)))) {
             jQuery(this).find('.skill_add').hide();
             jQuery(this).addClass('locked');
@@ -494,6 +511,7 @@ jQuery(document).on('ready', function(){
   }
 
   function limit_exceeded(skill_row){
+    //console.log(skill_row.data('max'));
     if(skill_row.data('max') == "" || typeof skill_row.data('max') == 'undefined'){
       return false;
     }
@@ -508,6 +526,13 @@ jQuery(document).on('ready', function(){
     if(builder_data.character.level >= level &&
       (level == 3 || builder_data.character.last_class_skill_level >= (level-3)) &&
       skill_row.data('class') == builder_data.character.class){
+      return true;
+    }
+    return false;
+  }
+
+  function meets_racial_req(skill_row){
+    if(builder_data.character.racial_skills == 0 || (((builder_data.character.level % 2) == 1) && (builder_data.character.racial_skills - builder_data.character.automatic_racial_skills) <= (builder_data.character.level/2))){
       return true;
     }
     return false;
@@ -562,6 +587,7 @@ jQuery(document).on('ready', function(){
     if(typeof req !== 'undefined' && req != ""){
       items = req.split(', ');
       for (req in items) {
+        var original_req = items[req];
         items[req] = set_req_alias(items[req], skill_row.data('name'));
 
         if (items.hasOwnProperty(req)) {
@@ -598,10 +624,10 @@ jQuery(document).on('ready', function(){
         }
       }
       var unique = returns.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-      if(returns.length != reqs.length){
-        return false;
-      }
-      if(unique.length == 1 && unique[0] == true) {
+      //if(returns.length != reqs.length){
+        //return false;
+      //}
+      if(unique.length >= 1 && unique[0] == true) {
         return true;
       }
     } else {
@@ -727,11 +753,23 @@ jQuery(document).on('ready', function(){
     }
   }
 
-  jQuery('.btn-cb-content ').on('click', function(){
-    if(!jQuery(this).hasClass('active')) {
-      jQuery('.btn-cb-content').toggleClass('active');
-      jQuery('.cb_display_content').toggleClass('active');
+  function generateUUID () { // Public Domain/MIT
+    var d = new Date().getTime();
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+        d += performance.now(); //use high-precision timer if available
     }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+
+  jQuery('.btn-cb-content ').on('click', function(){
+    jQuery('.btn-cb-content').removeClass('active');
+    jQuery('.cb_display_content').removeClass('active');
+    jQuery(this).addClass('active');
+    jQuery('.cb_display_content[data-tab="'+jQuery(this).data('tab')+'"]').addClass('active');
   });
 
   jQuery('.legend_toggler').on('click', function(e){
@@ -743,6 +781,9 @@ jQuery(document).on('ready', function(){
     e.preventDefault();
     jQuery('.non_data_fields').hide();
     jQuery('#cb_selectors').hide();
+    jQuery('#details_section').hide();
+    jQuery('#menu_primary').hide();
+    jQuery('#menu_launcher').show();
     jQuery('#data_fields').show();
   });
   jQuery('#btn_data_export').on('click', function(e){
@@ -768,6 +809,9 @@ jQuery(document).on('ready', function(){
       jQuery('.mandatory_section').show();
       jQuery('#btn_generate').hide();
       jQuery('#cb_selectors').hide();
+      jQuery('#details_section').show();
+      jQuery('#menu_primary').show();
+      jQuery('#menu_launcher').hide();
     }
   });
 
@@ -789,6 +833,9 @@ jQuery(document).on('ready', function(){
       jQuery('.mandatory_section').show();
       jQuery('#btn_generate').hide();
       jQuery('#cb_selectors').hide();
+      jQuery('#details_section').show();
+      jQuery('#menu_primary').show();
+      jQuery('#menu_launcher').hide();
     }
   });
 
@@ -802,7 +849,7 @@ jQuery(document).on('ready', function(){
     e.preventDefault();
     var char_import = jQuery('#data_import').val();
     var parsed_char = JSON.parse(char_import);
-    load_character(parsed_char)
+    load_character(parsed_char);
   });
 
   function load_character(character){
@@ -818,9 +865,14 @@ jQuery(document).on('ready', function(){
     jQuery('#cb_selectors').hide();
     jQuery("#cb-class").val(builder_data.character.class);
     jQuery("#cb-race").val(builder_data.character.race);
+    jQuery('#details_section').show();
+    jQuery('#menu_primary').show();
+    jQuery('#menu_launcher').hide();
 
     update_character();
     update_skills();
+
+    jQuery('#opt-clear').trigger('click');
 
   }
 
@@ -828,7 +880,7 @@ jQuery(document).on('ready', function(){
   if(jQuery('#character_data').length > 0){
     var $window = jQuery(window),
         $stickyEl = jQuery('#character_data'),
-        elTop = $stickyEl.offset().top;
+        elTop = $stickyEl.offset().top-200;
 
     $window.scroll(function() {
       if(!jQuery('header#header').hasClass('mobile')){

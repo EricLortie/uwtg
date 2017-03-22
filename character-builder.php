@@ -43,7 +43,12 @@
           builder_data.character.frags_avail = 0;
           builder_data.character.frags_spent = 0;
           builder_data.character.skill_count = 0;
+          builder_data.character.rulebook = 0;
+          builder_data.character.racial_skills = 0;
+          builder_data.character.automatic_racial_skills = 0;
           builder_data.races = [];
+          builder_data.skill = 0;
+          builder_data.step = 0;
           builder_data.vocations = [];
           builder_data.occupations = [];
           builder_data.pc_classes = [];
@@ -178,6 +183,49 @@
               "Spell Slot: Ritual Base"
             ]
 
+
+            builder_data.test_api_character = {
+              step: 1,
+              character: JSON.stringify(builder_data.character),
+              category: builder_data.character.category,
+              class: builder_data.character.class,
+              vocation: builder_data.character.vocation,
+              occupation: builder_data.character.occupation,
+              race: builder_data.character.race,
+              skill: "test",
+              skill_count: builder_data.character.skill_count,
+              frags_spent: builder_data.character.frags_spent,
+              spell_spheres: builder_data.character.spell_spheres,
+              cp_spent: builder_data.character.sp_spent
+            };
+
+            function push_to_remote(character, step, skill){
+
+              var api_character = {
+                rulebook: character.rulebook,
+                character_id: character.character_id,
+                category: character.category,
+                step: step,
+                character: JSON.stringify(character),
+                class: character.class,
+                vocation: character.vocation,
+                occupation: character.occupation,
+                race: character.race,
+                skill: skill,
+                skill_count: character.skill_count,
+                frags_spent: character.frags_spent,
+                spell_spheres: character.spell_spheres,
+                cp_spent: character.cp_spent
+              };
+              jQuery.ajax({
+                  type: "POST",
+                  data :JSON.stringify(api_character),
+                  headers: { 'X-API-KEY': "tempest_grove" },
+                  url: "https://arcane-sierra-27033.herokuapp.com/character_steps",
+                  contentType: "application/json",
+                  dataType: "json"
+              });
+            }
 
         </script>
 
@@ -360,6 +408,7 @@
                 skill_row.data('cat_string', `Scholar`)
                 skill_row.data('class_skill', false);
                 skill_row.data('spell_sphere', true);
+                skill_row.data('automatic', `<?php echo $automatic; ?>`);
                 //skill_row.data('frag_cost', `<?php echo $frag_cost ?>`),
 
                 jQuery('#skill_list').append(skill_row);
@@ -495,6 +544,10 @@
             if ( $optional && in_array('multiple', $optional) ) {
               $multiple = true;
             }
+            $automatic = false;
+            if ( $optional && in_array('automatic', $optional) ) {
+              $automatic = true;
+            }
 
             if (strpos($name, 'Subsequent') !== false) {
               continue;
@@ -573,6 +626,7 @@
                 skill_row.data('class', `<?php echo $pc_class;?>`);
                 skill_row.data('class_level', `<?php echo $class_level;?>`);
                 skill_row.data('class_skill', true);
+                skill_row.data('automatic', `<?php echo $automatic; ?>`);
                 skill_row.data('vocation_skill', `<?php echo $vocation_ability; ?>`)
                 skill_row.data('cost', `<?php echo $level_cost; ?>`)
 
@@ -641,6 +695,10 @@
             if ( $optional && in_array('multiple', $optional) ) {
               $multiple = true;
             }
+            $automatic = false;
+            if ( $optional && in_array('automatic', $optional) ) {
+              $automatic = true;
+            }
 
 
             ?>
@@ -702,6 +760,8 @@
                 skill_row.data('description', `<?php echo $description ?>`);
                 skill_row.data('requirements', `<?php echo $prereq ?>`);
                 skill_row.data('multiple', `<?php echo $multiple ?>`);
+                skill_row.data('automatic', `<?php echo $automatic; ?>`);
+                skill_row.data('max', 5);
                 //skill_row.data('frag', `<?php echo $frag_cost ?>`),
 
                 skill_row.data('class_skill', false);
@@ -777,6 +837,7 @@
             $category = get_sub_field('category');
 
 
+            $cat_icon = "fa-diamond";
             if($category == "Warrior"){
               $cat_icon = "fa-shield";
             } else if ($category == "Rogue"){
@@ -816,6 +877,10 @@
             $multiple = false;
             if ( $optional && in_array('multiple', $optional) ) {
               $multiple = true;
+            }
+            $automatic = false;
+            if ( $optional && in_array('automatic', $optional) ) {
+              $automatic = true;
             }
 
 
@@ -883,6 +948,7 @@
 
                 skill_row.data('class_skill', false);
                 skill_row.data('class', `<?php echo $pc_class; ?>`);
+                skill_row.data('automatic', `<?php echo $automatic; ?>`);
 
                 <?php if($prereq != ''){ ?>
                   skill_row.addClass('has_req');
@@ -903,46 +969,46 @@
             <div id="menu_launcher" class="row bg_<?php echo rand(1,5); ?>">
               <div class="col-sm-12">
                 <div id="menu_items">
-                  <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
-                    <a id="btn_choose_race" href="#" title="Choose Race" class="full-width blog-post-button state_saver locked">Select Race <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
-                  </div>
+                  <div id="menu_primary">
+                    <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
+                      <a id="btn_choose_race" href="#" title="Choose Race" class="full-width blog-post-button state_saver locked">Select Race <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
+                    </div>
 
-                  <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
-                    <a id="btn_choose_class" href="#" title="Choose Class" class="full-width blog-post-button state_saver locked">Select Class <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
-                  </div>
+                    <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
+                      <a id="btn_choose_class" href="#" title="Choose Class" class="full-width blog-post-button state_saver locked">Select Class <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
+                    </div>
 
-                  <div class="blog-post text-center" style=" display:none;">
-                    <div id="category-menu" class="col-sm-12 <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
-                      <p style="margin-bottom:3rem;"><span class="full-width styled-dropdown custom-dropdown custom-dropdown--red">
-                        <select id="category-dropdown" class="full-width builder_selector custom-dropdown__select custom-dropdown__select--red">
-                        <option>SELECT A CATEGORY</option>
-                        <?php $categories = array("Crafter", "Defender", "Attacker", "Damage Dealer", "Tank", "Guard", "Healer", "Passifist", "Hero", "Villain", "Storyteller", "Politician", "Merchant", "Jack of All Trades", "Specialist", "Observer", "Other"); ?>
-                          <?php foreach ($categories as $category) { ?>
-                            <option value="<?php echo $category; ?>"><?php echo $category; ?></option>
-                          <?php } ?>
-                        </select>
-                      </span></p>
+                    <div class="blog-post text-center" style="">
+                      <div id="category-menu" class="col-sm-12 <?php echo (wp_is_mobile()) ? "mobile" : "desktop"; ?>">
+                        <label>SELECT A CATEGORY <i class="fa fa-info-circle" aria-hidden="true" title="This is not required but will be useful for future projects."></i></label>
+                        <p style="margin-bottom:3rem;"><span class="full-width styled-dropdown custom-dropdown custom-dropdown--red">
+                          <select id="category-dropdown" class="full-width builder_selector custom-dropdown__select custom-dropdown__select--red">
+                            <option>---</option>
+                            <?php $categories = array("Crafter", "Defender", "Attacker", "Damage Dealer", "Tank", "Guard", "Healer", "Passifist", "Hero", "Villain", "Storyteller", "Politician", "Merchant", "Jack of All Trades", "Specialist", "Observer", "Other"); ?>
+                            <?php foreach ($categories as $category) { ?>
+                              <option value="<?php echo $category; ?>"><?php echo $category; ?></option>
+                            <?php } ?>
+                          </select>
+                        </span></p>
+                      </div>
+                    </div>
+
+                    <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
+                      <a id="btn_generate" href="#" title="Build Character" class="full-width blog-post-button state_saver locked">Start Character</a>
+                    </div>
+
+                    <div class="btn_warning text-center" style="margin-bottom:3rem;">
+                      <a id="btn_data_import" href="#" title="Import" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Import</a>
                     </div>
                   </div>
 
-                  <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
-                    <a id="btn_generate" href="#" title="Build Character" class="full-width blog-post-button state_saver locked">Start Character</a>
-                  </div>
-
-                  <p class="text-center">- OR -</p>
-
-                  <div class="btn_warning text-center" style="margin-bottom:3rem;">
-                    <a id="btn_data_import" href="#" title="Import" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Import</a>
-                  </div>
-
-                  <div id="data_fields" class="col-xs-12">
+                  <div id="data_fields" class="" style="padding-bottom:3rem;">
                     <div id="data_fields_export">
                       <label>Click the button below to generate your character export. Copy and paste it into a word document to save it.</label>
                       <input type="text" id="char_export_code" disabled="disabled" />
                       <button id="generate_export" class="btn btn-red btn_process_data">Generate Export</button>
 
-                      <p class="text-center">- OR -</p>
-
+                      <label>Alternatively, click the button below to save this character to your browser. You can only have one saved character.</label>
                       <button id="save_character" class="btn btn-red btn_process_data">Save</button>
                       <p id="save_warning">Note: This character was saved only to this browser on this device.</p>
                     </div>
@@ -952,8 +1018,7 @@
                       <button id="process_import" class="btn btn-red btn_process_data">Process Import</button>
 
                       <div id="load_character_section">
-                        <p class="text-center">- OR -</p>
-
+                        <label>Press this button to load your saved character from your browser.</label>
                         <button id="load_character" class="btn btn-red btn_process_data">Load Saved Character</button>
                       </div>
                     </div>
@@ -1114,20 +1179,25 @@
               <div id="character_section" class="mandatory_section non_data_fields">
 
                 <div class="row">
-                  <div class="col-xs-6">
-                    <button id="btn_view_char" class="btn-cb-content btn btn-red active">
+                  <div class="col-xs-4">
+                    <button id="btn_view_char" class="btn-cb-content btn btn-red active" data-tab="Character">
                       Character
                     </button>
                   </div>
-                  <div class="col-xs-6">
-                    <button id="btn_view_skills" class="btn-cb-content btn btn-red">
+                  <div class="col-xs-4">
+                    <button id="btn_view_skills" class="btn-cb-content btn btn-red" data-tab="Skills">
                       Skills
+                    </button>
+                  </div>
+                  <div class="col-xs-4">
+                    <button id="btn_view_armour" class="btn-cb-content btn btn-red" data-tab="Armour">
+                      Armour
                     </button>
                   </div>
                 </div>
                 <hr />
                 <div class="cb_data">
-                  <div id="cb_character_details" class="cb_display_content active">
+                  <div id="cb_character_details" class="cb_display_content active" data-tab="Character">
                     <h4>Race: <span id="cb_race_show"></span></h4>
                     <h4>Class: <span id="cb_class_show"></span></h4>
                     <h4 id="char_vocation">Vocation: <span id="cb_vocation_show"></span></h4>
@@ -1141,9 +1211,14 @@
                     <h4>Skills: <span id="cb_skill_count">0</span></h4>
                   </div>
 
-                  <div id="cb_skill_details" class="cb_display_content">
+                  <div id="cb_skill_details" class="cb_display_content" data-tab="Skills">
                     <h4>Skills</h4>
                     <div id="cb_skills"></div>
+
+                  </div>
+
+                  <div id="cb_armour_details" class="cb_display_content"  data-tab="Armour">
+                    <h4>Armour</h4>
 
                   </div>
                 </div>
