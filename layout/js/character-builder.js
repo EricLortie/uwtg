@@ -44,6 +44,7 @@ jQuery(document).on('ready', function(){
     jQuery('#menu_launcher').show();
     reset_character();
     reset_skills();
+    jQuery('#opt-clear').trigger('click');
   });
 
   function set_race(race, frag_cost){
