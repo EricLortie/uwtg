@@ -43,7 +43,7 @@
           builder_data.character.frags_avail = 0;
           builder_data.character.frags_spent = 0;
           builder_data.character.skill_count = 0;
-          builder_data.character.rulebook = 0;
+          builder_data.character.rulebook = 0.1;
           builder_data.character.racial_skills = 0;
           builder_data.character.automatic_racial_skills = 0;
           builder_data.races = [];
