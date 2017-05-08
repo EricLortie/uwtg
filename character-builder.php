@@ -689,6 +689,7 @@
             $bard_cost = get_sub_field('bard_cost');
             $demagogue_cost = get_sub_field('demagogue_cost');
             $champion_cost = get_sub_field('champion_cost');
+            $max = get_sub_field('max');
 
             $optional = get_sub_field('optional_fields');
             $multiple = false;
@@ -761,7 +762,7 @@
                 skill_row.data('requirements', `<?php echo $prereq ?>`);
                 skill_row.data('multiple', `<?php echo $multiple ?>`);
                 skill_row.data('automatic', `<?php echo $automatic; ?>`);
-                skill_row.data('max', 5);
+                skill_row.data('max', `<?php echo $max ?>`);
                 //skill_row.data('frag', `<?php echo $frag_cost ?>`),
 
                 skill_row.data('class_skill', false);

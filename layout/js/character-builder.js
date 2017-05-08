@@ -492,12 +492,12 @@ jQuery(document).on('ready', function(){
         }
       }
       if (cost > builder_data.character.cp_avail
-          || ((jQuery(this).data('multiple') == false || jQuery(this).data('multiple') == "0" || jQuery(this).data('multiple') == 0) && character_has_skill(name))
+          || ((jQuery(this).data('multiple') == false || jQuery(this).data('multiple') == 0) && character_has_skill(name))
           || (!spell_circle && has_req && !meets_req(jQuery(this)))
           || (spell_circle && !has_circle_req(name))
           || (jQuery(this).data('class_skill') && !meets_class_req(jQuery(this)))
           || (jQuery(this).data('racial_skill') && !meets_racial_req(jQuery(this)))
-          || (limit_exceeded(jQuery(this)))) {
+          || (jQuery(this).data('multiple') == "1" && limit_exceeded(jQuery(this)))) {
             jQuery(this).find('.skill_add').hide();
             jQuery(this).addClass('locked');
       } else {
@@ -516,7 +516,7 @@ jQuery(document).on('ready', function(){
     if(skill_row.data('max') == "" || typeof skill_row.data('max') == 'undefined'){
       return false;
     }
-    if(skill_row.data('max') >= builder_data.character.skills[skill_row.data('name')]) {
+    if(typeof builder_data.character.skills[skill_row.data('name')] !== 'undefined' && builder_data.character.skills[skill_row.data('name')] >= skill_row.data('max')) {
       return true;
     }
     return false;
