@@ -188,7 +188,7 @@
               step: 1,
               character: JSON.stringify(builder_data.character),
               category: builder_data.character.category,
-              class: builder_data.character.class,
+              class: builder_data.character.pc_class,
               vocation: builder_data.character.vocation,
               occupation: builder_data.character.occupation,
               race: builder_data.character.race,
@@ -207,7 +207,7 @@
                 category: character.category,
                 step: step,
                 character: JSON.stringify(character),
-                class: character.class,
+                class: character.pc_class,
                 vocation: character.vocation,
                 occupation: character.occupation,
                 race: character.race,
@@ -400,6 +400,7 @@
                   </div>
                 `);
 
+                skill_row.data('type', `spell sphere`);
                 skill_row.data('name', `<?php echo $name ?>`),
                 skill_row.data('description', `<?php echo $description ?>`),
                 skill_row.data('requirements', `Read Magic`),
@@ -500,7 +501,8 @@
                 `);
 
                 var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
-                skill_row.attr('id', row_id)
+                skill_row.attr('id', row_id);
+                skill_row.data('type', `racial skill`);
                 skill_row.data('name', `<?php echo $name ?>`);
                 skill_row.data('cat_string', `<?php echo $category; ?>`);
                 skill_row.data('category', `<?php echo $cat; ?>`);
@@ -615,6 +617,7 @@
 
                 var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
                 skill_row.attr('id', row_id)
+                skill_row.data('type', `class skill`);
                 skill_row.data('name', `<?php echo $name ?>`);
                 skill_row.data('cat_string', `<?php echo $category; ?>`);
                 skill_row.data('category', `<?php echo $cat; ?>`);
@@ -691,6 +694,12 @@
             $champion_cost = get_sub_field('champion_cost');
             $max = get_sub_field('max');
 
+            if($name == "Mysticism"){
+              $max = 10;
+            } else if($name == "Physician"){
+              $max = 10;
+            }
+
             $optional = get_sub_field('optional_fields');
             $multiple = false;
             if ( $optional && in_array('multiple', $optional) ) {
@@ -755,6 +764,7 @@
 
                 var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
                 skill_row.attr('id', row_id)
+                skill_row.data('type', `skill`);
                 skill_row.data('name', `<?php echo $name ?>`);
                 skill_row.data('cat_string', `<?php echo $category; ?>`);
                 skill_row.data('category', `<?php echo $cat; ?>`);
@@ -939,6 +949,7 @@
 
                 var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
                 skill_row.attr('id', row_id)
+                skill_row.data('type', `frag skill`);
                 skill_row.data('name', `<?php echo $name ?>`);
                 skill_row.data('cat_string', `<?php echo $category; ?>`);
                 skill_row.data('category', `<?php echo $cat; ?>`);
@@ -1180,19 +1191,24 @@
               <div id="character_section" class="mandatory_section non_data_fields">
 
                 <div class="row">
-                  <div class="col-xs-4">
+                  <div class="col-xs-3">
                     <button id="btn_view_char" class="btn-cb-content btn btn-red active" data-tab="Character">
                       Character
                     </button>
                   </div>
-                  <div class="col-xs-4">
+                  <div class="col-xs-3">
                     <button id="btn_view_skills" class="btn-cb-content btn btn-red" data-tab="Skills">
                       Skills
                     </button>
                   </div>
-                  <div class="col-xs-4">
+                  <div class="col-xs-3">
                     <button id="btn_view_armour" class="btn-cb-content btn btn-red" data-tab="Armour">
                       Armour
+                    </button>
+                  </div>
+                  <div class="col-xs-3">
+                    <button id="btn_view_spells" class="btn-cb-content btn btn-red" data-tab="Spells">
+                      Spells
                     </button>
                   </div>
                 </div>
@@ -1220,6 +1236,15 @@
 
                   <div id="cb_armour_details" class="cb_display_content"  data-tab="Armour">
                     <h4>Armour</h4>
+                    <p>Coming soon-ish! You'll be able to set up your armour here.</p>
+                    <p>Consider donating to my <a href="https://www.patreon.com/EricLortie">Patreon page</a> to further motivate me.</p>
+
+                  </div>
+
+                  <div id="cb_spell_details" class="cb_display_content"  data-tab="Spells">
+                    <h4>Spell Pyramid</h4>
+                    <p>Coming soon-ish! You'll be able to set up your spell pyramid here.</p>
+                    <p>Consider donating to my <a href="https://www.patreon.com/EricLortie">Patreon page</a> to further motivate me.</p>
 
                   </div>
                 </div>
