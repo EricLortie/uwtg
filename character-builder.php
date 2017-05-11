@@ -1237,14 +1237,14 @@
                   <div id="cb_armour_details" class="cb_display_content"  data-tab="Armour">
                     <h4>Armour</h4>
                     <p>Coming soon-ish! You'll be able to set up your armour here.</p>
-                    <p>Consider donating to my <a href="https://www.patreon.com/EricLortie">Patreon page</a> to further motivate me.</p>
+                    <p>Consider donating to my <a href="https://www.patreon.com/EricLortie" target="_blank">Patreon page</a> to further motivate me.</p>
 
                   </div>
 
                   <div id="cb_spell_details" class="cb_display_content"  data-tab="Spells">
                     <h4>Spell Pyramid</h4>
                     <p>Coming soon-ish! You'll be able to set up your spell pyramid here.</p>
-                    <p>Consider donating to my <a href="https://www.patreon.com/EricLortie">Patreon page</a> to further motivate me.</p>
+                    <p>Consider donating to my <a href="https://www.patreon.com/EricLortie" target="_blank">Patreon page</a> to further motivate me.</p>
 
                   </div>
                 </div>
