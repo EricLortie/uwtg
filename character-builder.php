@@ -1191,22 +1191,24 @@
               <div id="character_section" class="mandatory_section non_data_fields">
 
                 <div class="row">
-                  <div class="col-xs-3">
+                  <div class="col-xs-6">
                     <button id="btn_view_char" class="btn-cb-content btn btn-red active" data-tab="Character">
                       Character
                     </button>
                   </div>
-                  <div class="col-xs-3">
+                  <div class="col-xs-6">
                     <button id="btn_view_skills" class="btn-cb-content btn btn-red" data-tab="Skills">
                       Skills
                     </button>
                   </div>
-                  <div class="col-xs-3">
+                </div>
+                <div class="row">
+                  <div class="col-xs-6">
                     <button id="btn_view_armour" class="btn-cb-content btn btn-red" data-tab="Armour">
                       Armour
                     </button>
                   </div>
-                  <div class="col-xs-3">
+                  <div class="col-xs-6">
                     <button id="btn_view_spells" class="btn-cb-content btn btn-red" data-tab="Spells">
                       Spells
                     </button>

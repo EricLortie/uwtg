@@ -672,6 +672,17 @@ jQuery(document).on('ready', function(){
           }
         case "Specialization +1: Weapon Group":
           switch(skill) {
+            case "Slay / Parry (Master): All Simple Weapons":
+              return "Specialization +1: Simple Group"
+            case "Slay / Parry (Master): All Medium Weapons":
+              return "Specialization +1: Medium Group"
+            case "Slay / Parry (Master): All Large Weapons":
+              return "Specialization +1: Large Group"
+            case "Slay / Parry (Master): All Exotic Weapons":
+              return "Specialization +1: Exotic Group"
+          }
+        case "Specialization +1: Weapon Specific":
+          switch(skill) {
             case "Slay / Parry: Specific Simple Weapon":
               return "Specialization +1: Simple Group"
             case "Slay / Parry: Specific Medium Weapon":
@@ -680,11 +691,6 @@ jQuery(document).on('ready', function(){
               return "Specialization +1: Large Group"
             case "Slay / Parry: Specific Exotic Weapon":
               return "Specialization +1: Exotic Group"
-          }
-        case "Specialization +1: Weapon Specific":
-          switch(skill) {
-            case "Slay / Parry":
-              return "Specialization +1: Simple Weapon"
           }
       case "Critical +2: Specific":
         switch(skill) {
