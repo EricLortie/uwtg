@@ -43,7 +43,7 @@
           builder_data.character.frags_avail = 0;
           builder_data.character.frags_spent = 0;
           builder_data.character.skill_count = 0;
-          builder_data.character.rulebook = 0.1;
+          builder_data.character.rulebook = 5.5;
           builder_data.character.racial_skills = 0;
           builder_data.character.automatic_racial_skills = 0;
           builder_data.races = [];
@@ -1202,6 +1202,7 @@
                     </button>
                   </div>
                 </div>
+                <br/>
                 <div class="row">
                   <div class="col-xs-6">
                     <button id="btn_view_armour" class="btn-cb-content btn btn-red" data-tab="Armour">
