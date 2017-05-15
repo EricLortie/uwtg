@@ -59,7 +59,7 @@ jQuery(document).on('ready', function(){
       skill_ele = jQuery(this);
       set_skill_cost_and_visibility(skill_ele);
     });
-    if (builder_data.character.race != '' && builder_data.character.class != '') {
+    if (builder_data.character.race != '' && builder_data.character.pc_class != '') {
       jQuery('#btn_generate').removeClass('locked');
     } else {
       jQuery('#btn_generate').addClass('locked');
@@ -72,7 +72,7 @@ jQuery(document).on('ready', function(){
       var old_frag_count = builder_data.character.frags_spent;
       var old_blankets_spent = builder_data.character.blankets_spent;
       var old_level = builder_data.character.level;
-      var old_class = builder_data.character.class;
+      var old_class = builder_data.character.pc_class;
       if(cost_ele == "dra_cost" || cost_ele == "lig_cost" || cost_ele == "dar_cost"){
         cost_ele = "dem_cost";
       } else {
@@ -81,7 +81,7 @@ jQuery(document).on('ready', function(){
       reset_character();
       set_class(pc_class, 50, cost_ele)
       builder_data.character.old_class = old_class;
-      builder_data.character.class = pc_class;
+      builder_data.character.pc_class = pc_class;
       builder_data.character.cp_avail = old_cp_count;
       builder_data.character.frags_spent = old_frag_count;
       builder_data.character.blankets_spent = old_blankets_spent;
@@ -125,7 +125,7 @@ jQuery(document).on('ready', function(){
     }
 
   function set_class(pc_class, frag_cost, cost_ele){
-    builder_data.character.class = pc_class;
+    builder_data.character.pc_class = pc_class;
     builder_data.character.cost_element = cost_ele;
 
     if(pc_class == "Mercenary" || pc_class == "Ranger" || pc_class == "Templar"){
@@ -148,7 +148,7 @@ jQuery(document).on('ready', function(){
     });
 
 
-    if (builder_data.character.race != '' && builder_data.character.class != '') {
+    if (builder_data.character.race != '' && builder_data.character.pc_class != '') {
       jQuery('#btn_generate').removeClass('locked');
     } else {
       jQuery('#btn_generate').addClass('locked');
@@ -160,7 +160,7 @@ jQuery(document).on('ready', function(){
     if(skill_ele.data('class_skill') == true){
 
       skill_ele.find('.level_cost').show();
-      if(skill_ele.data('class') != builder_data.character.class ){
+      if(skill_ele.data('class') != builder_data.character.pc_class ){
         skill_ele.data('class_restricted', true);
       } else {
         skill_ele.data('class_restricted', false);
@@ -203,7 +203,7 @@ jQuery(document).on('ready', function(){
 
   jQuery('#btn_generate').on('click', function(e){
     e.preventDefault();
-    if (builder_data.character.class != '' && builder_data.character.race != '') {
+    if (builder_data.character.pc_class != '' && builder_data.character.race != '') {
       reset_character();
       jQuery('.mandatory_section').show();
       jQuery(this).hide();
@@ -399,7 +399,7 @@ jQuery(document).on('ready', function(){
 
   function update_character(){
     jQuery('#cb_race_show').html(builder_data.character.race);
-    jQuery('#cb_class_show').html(builder_data.character.class);
+    jQuery('#cb_class_show').html(builder_data.character.pc_class);
     jQuery('#cb_blankets_spent').html(builder_data.character.blankets_spent);
     jQuery('#cb_blanket_next').html(builder_data.character.blanket_value);
     jQuery('#cb_cp_avail').html(builder_data.character.cp_avail);
@@ -526,7 +526,7 @@ jQuery(document).on('ready', function(){
     level = parseInt(skill_row.data('class_level'));
     if(builder_data.character.level >= level &&
       (level == 3 || builder_data.character.last_class_skill_level >= (level-3)) &&
-      skill_row.data('class') == builder_data.character.class){
+      skill_row.data('class') == builder_data.character.pc_class){
       return true;
     }
     return false;
@@ -870,8 +870,8 @@ jQuery(document).on('ready', function(){
     jQuery('.mandatory_section').show();
     jQuery('#btn_generate').hide();
     jQuery('#cb_selectors').hide();
-    jQuery("#cb-class").val(builder_data.character.class);
-    jQuery("#cb-race").val(builder_data.character.race);
+    jQuery("#cb-class").val(builder_data.character.pc_class);
+    jQuery("#cb-race").val(builder_data.character.pc_class);
     jQuery('#details_section').show();
     jQuery('#menu_primary').show();
     jQuery('#menu_launcher').hide();

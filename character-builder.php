@@ -36,7 +36,7 @@
 
           state_counter = 0;
           builder_data.character = {};
-          builder_data.character.class = "";
+          builder_data.character.pc_class = "";
           builder_data.character.race = "";
           builder_data.character.skills = {};
           builder_data.character.class_skills = {};
@@ -183,48 +183,39 @@
               "Spell Slot: Ritual Base"
             ]
 
-
-            builder_data.test_api_character = {
-              step: 1,
-              character: JSON.stringify(builder_data.character),
-              category: builder_data.character.category,
-              class: builder_data.character.pc_class,
-              vocation: builder_data.character.vocation,
-              occupation: builder_data.character.occupation,
-              race: builder_data.character.race,
-              skill: "test",
-              skill_count: builder_data.character.skill_count,
-              frags_spent: builder_data.character.frags_spent,
-              spell_spheres: builder_data.character.spell_spheres,
-              cp_spent: builder_data.character.sp_spent
-            };
-
             function push_to_remote(character, step, skill){
 
-              var api_character = {
-                rulebook: character.rulebook,
-                character_id: character.character_id,
-                category: character.category,
-                step: step,
-                character: JSON.stringify(character),
-                class: character.pc_class,
-                vocation: character.vocation,
-                occupation: character.occupation,
-                race: character.race,
-                skill: skill,
-                skill_count: character.skill_count,
-                frags_spent: character.frags_spent,
-                spell_spheres: character.spell_spheres,
-                cp_spent: character.cp_spent
-              };
-              jQuery.ajax({
-                  type: "POST",
-                  data :JSON.stringify(api_character),
-                  headers: { 'X-API-KEY': "tempest_grove" },
-                  url: "https://arcane-sierra-27033.herokuapp.com/character_steps",
-                  contentType: "application/json",
-                  dataType: "json"
-              });
+              if(skill != "Weapon Group Proficiency: Simple"){
+
+                var api_character = {
+                  rulebook: character.rulebook,
+                  character_id: character.character_id,
+                  category: character.category,
+                  step: step,
+                  character: JSON.stringify(character),
+                  pc_class: character.pc_class,
+                  vocation: character.vocation,
+                  occupation: character.occupation,
+                  race: character.race,
+                  skill: skill,
+                  skill_count: character.skill_count,
+                  frags_spent: character.frags_spent,
+                  spell_spheres: character.spell_spheres,
+                  cp_spent: character.cp_spent
+                };
+
+                jQuery.ajax({
+                    type: "POST",
+                    data :JSON.stringify(api_character),
+                    headers: { 'X-API-KEY': "tempest_grove" },
+                    url: "https://arcane-sierra-27033.herokuapp.com/character_steps",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function(data){
+                      console.log(data);
+                    }
+                });
+              }
             }
 
         </script>
