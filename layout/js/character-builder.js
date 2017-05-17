@@ -318,6 +318,9 @@ jQuery(document).on('ready', function(){
     } else {
       builder_data.character.skills[skill_ele.data('name')] = 1;
     }
+    if(skill_ele.data('spell_circle')){
+      builder_data.circle_values[skill_ele.data('name')] += 1;
+    }
     if(skill_ele.data('class_skill')){
       if(builder_data.character.class_skills.hasOwnProperty(skill_ele.data('name'))) {
         builder_data.character.class_skills[skill_ele.data('level')] += 1;
@@ -547,19 +550,18 @@ jQuery(document).on('ready', function(){
   }
 
   function is_spell_circle(skill){
-    circle_search = builder_data.circles.indexOf(skill);
-    if(circle_search != -1){
+    circle_search = builder_data.circle_values[skill];
+    if(typeof circle_search != 'undefined'){
       return true;
     }
     return false;
   }
 
   function has_circle_req(skill) {
+    console.log(skill);
     cur_circle = builder_data.circles.indexOf(skill);
-    prev_circle = builder_data.circles[cur_circle-1];
+    cur_circle_count = builder_data.circle_values[skill];
     skills = builder_data.character.skills;
-    prev_skill_count = skills[prev_circle];
-    cur_skill_count = skills[skill];
     if(typeof cur_skill_count == 'undefined'){
       cur_skill_count = 0;
     }
@@ -567,18 +569,25 @@ jQuery(document).on('ready', function(){
       return false;
     } else if (skill == "Spell Slot: Ritual Base" && skills["Read Magic: Ritual"] == 1 && skills["Spell Slot: 9th Circle"] >= 1) {
       return true;
-    } else if(skill == "Spell Slot: 1st Circle" && builder_data.character.spell_spheres >= 1){
+    } else if(skill == "Spell Slot: 1st Circle" && (builder_data.character.spell_spheres >= 1) && (cur_circle_count < 2 || circle_math_req(cur_circle, cur_circle_count))){
       return true;
-    } else if (skill != "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && circle_math_req(prev_skill_count, cur_skill_count)) {
+    } else if (skill != "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && circle_math_req(cur_circle, cur_circle_count)) {
       return true;
-    } else if (skill == "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && skills["Read Magic: Advanced"] == 1 && circle_math_req(prev_skill_count, cur_skill_count)){
+    } else if (skill == "Spell Slot: 5th Circle" && skill != "Spell Slot: Ritual Base" && skills["Read Magic: Advanced"] == 1 && circle_math_req(cur_circle, cur_circle_count)){
       return true;
     }
     return false;
   }
 
-  function circle_math_req(prev_skill_count, cur_skill_count){
-    return ((prev_skill_count > (cur_skill_count+1)) || prev_skill_count == 5)
+  function circle_math_req(cur_circle, cur_circle_count){
+    prev_circle_count = builder_data.circle_values[builder_data.circles[cur_circle-1]];
+    next_circle_count = builder_data.circle_values[builder_data.circles[cur_circle+1]];
+    if(cur_circle == 0){
+      return ((cur_circle_count > next_circle_count) && (cur_circle_count < next_circle_count+2));
+    } else {
+      return ((next_circle_count <= cur_circle_count+1) && (prev_circle_count >= cur_circle_count+2));
+    }
+    return false;
   }
 
   function meets_req(skill_row){
@@ -887,10 +896,11 @@ jQuery(document).on('ready', function(){
   if(jQuery('#character_data').length > 0){
     var $window = jQuery(window),
         $stickyEl = jQuery('#character_data'),
-        elTop = $stickyEl.offset().top-200;
+        elTop = $stickyEl.offset().top;
 
     $window.scroll(function() {
       if(!jQuery('header#header').hasClass('mobile')){
+        //console.log("Testing: " + $window.scrollTop() + " & " + elTop);
          $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
        }
     });

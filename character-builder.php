@@ -53,6 +53,26 @@
           builder_data.occupations = [];
           builder_data.pc_classes = [];
           builder_data.spell_spheres = [];
+
+          builder_data.circle_values = {
+            "Spell Slot: 1st Circle": 0,
+            "Spell Slot: 2nd Circle": 0,
+            "Spell Slot: 3rd Circle": 0,
+            "Spell Slot: 4th Circle": 0,
+            "Spell Slot: 5th Circle": 0,
+            "Spell Slot: 6th Circle": 0,
+            "Spell Slot: 7th Circle": 0,
+            "Spell Slot: 8th Circle": 0,
+            "Spell Slot: 9th Circle": 0,
+            "Spell Slot: Ritual Base": 0
+          }
+
+          builder_data.circles = [
+            "Spell Slot: 1st Circle", "Spell Slot: 2nd Circle", "Spell Slot: 3rd Circle",
+            "Spell Slot: 4th Circle", "Spell Slot: 5th Circle", "Spell Slot: 6th Circle",
+            "Spell Slot: 7th Circle", "Spell Slot: 8th Circle", "Spell Slot: 9th Circle",
+            "Spell Slot: Ritual Base"
+          ]
           builder_data.character_states = [];
           builder_data.skills = [];
           builder_data.level_chart = [
@@ -175,13 +195,6 @@
               'Slay / Parry (Master): All Exotic Weapons (Subsequent)',
             ]
           }
-
-            builder_data.circles = [
-              "Spell Slot: 1st Circle", "Spell Slot: 2nd Circle", "Spell Slot: 3rd Circle",
-              "Spell Slot: 4th Circle", "Spell Slot: 5th Circle", "Spell Slot: 6th Circle",
-              "Spell Slot: 7th Circle", "Spell Slot: 8th Circle", "Spell Slot: 9th Circle",
-              "Spell Slot: Ritual Base"
-            ]
 
             function push_to_remote(character, step, skill){
 
@@ -765,6 +778,10 @@
                 skill_row.data('automatic', `<?php echo $automatic; ?>`);
                 skill_row.data('max', `<?php echo $max ?>`);
                 //skill_row.data('frag', `<?php echo $frag_cost ?>`),
+
+                if(builder_data.circles.indexOf('<?php echo $name; ?>') >= 0){
+                  skill_row.data('spell_circle', true);
+                }
 
                 skill_row.data('class_skill', false);
 
