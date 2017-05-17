@@ -398,6 +398,8 @@ jQuery(document).on('ready', function(){
         $btn_add.trigger('click');
       }
     });
+
+    builder_data.character.skill_count = 0;
   }
 
   function update_character(){
@@ -558,7 +560,6 @@ jQuery(document).on('ready', function(){
   }
 
   function has_circle_req(skill) {
-    console.log(skill);
     cur_circle = builder_data.circles.indexOf(skill);
     cur_circle_count = builder_data.circle_values[skill];
     skills = builder_data.character.skills;
