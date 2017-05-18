@@ -330,3 +330,236 @@ if ( ! function_exists('sortByOption')) {
 @ini_set( 'upload_max_size' , '64M' );
 @ini_set( 'post_max_size', '64M');
 @ini_set( 'max_execution_time', '300' );
+
+if ( ! function_exists('write_log')) {
+   function write_log ( $log )  {
+      if ( is_array( $log ) || is_object( $log ) ) {
+         error_log( print_r( $log, true ) );
+      } else {
+         error_log( $log );
+      }
+   }
+}
+
+
+function build_skill_row($post, $s_count, $skill_type) {
+	$s_count++;
+	$name = get_sub_field('name');
+
+	if (strpos($name, 'Subsequent') === false) {
+
+			$description = get_sub_field('description');
+			$category = get_sub_field('category');
+
+
+			if($category == "Warrior"){
+				$cat_icon = "fa-shield";
+			} else if ($category == "Rogue"){
+				$cat_icon = "fa-bomb";
+			} else if ($category == "Scholar"){
+				$cat_icon = "fa-magic";
+			} else if ($category == "Production"){
+				$cat_icon = "fa-cog";
+			} else if ($category == "Racial Ability"){
+				$category = "Abilities (Racial)";
+				$cat_icon = "fa-users";
+			} else if ($category == "Class Ability"){
+				$cat_icon = "fa-universal-access";
+			}
+
+			$cat =  substr($category, 0, 1);
+			$focus = get_sub_field('focus');
+			$frag_cost = get_sub_field('frag_cost');
+
+
+			$optional_fields = get_sub_field('optional_fields');
+			$mercenary_cost = get_sub_field('mercenary_cost');
+			$ranger_cost = get_sub_field('ranger_cost');
+			$templar_cost = get_sub_field('templar_cost');
+			$nightblade_cost = get_sub_field('nightblade_cost');
+			$assassin_cost = get_sub_field('assassin_cost');
+			$witchhunter_cost = get_sub_field('witchblade_cost');
+			$mage_cost = get_sub_field('mage_cost');
+			$druid_cost = get_sub_field('druid_cost');
+			$bard_cost = get_sub_field('bard_cost');
+			$demagogue_cost = get_sub_field('demagogue_cost');
+			$champion_cost = get_sub_field('champion_cost');
+			$max = get_sub_field('max');
+
+			if($name == "Mysticism"){
+				$max = 10;
+			} else if($name == "Physician"){
+				$max = 10;
+			}
+
+			$optional = get_sub_field('optional_fields');
+
+			$sphere_class = '';
+			$btn_class = '';
+			$btn_id = 'skill_'+$s_count;
+			$spells = get_sub_field('spells');
+			if($skill_type == "spell_sphere"){
+				$btn_class = 'spell_sphere_add';
+				$btn_id = 'sphere_' + $count;
+				$sphere_class = 'spell_sphere';
+				$prereq = 'Read Magic';
+				$cat_icon = "fa-magic";
+			} else {
+				$prereq = get_sub_field('prerequesites');
+			}
+
+			$multiple = false;
+			if ( $optional && in_array('multiple', $optional) ) {
+				$multiple = true;
+			}
+			$automatic = false;
+			if ( $optional && in_array('automatic', $optional) ) {
+				$automatic = true;
+			}
+
+
+			?>
+
+			<script type="text/javascript">
+				jQuery(document).on('ready', function(){
+					var skill_type = '<?php echo $skill_type; ?>';
+					var skill_row = jQuery('<div class="row skill_row <?php echo $sphere_class; ?> <?php echo $cat; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+					var skill_ele = skill_row.find('.skill');
+					skill_ele.append(`
+						<div class="row">
+							<div class="col-xs-1">
+								<i id="<?php echo $btn_class; ?>" class="fa fa-plus-square skill_add <?php echo $btn_class; ?> state_saver" aria-hidden="true"></i>
+								<i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
+							</div>
+							<div class="col-xs-9">
+								<span class="cat_label"><i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i></span>&nbsp;
+								<span class="name"><?php echo $name; ?></span>
+								&nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
+								<?php if($prereq != ""){ ?>
+									&nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
+								<?php } ?>
+								&nbsp;
+							</div>
+							<div class="col-xs-1">
+								<div class="cost_strings">
+									<span class="mer_cost skill_cost"><?php echo $mercenary_cost ?></span>
+									<span class="ran_cost skill_cost"><?php echo $ranger_cost ?></span>
+									<span class="tem_cost skill_cost"><?php echo $templar_cost ?></span>
+									<span class="nig_cost skill_cost"><?php echo $nightblade_cost ?></span>
+									<span class="ass_cost skill_cost"><?php echo $assassin_cost ?></span>
+									<span class="wit_cost skill_cost"><?php echo $witchhunter_cost ?></span>
+									<span class="mag_cost skill_cost"><?php echo $mage_cost ?></span>
+									<span class="dru_cost skill_cost"><?php echo $druid_cost ?></span>
+									<span class="bar_cost skill_cost"><?php echo $bard_cost ?></span>
+									<span class="dem_cost skill_cost"><?php echo $demagogue_cost ?></span>
+									<span class="cha_cost skill_cost"><?php echo $champion_cost ?></span>
+								</div>
+								<span class="sphere_cost skill_cost"></span>
+								<span class="cost" style="display:none"></span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 skill_desc" style="display:none;">
+								<?php if ($prereq != "") { ?>
+									<p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
+								<?php } ?>
+								<?php if ($focus != "") { ?>
+									<p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Focus: <?php echo $focus; ?></p>
+								<?php } ?>
+								<p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
+								<?php echo $description; ?>
+								<hr />
+								<p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+							</div>
+						</div>
+					`);
+
+					var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+					skill_row.attr('id', row_id)
+					if(skill_type == "spell_sphere"){
+
+          	skill_row.data('type', `spell sphere`);
+						skill_row.data('spell_sphere', true);
+						skill_row.find('.cost_strings').remove();
+
+            builder_data.spell_spheres.push({
+              name: `<?php echo $name ?>`,
+              focus: `<?php echo $focus ?>`,
+              spells: `<?php echo $spells ?>`,
+              description: `<?php echo $description ?>`,
+              frag_cost: `<?php echo $frag_cost ?>`
+            });
+
+					} else {
+						skill_row.data('type', `skill`);
+						skill_row.find('.sphere_cost').remove();
+					}
+					skill_row.data('name', `<?php echo $name ?>`);
+					skill_row.data('cat_string', `<?php echo $category; ?>`);
+					skill_row.data('category', `<?php echo $cat; ?>`);
+					skill_row.data('description', `<?php echo $description ?>`);
+					skill_row.data('requirements', `<?php echo $prereq ?>`);
+					skill_row.data('multiple', `<?php echo $multiple ?>`);
+					skill_row.data('automatic', `<?php echo $automatic; ?>`);
+					skill_row.data('max', `<?php echo $max ?>`);
+
+					if(builder_data.circles.indexOf('<?php echo $name; ?>') >= 0){
+						skill_row.data('spell_circle', true);
+					}
+
+					skill_row.data('class_skill', false);
+
+					<?php if($prereq != ''){ ?>
+						skill_row.addClass('has_req');
+						skill_row.addClass('locked');
+					<?php } ?>
+
+					aliases = builder_data.skill_aliases['<?php echo $name; ?>'];
+					if(typeof aliases !== 'undefined'){
+						alias_rows = [];
+						for (alias in aliases) {
+							var alias_row = skill_row.clone(true);
+							var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+							alias_row.attr('id', row_id)
+							alias_row.data('name', aliases[alias]);
+							alias_row.find('span.name').html(aliases[alias]);
+							alias_row.appendTo("#skill_list");
+						}
+					} else {
+						var name = '<?php echo $name?>';
+						if(~name.indexOf("Circle")){
+							var cost_string = `<span class="mer_cost skill_cost"><?php echo $mercenary_cost+10; ?></span>
+							<span class="ran_cost skill_cost"><?php echo $ranger_cost+10; ?></span>
+							<span class="tem_cost skill_cost"><?php echo $templar_cost+10; ?></span>
+							<span class="nig_cost skill_cost"><?php echo $nightblade_cost+10; ?></span>
+							<span class="ass_cost skill_cost"><?php echo $assassin_cost+10; ?></span>
+							<span class="wit_cost skill_cost"><?php echo $witchhunter_cost+10; ?></span>
+							<span class="mag_cost skill_cost"><?php echo $mage_cost+10; ?></span>
+							<span class="dru_cost skill_cost"><?php echo $druid_cost+10; ?></span>
+							<span class="bar_cost skill_cost"><?php echo $bard_cost+10; ?></span>
+							<span class="dem_cost skill_cost"><?php echo $demagogue_cost+10; ?></span>
+							<span class="cha_cost skill_cost"><?php echo $champion_cost+10; ?></span>`;
+
+							var alias_row = skill_row.clone(true);
+							var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
+							alias_row.attr('id', row_id)
+							alias_row.find('.cost_strings').html(cost_string);
+							alias_row.data('name', "Spell Versatility: " + name);
+							var name_string = "<span class='frag_cost'>"+"Spell Versatility: " + name+" ("+cost_string+"&nbsp;<i class='fa fa-diamond' aria-hidden='true'></i>)</span>"
+							alias_row.find('span.name').html(name_string);
+							alias_row.appendTo("#skill_list");
+							alias_row.find('.row').addClass('frag_row');
+							alias_row.data('requirements', name);
+							alias_row.data('max', 5);
+							alias_row.data('multiple', true);
+							jQuery('#skill_list').append(alias_row);
+						}
+						jQuery('#skill_list').append(skill_row);
+					}
+
+				});
+			</script>
+
+	<?php
+	}
+}

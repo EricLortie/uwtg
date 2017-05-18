@@ -1,19 +1,22 @@
 jQuery(document).on('ready', function(){
 
+  // The button that surfaces the descrition for a skill
   jQuery('.skill_expander').on('click', function(){
     var desc = jQuery(this).closest('.skill_row').find('.skill_desc');
     desc.slideToggle();
   });
 
+    // The button that hides the descrition for a skill
   jQuery('.skill_closer').on('click', function(e){
     e.preventDefault();
     var desc = jQuery(this).closest('.skill_desc');
     desc.slideToggle();
   });
 
+  //The button that adds a skill to the character
   jQuery('.skill_add').on('click', function(){
     if(jQuery(this).hasClass('spell_sphere_add')) {
-      update_spell_spheres();
+      update_spell_spheres(); // This function will update the value of the next sphere purchased
     }
     var skill_row = jQuery(this).closest('.skill_row');
 
