@@ -161,17 +161,11 @@ jQuery(document).on('ready', function(){
 
   function set_skill_cost_and_visibility(skill_ele) {
     if(skill_ele.data('class_skill') == true){
-
       skill_ele.find('.level_cost').show();
       if(skill_ele.data('class') != builder_data.character.pc_class ){
         skill_ele.data('class_restricted', true);
       } else {
         skill_ele.data('class_restricted', false);
-      }
-      if(skill_ele.data('race') != builder_data.character.race ){
-        skill_ele.data('race_restricted', true);
-      } else {
-        skill_ele.data('race_restricted', false);
       }
       skill_ele.data('cost', parseInt(skill_ele.find('.level_cost').html()));
 
@@ -472,9 +466,10 @@ jQuery(document).on('ready', function(){
   function update_skills() {
     jQuery('.skill_row').each(function(){
       var name = jQuery(this).data('name');
-      var cost = parseInt(jQuery(this).data('cost'));
       if (isNaN(cost)){
         cost = 0;
+      } else {
+        var cost = parseInt(jQuery(this).data('cost'));
       }
       var has_req = (jQuery(this).data('requirements') != "");
       var spell_circle = is_spell_circle(name);
@@ -514,7 +509,6 @@ jQuery(document).on('ready', function(){
         jQuery(this).removeClass('locked');
         jQuery(this).removeClass('purchased');
       }
-      jQuery(this).data('cost', cost);
     });
 
   }

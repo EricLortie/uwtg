@@ -356,212 +356,21 @@
         <?php endif; ?>
 
 
+
         <?php if( have_rows('skills', get_id_by_slug('codex-racial-abilities')) ): ?>
           <?php $s_count = 0; ?>
           <?php while( have_rows('skills', get_id_by_slug('codex-racial-abilities')) ): the_row(); ?>
 
-
-            <?php // vars
-            $s_count++;
-            $name = get_sub_field('name');
-            $description = get_sub_field('description');
-            $category = get_sub_field('category');
-            $cat_icon = "fa-users";
-            $pc_class = get_sub_field('class');
-            $cat =  "A";
-            $prereq = get_sub_field('prerequesites');
-            $optional_fields = get_sub_field('optional_fields');
-            $race = get_sub_field('race');
-
-            $optional = get_sub_field('optional_fields');
-            $multiple = false;
-            if ( $optional && in_array('multiple', $optional) ) {
-              $multiple = true;
-            }
-            $automatic = false;
-            if ( $optional && in_array('automatic', $optional) ) {
-              $automatic = true;
-            }
-            ?>
-
-            <script type="text/javascript">
-              jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row <?php echo $cat; ?> <?php echo $pc_class; ?>"><div class="col-sm-12 skill" style=""></div></div>');
-                var skill_ele = skill_row.find('.skill');
-                skill_ele.append(`
-                  <div class="row">
-                    <div class="col-xs-1">
-                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver <?php echo (($automatic) ? "automatic_skill" : "" ) ?>" aria-hidden="true"></i>
-                      <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-xs-9">
-                      <span class="cat_label"><i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i></span>&nbsp;
-                      <span class="name"><?php echo $name; ?></span>
-                      &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
-                      <?php if($prereq != ""){ ?>
-                        &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
-                      <?php } ?>
-                      &nbsp;
-                    </div>
-                    <div class="col-xs-1">
-                      <?php if($automatic) { ?>
-                        <span class="racial_cost skill_cost"></span>
-                        <span class="cost" style="display:none">0</span>
-                      <?php } else { ?>
-                        <span class="racial_cost skill_cost">50</span>
-                        <span class="cost" style="display:none">50</span>
-                      <?php } ?>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xs-12 skill_desc" style="display:none;">
-                      <h4>Race: <?php echo $race; ?></h4>
-                      <p>Automatic: <?php echo (($automatic) ? "Yes" : "No"); ?></p>
-                      <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
-                      <?php echo $description; ?>
-                      <hr />
-                      <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
-                    </div>
-                  </div>
-                `);
-
-                var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
-                skill_row.attr('id', row_id);
-                skill_row.data('type', `racial skill`);
-                skill_row.data('name', `<?php echo $name ?>`);
-                skill_row.data('cat_string', `<?php echo $category; ?>`);
-                skill_row.data('category', `<?php echo $cat; ?>`);
-                skill_row.data('description', `<?php echo $description ?>`);
-                skill_row.data('requirements', `<?php echo $prereq ?>`);
-                skill_row.data('multiple', `<?php echo $multiple ?>`);
-                //skill_row.data('frag', `<?php echo $frag_cost ?>`),
-
-                skill_row.data('race', `<?php echo $race;?>`);
-                skill_row.data('racial_skill', true);
-                skill_row.data('automatic', `<?php echo $automatic;?>`);
-                skill_row.data('cost', `50`)
-
-                jQuery('#skill_list').append(skill_row);
-
-              });
-            </script>
+            <?php build_skill_row($post, $s_count, "race_skill"); ?>
 
           <?php endwhile; ?>
         <?php endif; ?>
-
-
 
         <?php if( have_rows('skills', get_id_by_slug('codex-class-skills')) ): ?>
           <?php $s_count = 0; ?>
           <?php while( have_rows('skills', get_id_by_slug('codex-class-skills')) ): the_row(); ?>
 
-
-            <?php // vars
-            $s_count++;
-            $name = get_sub_field('name');
-
-
-            $optional = get_sub_field('optional_fields');
-            $vocation_ability = false;
-            if ( $optional && in_array('vocation', $optional) ) {
-              continue;
-              $vocation_ability = true;
-            }
-            $multiple = false;
-            if ( $optional && in_array('multiple', $optional) ) {
-              $multiple = true;
-            }
-            $automatic = false;
-            if ( $optional && in_array('automatic', $optional) ) {
-              $automatic = true;
-            }
-
-            if (strpos($name, 'Subsequent') !== false) {
-              continue;
-            }
-
-            $description = get_sub_field('description');
-            $category = get_sub_field('category');
-            $pc_class = get_sub_field('class');
-            $pc_class_string = str_replace(" ", "", $pc_class);
-            $class_level = get_sub_field('level');
-            $cat_icon = "fa-universal-access";
-
-            $cat =  substr($category, 0, 1);
-
-            $prereq = get_sub_field('prerequesites');
-
-            $level = get_sub_field('level');
-            $level_cost = 0;
-            if($level == 3){
-              $level_cost = 30;
-            } else if ($level == 6) {
-              $level_cost = 60;
-            } else if ($level == 9) {
-              $level_cost = 90;
-            } else if($level == 12){
-              $level_cost = 120;
-            }
-
-            ?>
-
-            <script type="text/javascript">
-              jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row <?php echo $cat; ?> <?php echo $pc_class_string; ?>"><div class="col-sm-12 skill" style=""></div></div>');
-                var skill_ele = skill_row.find('.skill');
-                skill_ele.append(`
-                  <div class="row">
-                    <div class="col-xs-1">
-                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver" aria-hidden="true"></i>
-                      <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-xs-9">
-                      <span class="cat_label"><i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i></span>&nbsp;
-                      <span class="name"><?php echo $name; ?></span>
-                      &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
-                      <?php if($prereq != ""){ ?>
-                        &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
-                      <?php } ?>
-                      &nbsp;
-                    </div>
-                    <div class="col-xs-1">
-                      <span class="level_cost skill_cost"><?php echo $level_cost ?></span>
-                      <span class="cost" style="display:none"><?php echo $level_cost ?></span>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xs-12 skill_desc" style="display:none;">
-                      <h4>Class: <?php echo $pc_class; ?></h4>
-                      <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
-                      <?php echo $description; ?>
-                      <hr />
-                      <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
-                    </div>
-                  </div>
-                `);
-
-                var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
-                skill_row.attr('id', row_id)
-                skill_row.data('type', `class skill`);
-                skill_row.data('name', `<?php echo $name ?>`);
-                skill_row.data('cat_string', `<?php echo $category; ?>`);
-                skill_row.data('category', `<?php echo $cat; ?>`);
-                skill_row.data('description', `<?php echo $description ?>`);
-                skill_row.data('requirements', `<?php echo $prereq ?>`);
-                skill_row.data('multiple', `<?php echo $multiple ?>`);
-                //skill_row.data('frag', `<?php echo $frag_cost ?>`),
-
-                skill_row.data('class', `<?php echo $pc_class;?>`);
-                skill_row.data('class_level', `<?php echo $class_level;?>`);
-                skill_row.data('class_skill', true);
-                skill_row.data('automatic', `<?php echo $automatic; ?>`);
-                skill_row.data('vocation_skill', `<?php echo $vocation_ability; ?>`)
-                skill_row.data('cost', `<?php echo $level_cost; ?>`)
-
-                jQuery('#skill_list').append(skill_row);
-
-              });
-            </script>
+            <?php build_skill_row($post, $s_count, "class_skill"); ?>
 
           <?php endwhile; ?>
         <?php endif; ?>
@@ -583,142 +392,7 @@
           <?php $s_count = 0; ?>
           <?php while( have_rows('skills', get_id_by_slug('codex-frag-skills')) ): the_row(); ?>
 
-
-            <?php // vars
-            $s_count++;
-            $name = get_sub_field('name');
-
-            if (strpos($name, 'Subsequent') !== false || $name == "Spell Versatility") {
-              continue;
-            }
-
-            $description = get_sub_field('description');
-            $category = get_sub_field('category');
-
-
-            $cat_icon = "fa-diamond";
-            if($category == "Warrior"){
-              $cat_icon = "fa-shield";
-            } else if ($category == "Rogue"){
-              $cat_icon = "fa-bomb";
-            } else if ($category == "Scholar"){
-              $cat_icon = "fa-magic";
-            } else if ($category == "Production"){
-              $cat_icon = "fa-cog";
-            } else if ($category == "Racial Ability"){
-              $category = "Abilities (Racial)";
-              $cat_icon = "fa-users";
-            } else if ($category == "Class Ability"){
-              $cat_icon = "fa-universal-access";
-            }
-
-            $cat =  substr($category, 0, 1);
-
-            $prereq = get_sub_field('prerequesites');
-            $optional_fields = get_sub_field('optional_fields');
-            $mercenary_cost = get_sub_field('mercenary_cost');
-            $ranger_cost = get_sub_field('ranger_cost');
-            $templar_cost = get_sub_field('templar_cost');
-            $nightblade_cost = get_sub_field('nightblade_cost');
-            $assassin_cost = get_sub_field('assassin_cost');
-            $witchhunter_cost = get_sub_field('witchblade_cost');
-            $mage_cost = get_sub_field('mage_cost');
-            $druid_cost = get_sub_field('druid_cost');
-            $bard_cost = get_sub_field('bard_cost');
-            $frag_cost = get_sub_field('frag_cost');
-            $demagogue_cost = get_sub_field('demagogue_cost');
-            $champion_cost = get_sub_field('champion_cost');
-
-            $pc_class = get_sub_field('class');
-            $pc_class_string = str_replace(" ", "", $pc_class);
-
-            $optional = get_sub_field('optional_fields');
-            $multiple = false;
-            if ( $optional && in_array('multiple', $optional) ) {
-              $multiple = true;
-            }
-            $automatic = false;
-            if ( $optional && in_array('automatic', $optional) ) {
-              $automatic = true;
-            }
-
-
-            ?>
-
-            <script type="text/javascript">
-              jQuery(document).on('ready', function(){
-                var skill_row = jQuery('<div class="row skill_row frag_row <?php echo $cat; ?> <?php echo $pc_class_string; ?>"><div class="col-sm-12 skill" style=""></div></div>');
-                var skill_ele = skill_row.find('.skill');
-                skill_ele.append(`
-                  <div class="row">
-                    <div class="col-xs-1">
-                      <i id="skill_<?php echo $s_count; ?>" class="fa fa-plus-square skill_add state_saver <?php echo (($name == "Favoured") ? "favoured" : ""); ?>" aria-hidden="true"></i>
-                      <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-xs-9">
-                      <span class="cat_label">
-                        <i class="fa <?php echo $cat_icon; ?>" aria-hidden="true"></i>
-                      </span>&nbsp;
-                      <span class="name"><span class="frag_cost"><?php echo $name; ?> (<?php echo $frag_cost; ?>&nbsp;<i class=" fa fa-diamond" aria-hidden="true"></i>)</span> </span>
-                      &nbsp; <i class="fa fa-info-circle skill_expander" aria-hidden="true"></i>
-                      <?php if($prereq != ""){ ?>
-                        &nbsp; <i class="fa fa-exclamation-triangle skill_req skill_expander" aria-hidden="true"></i>
-                      <?php } ?>
-                      &nbsp;
-                    </div>
-                    <div class="col-xs-1">
-                      <span class="mer_cost skill_cost"><?php echo $mercenary_cost ?></span>
-                      <span class="ran_cost skill_cost"><?php echo $ranger_cost ?></span>
-                      <span class="tem_cost skill_cost"><?php echo $templar_cost ?></span>
-                      <span class="nig_cost skill_cost"><?php echo $nightblade_cost ?></span>
-                      <span class="ass_cost skill_cost"><?php echo $assassin_cost ?></span>
-                      <span class="wit_cost skill_cost"><?php echo $witchhunter_cost ?></span>
-                      <span class="mag_cost skill_cost"><?php echo $mage_cost ?></span>
-                      <span class="dru_cost skill_cost"><?php echo $druid_cost ?></span>
-                      <span class="bar_cost skill_cost"><?php echo $bard_cost ?></span>
-                      <span class="dem_cost skill_cost"><?php echo $demagogue_cost ?></span>
-                      <span class="cha_cost skill_cost"><?php echo $champion_cost ?></span>
-                      <span class="cost" style="display:none"></span>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xs-12 skill_desc" style="display:none;">
-                      <?php if ($prereq != "") { ?>
-                        <p><i class="fa fa-exclamation-triangle skill_req" aria-hidden="true"></i>&nbsp; Requirements: <?php echo $prereq; ?></p>
-                      <?php } ?>
-                      <p>Multiple Purchases: <?php echo (($multiple) ? "Yes" : "No"); ?></p>
-                      <p>Frag Cost: <?php echo $frag_cost; ?></p>
-                      <?php echo $description; ?>
-                      <hr />
-                      <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
-                    </div>
-                  </div>
-                `);
-
-                var row_id = "row_" + Math.floor((Math.random() * 10000) + 1);
-                skill_row.attr('id', row_id)
-                skill_row.data('type', `frag skill`);
-                skill_row.data('name', `<?php echo $name ?>`);
-                skill_row.data('cat_string', `<?php echo $category; ?>`);
-                skill_row.data('category', `<?php echo $cat; ?>`);
-                skill_row.data('description', `<?php echo $description ?>`);
-                skill_row.data('requirements', `<?php echo $prereq ?>`);
-                skill_row.data('multiple', `<?php echo $multiple ?>`);
-                skill_row.data('frag_cost', `<?php echo $frag_cost ?>`),
-
-                skill_row.data('class_skill', false);
-                skill_row.data('class', `<?php echo $pc_class; ?>`);
-                skill_row.data('automatic', `<?php echo $automatic; ?>`);
-
-                <?php if($prereq != ''){ ?>
-                  skill_row.addClass('has_req');
-                  skill_row.addClass('locked');
-                <?php } ?>
-
-                jQuery('#skill_list').append(skill_row);
-
-              });
-            </script>
+            <?php build_skill_row($post, $s_count, "frag skill"); ?>
 
           <?php endwhile; ?>
         <?php endif; ?>
@@ -1041,7 +715,7 @@
                   </div></div>
               </div>
 
-                <div class="col-sm-6 text-center">
+                <div class="col-sm-6 text-center" style="display:none;">
                   <h4>Filter</h4>
                   <div class="row">
                     <div class="col-xs-2">
@@ -1076,7 +750,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-3 col-xs-6 text-center">
+                <div class="col-sm-3 col-xs-6 text-center" style="display:none;">
                   <h4>Toggle</h4>
                   <div class="row">
                     <div class="col-xs-6">
@@ -1091,7 +765,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-3 col-xs-6 text-center">
+                <div class="col-sm-4 col-xs-6 text-center">
+                </div>
+                <div class="col-sm-4 col-xs-6 text-center">
                   <h4>Sort</h4>
                   <div class="row">
                     <div class="col-xs-6">
@@ -1104,7 +780,7 @@
                 </div>
               </div>
 
-              <div id="skill_header" class="row">
+              <div id="skill_header" class="row" style="display:none;">
                 <p id="option_string">Showing <span id="filter_string" class="opt">ALL</span> <span id="cat_string" class="opt"></span> skills, sorted by <span id="sort_string" class="opt">NAME</span>.&nbsp;
                 <i id="opt-clear" class="fa fa-close" aria-hidden="true"></i></p>
               </div>
