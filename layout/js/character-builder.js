@@ -227,6 +227,7 @@ jQuery(document).on('ready', function(){
       builder_data.character.blanket_value = builder_data.character.level_data.cppb;
       builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
     }
+    jQuery('#blanket_val').html(builder_data.character.blanket_value);
     update_character();
   });
 
@@ -331,7 +332,7 @@ jQuery(document).on('ready', function(){
 
     builder_data.character.cp_avail -= skill_ele.data('cost');
     builder_data.character.cp_spent += skill_ele.data('cost');
-    if(typeof skill_ele.data('frag_cost') != 'undefined'){
+    if(typeof skill_ele.data('frag_cost') != 'undefined' && skill_ele.data('frag_cost') != ""){
       builder_data.character.frags_spent += parseInt(skill_ele.data('frag_cost'));
     }
     builder_data.character.skill_count += 1
@@ -343,7 +344,7 @@ jQuery(document).on('ready', function(){
     update_skills();
     if((!skill_ele.find('.skill_add').hasClass('automatic_skill'))){
       builder_data.step += 1;
-      push_to_remote(builder_data.character, builder_data.step, skill_ele.data('name'));
+      //push_to_remote(builder_data.character, builder_data.step, skill_ele.data('name'));
     }
   }
 
@@ -452,16 +453,38 @@ jQuery(document).on('ready', function(){
     html = "<ul>";
     for (skill in skills) {
       if (skills.hasOwnProperty(skill)) {
-        var skill_string = skill;
-        if(skills[skill] > 1) {
-          skill_string = skill_string + " X" + skills[skill];
+        if(skills[skill] != 0){
+          var skill_string = skill;
+          if(skills[skill] > 1) {
+            skill_string = skill_string + " X" + skills[skill];
+          }
+          var remort_string = "";
+          if(can_be_remorted(skill)){
+            remort_string = " <a href='#' class='remort' data-skill-name='"+skill+"'>X (250 <i class='fa fa-diamond' aria-hidden='true'></i>)</a>";
+          }
+          html += "<li>"+skill_string + remort_string + "</li>";
         }
-        html += "<li>"+skill_string + "</li>";
       }
     }
     html += "</ul>";
     return html;
   }
+
+  function can_be_remorted(skill){
+    var skill_ele = jQuery('.skill_row[skill-name="'+skill+'"]');
+    if(skill_ele.data('racial_skill') || skill_ele.data('automatic') || skill == "Weapon Group Proficiency: Simple"){
+      return false;
+    }
+    return true;
+  }
+
+  jQuery(document).on('click', '.remort', function(e){
+    e.preventDefault();
+    builder_data.character.frags_spent += 250;
+    builder_data.character.skills[jQuery(this).data('skillName')] -= 1;
+    update_character();
+
+  });
 
   function update_skills() {
     jQuery('.skill_row').each(function(){

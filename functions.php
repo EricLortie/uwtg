@@ -453,7 +453,7 @@ function build_skill_row($post, $s_count, $skill_type) {
 			<script type="text/javascript">
 				jQuery(document).on('ready', function(){
 					var skill_type = '<?php echo $skill_type; ?>';
-					var skill_row = jQuery('<div class="row skill_row <?php echo $sphere_class; ?> <?php echo $cat; ?> <?php echo $pc_class_string; ?>"><div class="col-sm-12 skill" style=""></div></div>');
+					var skill_row = jQuery(`<div class="row skill_row <?php echo $sphere_class; ?> <?php echo $cat; ?> <?php echo $pc_class_string; ?>" skill-name="<?php echo $name; ?>"><div class="col-sm-12 skill" style=""></div></div>`);
 					var skill_ele = skill_row.find('.skill');
 					skill_ele.append(`
 						<div class="row">

@@ -604,7 +604,7 @@
                 <div class="col-xs-12 non_data_fields">
 
                   <button id="btn_add_blanket" class="btn btn-red state_saver mandatory_section" style="margin: 2rem 0;">
-                    Add Blanket of XP
+                    Add Blanket of XP (+<span id="blanket_val"></span>CP)
                   </button>
                 </div>
               </div>
@@ -654,7 +654,16 @@
                   </div>
 
                   <div id="cb_skill_details" class="cb_display_content" data-tab="Skills">
-                    <h4>Skills</h4>
+                    <div id="suggested_skills">
+
+                        <h4>Suggested Skills</h4>
+                        <p>Coming soon-ish! You'll be able to get suggestions on what skill to purchase next.</p>
+                        <p>Consider donating to my <a href="https://www.patreon.com/EricLortie" target="_blank">Patreon page</a> to further motivate me.</p>
+
+                    </div>
+
+                    <hr/>
+                    <h4>Purchased Skills</h4>
                     <div id="cb_skills"></div>
 
                   </div>
