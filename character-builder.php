@@ -210,7 +210,7 @@
                   vocation: character.vocation,
                   occupation: character.occupation,
                   race: character.race,
-                  skill: skill,
+                  skill_name: skill,
                   skill_count: character.skill_count,
                   frags_spent: character.frags_spent,
                   spell_spheres: character.spell_spheres,
