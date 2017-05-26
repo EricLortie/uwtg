@@ -53,10 +53,11 @@
           builder_data.occupations = [];
           builder_data.pc_classes = [];
           builder_data.spell_spheres = [];
+          builder_data.heavy_armour = false;
 
-          builder_data.character.armour_points = 0;
-          builder_data.character.armour_pieces = 0;
-          builder_data.character.armour = {};
+          builder_data.armour_points = 0;
+          builder_data.armour_pieces = 0;
+          builder_data.armour = {};
 
           builder_data.circle_values = {
             "Spell Slot: 1st Circle": 0,
@@ -748,7 +749,7 @@
                             <span id="armour_<?php echo $slot; ?>_desc_2">No Armour</span>
                           </div>
                           <div class="col-xs-2 action_buttons">
-                            <i class="fa fa-plus-square armour_toggle show_armour_modal" slot="<?php $slot; ?>" level="2" aria-hidden="true"></i>
+                            <i class="fa fa-plus-square armour_toggle show_armour_modal" slot="<?php echo $slot; ?>" level="2" aria-hidden="true"></i>
                           </div>
                         </div>
                       </div>
@@ -1003,7 +1004,7 @@ get_footer();
                 <div class="col-sm-12">
                   Type:<br/>
                   <select id="armour_type">
-                    <?php foreach([[0, "No Armour"], [1, 'Leather'],[2, 'Boiled/Studded Leather'],[3, 'Scale'],[4, 'Plate']] as $a) { ?>
+                    <?php foreach([[0, "No Armour"], [1, 'Leather'],[2, 'Boiled/Studded Leather'],[3, 'Chain/Scale'],[4, 'Plate']] as $a) { ?>
                       <option value="<?php echo $a[0];?>" type="<?php echo $a[1];?>"><?php echo $a[1];?></option>
                     <?php } ?>
                   </select>

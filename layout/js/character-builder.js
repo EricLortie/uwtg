@@ -329,6 +329,11 @@ jQuery(document).on('ready', function(){
     if(skill_ele.data('racial_skill')){
       builder_data.character.racial_skills += 1;
     }
+    if(skill_ele.data('name') == "Heavy Armour"){
+      builder_data.heavy_armour = true;
+      jQuery('.armour_slot_data_2').removeClass('locked');
+      jQuery('#heavy_armour_flag').html("Yes")
+    }
 
     builder_data.character.cp_avail -= skill_ele.data('cost');
     builder_data.character.cp_spent += skill_ele.data('cost');
@@ -356,6 +361,15 @@ jQuery(document).on('ready', function(){
     jQuery('#cb_occupation_show').html("");
     jQuery('#char_vocation').hide();
     jQuery('#cb_vocation_show').html("");
+
+    builder_data.heavy_armour = false;
+    builder_data.armour_points = 0;
+    builder_data.armour_pieces = 0;
+    builder_data.armour = {};
+    jQuery('.armour_slot_data_2').addClass('locked');
+    jQuery('#heavy_armour_flag').html("No");
+    jQuery('.armour_slot').attr('val1', 0);
+    jQuery('.armour_slot').attr('val2', 0);
 
     builder_data.character.character_id = generateUUID();
     builder_data.character.level = 1;
@@ -1042,16 +1056,16 @@ jQuery(document).on('ready', function(){
     var section_ap = parseInt(jQuery('#armour_'+slot).attr('val1')) + parseInt(jQuery('#armour_'+slot).attr('val2'));
     jQuery('#ap_val_'+slot).html(section_ap);
 
-    if(typeof builder_data.character.armour[slot] == "undefined"){
-      builder_data.character.armour[slot] = [];
+    if(typeof builder_data.armour[slot] == "undefined"){
+      builder_data.armour[slot] = {};
     }
 
-    builder_data.character.armour[slot][level] = {'value': ap, 'type': type, 'penalty': penalty};
-    builder_data.character.armour_points += ap;
-    builder_data.character.armour_pieces += 1;
+    builder_data.armour[slot][level] = {'value': ap, 'type': type, 'penalty': penalty};
+    builder_data.armour_points += ap;
+    builder_data.armour_pieces += 1;
 
-    jQuery('#armour_points').html(builder_data.character.armour_points);
-    jQuery('#armour_count').html(builder_data.character.armour_pieces);
+    jQuery('#armour_points').html(builder_data.armour_points);
+    jQuery('#armour_count').html(builder_data.armour_pieces);
 
     jQuery('#armour_slot_data_'+slot).find('.armour_toggle').toggleClass('hidden');
     jQuery('#armour_modal').modal('toggle');
