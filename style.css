@@ -756,6 +756,53 @@ select.mandatory:disabled {
 .cb_display_content.active {
   display: block;
 }
+#cb_armour_details {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+#cb_armour_details i {
+  cursor: pointer;
+  color: darkred;
+}
+.armour_slot {
+  padding-top: 4px;
+}
+.armour_slot_data {
+  display:none;
+  padding: 2px;
+  border-bottom: 1px solid grey;
+}
+.armour_slot_data_1 {
+  border-bottom: 1px solid grey;
+}
+.armour_slot_data_1 {
+  background: #333;
+}
+.armour_slot_data_2 {
+  background: #111;
+}
+#armour_modal .modal-dialog {
+  width: 300px;
+  margin-top: 140px;
+}
+#armour_modal .modal-content {
+  background: #333;
+  border: 1px solid whitesmoke;
+}
+#armour_modal select {
+  padding: .5rem;
+  margin-top: .5rem;
+  width: 100%;
+  background: #222;
+  color: #ccc;
+}
+#armour_modal button {
+  font-weight: bold;
+  background: darkred;
+}
+.locked .action_buttons {
+  display: none;
+}
 .cat_label {
   text-transform: uppercase;
   color: darkred;

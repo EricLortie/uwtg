@@ -54,6 +54,10 @@
           builder_data.pc_classes = [];
           builder_data.spell_spheres = [];
 
+          builder_data.character.armour_points = 0;
+          builder_data.character.armour_pieces = 0;
+          builder_data.character.armour = {};
+
           builder_data.circle_values = {
             "Spell Slot: 1st Circle": 0,
             "Spell Slot: 2nd Circle": 0,
@@ -669,9 +673,87 @@
                   </div>
 
                   <div id="cb_armour_details" class="cb_display_content"  data-tab="Armour">
-                    <h4>Armour</h4>
-                    <p>Coming soon-ish! You'll be able to set up your armour here.</p>
-                    <p>Consider donating to my <a href="https://www.patreon.com/EricLortie" target="_blank">Patreon page</a> to further motivate me.</p>
+
+                    <ul>
+                      <li>Total Armour Points: <span id="armour_points">0</span></li>
+                      <li>Total Armour Pieces: <span id="armour_count">0</span></li>
+                      <li>Heavy Armour: <span id="heavy_armour_flag">No</span></li>
+                    </ul>
+                    <?php
+                      $a_slots = [
+                        "Upper Skull",
+                        "Eyes",
+                        "Lower Face/Jaw",
+                        "Throat",
+                        "Right Pectoral",
+                        "Left Pectoral",
+                        "Right Ribs",
+                        "Left Ribs",
+                        "Right Abdomen",
+                        "Left Abdomen",
+                        "Groin",
+                        "Right Shoulder",
+                        "Left Shoulder",
+                        "Right Forearm",
+                        "Left Forearm",
+                        "Right Hand",
+                        "Left Hand",
+                        "Right Thigh",
+                        "Left Thigh",
+                        "Right Calf",
+                        "Left Calf",
+                        "Right Foot",
+                        "Left Foot",
+                        "Back of Neck",
+                        "Upper Back",
+                        "Mid Back",
+                        "Lower Back",
+                        "Gluteus"
+                      ];
+                      for($i=0; $i<=count($a_slots)-1; $i++){
+                        $slot = $i+1;
+                    ?>
+                      <div id="armour_<?php echo $slot; ?>" val1="0" val2="0" class="armour_slot">
+                        <div class="row">
+                          <div class="col-sm-2">
+                            <?php echo $slot; ?>
+                          </div>
+                          <div class="col-sm-5">
+                            <?php echo $a_slots[$i]; ?>
+                          </div>
+                          <div class="col-sm-3">
+                            <span id="ap_val_<?php echo $slot; ?>">0</span> pts
+                          </div>
+                          <div class="col-xs-2">
+                            <i class="fa fa-toggle-down expand_armour" armour="<?php echo $slot; ?>" aria-hidden="true"></i>
+                            <i class="fa fa-toggle-up close_armour hidden" armour="<?php echo $slot; ?>" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                        <div class="row armour_slot_data armour_slot_data_1">
+                          <div class="col-xs-2">
+                            <span id="armour_<?php echo $slot; ?>_val_1">0</span> pts
+                          </div>
+                          <div class="col-xs-8">
+                            <span id="armour_<?php echo $slot; ?>_desc_1">No Armour</span>
+                          </div>
+                          <div class="col-xs-2">
+                            <i class="fa fa-plus-square armour_toggle show_armour_modal" slot="<?php echo $slot; ?>" level="1" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                        <div class="row armour_slot_data armour_slot_data_2 locked">
+                          <div class="col-xs-2">
+                            <span id="armour_<?php echo $slot; ?>_val_2">0</span> pts
+                          </div>
+                          <div class="col-xs-8">
+                            <span id="armour_<?php echo $slot; ?>_desc_2">No Armour</span>
+                          </div>
+                          <div class="col-xs-2 action_buttons">
+                            <i class="fa fa-plus-square armour_toggle show_armour_modal" slot="<?php $slot; ?>" level="2" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </div>
+                    <?php }?>
+
 
                   </div>
 
@@ -904,4 +986,43 @@
 
 
 </div>
-<?php get_footer(); ?>
+<?php
+get_footer();
+
+?>
+
+<div class="modal fade" id="armour_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Armour</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  Type:<br/>
+                  <select id="armour_type">
+                    <?php foreach([[0, "No Armour"], [1, 'Leather'],[2, 'Boiled/Studded Leather'],[3, 'Scale'],[4, 'Plate']] as $a) { ?>
+                      <option value="<?php echo $a[0];?>" type="<?php echo $a[1];?>"><?php echo $a[1];?></option>
+                    <?php } ?>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  Penalty:<br/>
+                  <select id="armour_penalty">
+                    <option value="0">0</option>
+                    <option value="0.5">0.5</option>
+                    <option value="1">1</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="armour_add" class="btn" slot="" level="" old-ap="">Add To Slot</button>
+            </div>
+        </div>
+    </div>
+</div>

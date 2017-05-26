@@ -345,7 +345,6 @@ if ( ! function_exists('write_log')) {
 function build_skill_row($post, $s_count, $skill_type) {
 	$s_count++;
 	$name = get_sub_field('name');
-	write_log(strpos($name, 'Subsequent'));
 	if (strpos($name, 'Subsequent') === false && $name != "Spell Versatility") {
 
 			$description = get_sub_field('description');

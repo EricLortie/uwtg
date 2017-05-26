@@ -809,6 +809,19 @@ jQuery(document).on('ready', function(){
     jQuery('.cb_display_content[data-tab="'+jQuery(this).data('tab')+'"]').addClass('active');
   });
 
+  jQuery(document).on('click', '.expand_armour', function(){
+    jQuery(this).toggleClass('hidden')
+    jQuery(this).siblings('.close_armour').toggleClass('hidden');
+    var slot = jQuery(this).attr('armour');
+    jQuery('#armour_'+slot).find('.armour_slot_data').show();
+  });
+  jQuery(document).on('click', '.close_armour', function(){
+    jQuery(this).toggleClass('hidden')
+    jQuery(this).siblings('.expand_armour').toggleClass('hidden');
+    var slot = jQuery(this).attr('armour');
+    jQuery('#armour_'+slot).find('.armour_slot_data').hide();
+  });
+
   jQuery('.legend_toggler').on('click', function(e){
     e.preventDefault();
     jQuery('#legend').toggleClass('opened').toggleClass('closed');
@@ -996,5 +1009,53 @@ jQuery(document).on('ready', function(){
   if(jQuery('.tooltip').length > 0){
     jQuery( document ).tooltip();
   }
+
+  jQuery('.show_armour_modal').on('click', function(){
+    var slot = jQuery(this).attr('slot');
+    var level = jQuery(this).attr('level');
+    jQuery('#armour_add').attr('slot', slot);
+    jQuery('#armour_add').attr('level', level);
+    jQuery('#armour_add').attr('old-ap', jQuery('#armour_'+slot).attr('val'+level));
+    jQuery('#armour_modal').modal();
+  });
+
+  jQuery('#armour_add').on('click', function(){
+    if (jQuery(this).attr('old-ap') != "0") {
+      builder_data.character.armour_points -= parseInt(jQuery(this).attr('old-ap'));
+      builder_data.character.armour_pieces -= 1;
+    }
+
+    var slot = jQuery(this).attr('slot');
+    var level = jQuery(this).attr('level');
+    var ap = parseInt(jQuery('#armour_type').val());
+    var type = jQuery('#armour_type').find('option:selected').attr('type');
+    var penalty = jQuery('#armour_penalty').val();
+
+    if(penalty != '0'){
+      type = type + " (penalty: "+penalty+")";
+      ap = ap-parseInt(penalty);
+    }
+
+    jQuery('#armour_'+slot+'_val_'+level).html(ap);
+    jQuery('#armour_'+slot+'_desc_'+level).html(type);
+    jQuery('#armour_'+slot).attr('val'+level, ap);
+    var section_ap = parseInt(jQuery('#armour_'+slot).attr('val1')) + parseInt(jQuery('#armour_'+slot).attr('val2'));
+    jQuery('#ap_val_'+slot).html(section_ap);
+
+    if(typeof builder_data.character.armour[slot] == "undefined"){
+      builder_data.character.armour[slot] = [];
+    }
+
+    builder_data.character.armour[slot][level] = {'value': ap, 'type': type, 'penalty': penalty};
+    builder_data.character.armour_points += ap;
+    builder_data.character.armour_pieces += 1;
+
+    jQuery('#armour_points').html(builder_data.character.armour_points);
+    jQuery('#armour_count').html(builder_data.character.armour_pieces);
+
+    jQuery('#armour_slot_data_'+slot).find('.armour_toggle').toggleClass('hidden');
+    jQuery('#armour_modal').modal('toggle');
+
+  });
 
 });
