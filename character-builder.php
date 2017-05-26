@@ -201,39 +201,74 @@
             ]
           }
 
-            function push_to_remote(character, step, skill){
+          function push_character_to_remote(character, step, skill){
 
-              if(skill != "Weapon Group Proficiency: Simple"){
+            if(skill != "Weapon Group Proficiency: Simple"){
 
-                var api_character = {
-                  rulebook: character.rulebook,
-                  character_id: character.character_id,
-                  category: character.category,
-                  step: step,
-                  character: JSON.stringify(character),
-                  pc_class: character.pc_class,
-                  vocation: character.vocation,
-                  occupation: character.occupation,
-                  race: character.race,
-                  skill_name: skill,
-                  skill_count: character.skill_count,
-                  frags_spent: character.frags_spent,
-                  spell_spheres: character.spell_spheres,
-                  cp_spent: character.cp_spent
-                };
+              var api_character = {
+                rulebook: character.rulebook,
+                character_id: character.character_id,
+                category: character.category,
+                step: step,
+                character: JSON.stringify(character),
+                pc_class: character.pc_class,
+                vocation: character.vocation,
+                occupation: character.occupation,
+                race: character.race,
+                skill_name: skill,
+                skill_count: character.skill_count,
+                frags_spent: character.frags_spent,
+                spell_spheres: character.spell_spheres,
+                cp_spent: character.cp_spent
+              };
 
-                jQuery.ajax({
-                    type: "POST",
-                    data :JSON.stringify(api_character),
-                    headers: { 'X-API-KEY': "tempest_grove" },
-                    url: "https://arcane-sierra-27033.herokuapp.com/character_steps",
-                    contentType: "application/json",
-                    dataType: "json",
-                    success: function(data){
-                    }
-                });
-              }
+              jQuery.ajax({
+                  type: "POST",
+                  data :JSON.stringify(api_character),
+                  headers: { 'X-API-KEY': "tempest_grove" },
+                  url: "https://arcane-sierra-27033.herokuapp.com/character_steps",
+                  contentType: "application/json",
+                  dataType: "json",
+                  success: function(data){
+                  }
+              });
             }
+          }
+          function push_armour_to_remote(armour_data, slot, level, ap, penalty, type){
+
+            var api_armour = {
+              rulebook: armour_data.character.rulebook,
+              character_id: armour_data.character.character_id,
+              category: armour_data.character.category,
+              character: JSON.stringify(armour_data.character),
+              pc_class: armour_data.character.pc_class,
+              vocation: armour_data.character.vocation,
+              occupation: armour_data.character.occupation,
+              race: armour_data.character.race,
+              skill_count: armour_data.character.skill_count,
+              frags_spent: armour_data.character.frags_spent,
+              spell_spheres: armour_data.character.spell_spheres,
+              cp_spent: armour_data.character.cp_spent,
+              armour_points: armour_data.armour_points,
+              armour_pieces: armour_data.armour_pieces,
+              armour_slot: slot,
+              armour_level: level,
+              armour_value: ap,
+              armour_penalty: penalty,
+              armour_type: type
+            };
+
+            jQuery.ajax({
+                type: "POST",
+                data :JSON.stringify(api_armour),
+                headers: { 'X-API-KEY': "tempest_grove" },
+                url: "https://arcane-sierra-27033.herokuapp.com/armours",
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data){
+                }
+            });
+          }
 
         </script>
 

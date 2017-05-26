@@ -349,7 +349,7 @@ jQuery(document).on('ready', function(){
     update_skills();
     if((!skill_ele.find('.skill_add').hasClass('automatic_skill'))){
       builder_data.step += 1;
-      //push_to_remote(builder_data.character, builder_data.step, skill_ele.data('name'));
+      push_character_to_remote(builder_data.character, builder_data.step, skill_ele.data('name'));
     }
   }
 
@@ -1069,6 +1069,8 @@ jQuery(document).on('ready', function(){
 
     jQuery('#armour_slot_data_'+slot).find('.armour_toggle').toggleClass('hidden');
     jQuery('#armour_modal').modal('toggle');
+
+    push_armour_to_remote(builder_data, slot, level, ap, penalty, type);
 
   });
 
