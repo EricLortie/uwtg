@@ -46,6 +46,7 @@
           builder_data.character.rulebook = 5.5;
           builder_data.character.racial_skills = 0;
           builder_data.character.automatic_racial_skills = 0;
+          builder_data.character.next_racial_skill_level = 1;
           builder_data.races = [];
           builder_data.skill = 0;
           builder_data.step = 0;
@@ -203,7 +204,7 @@
 
           function push_character_to_remote(character, step, skill){
 
-            if(skill != "Weapon Group Proficiency: Simple"){
+            if(skill != "Weapon Group Proficiency: Simple" && window.location.href.indexOf('uwtg') == -1){
 
               var api_character = {
                 rulebook: character.rulebook,
@@ -236,38 +237,40 @@
           }
           function push_armour_to_remote(armour_data, slot, level, ap, penalty, type){
 
-            var api_armour = {
-              rulebook: armour_data.character.rulebook,
-              character_id: armour_data.character.character_id,
-              category: armour_data.character.category,
-              character: JSON.stringify(armour_data.character),
-              pc_class: armour_data.character.pc_class,
-              vocation: armour_data.character.vocation,
-              occupation: armour_data.character.occupation,
-              race: armour_data.character.race,
-              skill_count: armour_data.character.skill_count,
-              frags_spent: armour_data.character.frags_spent,
-              spell_spheres: armour_data.character.spell_spheres,
-              cp_spent: armour_data.character.cp_spent,
-              armour_points: armour_data.armour_points,
-              armour_pieces: armour_data.armour_pieces,
-              armour_slot: slot,
-              armour_level: level,
-              armour_value: ap,
-              armour_penalty: penalty,
-              armour_type: type
-            };
+            if(window.location.href.indexOf('uwtg') == -1){
+              var api_armour = {
+                rulebook: armour_data.character.rulebook,
+                character_id: armour_data.character.character_id,
+                category: armour_data.character.category,
+                character: JSON.stringify(armour_data.character),
+                pc_class: armour_data.character.pc_class,
+                vocation: armour_data.character.vocation,
+                occupation: armour_data.character.occupation,
+                race: armour_data.character.race,
+                skill_count: armour_data.character.skill_count,
+                frags_spent: armour_data.character.frags_spent,
+                spell_spheres: armour_data.character.spell_spheres,
+                cp_spent: armour_data.character.cp_spent,
+                armour_points: armour_data.armour_points,
+                armour_pieces: armour_data.armour_pieces,
+                armour_slot: slot,
+                armour_level: level,
+                armour_value: ap,
+                armour_penalty: penalty,
+                armour_type: type
+              };
 
-            jQuery.ajax({
-                type: "POST",
-                data :JSON.stringify(api_armour),
-                headers: { 'X-API-KEY': "tempest_grove" },
-                url: "https://arcane-sierra-27033.herokuapp.com/armours",
-                contentType: "application/json",
-                dataType: "json",
-                success: function(data){
-                }
-            });
+              jQuery.ajax({
+                  type: "POST",
+                  data :JSON.stringify(api_armour),
+                  headers: { 'X-API-KEY': "tempest_grove" },
+                  url: "https://arcane-sierra-27033.herokuapp.com/armours",
+                  contentType: "application/json",
+                  dataType: "json",
+                  success: function(data){
+                  }
+              });
+            }
           }
 
         </script>
@@ -644,7 +647,7 @@
                 <div class="col-xs-12 non_data_fields">
 
                   <button id="btn_add_blanket" class="btn btn-red state_saver mandatory_section" style="margin: 2rem 0;">
-                    Add Blanket of XP (+<span id="blanket_val"></span>CP)
+                    Add Blanket of XP (+<span id="blanket_val">65</span>CP)
                   </button>
                 </div>
               </div>

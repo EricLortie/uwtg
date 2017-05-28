@@ -225,7 +225,7 @@ jQuery(document).on('ready', function(){
       builder_data.character.level += 1;
       builder_data.character.level_data = builder_data.level_chart[builder_data.character.level-1];
       builder_data.character.blanket_value = builder_data.character.level_data.cppb;
-      builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
+      builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type] + builder_data.character.body_point_bonus;
     }
     jQuery('#blanket_val').html(builder_data.character.blanket_value);
     update_character();
@@ -328,11 +328,17 @@ jQuery(document).on('ready', function(){
     }
     if(skill_ele.data('racial_skill')){
       builder_data.character.racial_skills += 1;
+      if(!skill_ele.data('automatic')){
+        builder_data.character.next_racial_skill_level = builder_data.character.level+2;
+      }
     }
     if(skill_ele.data('name') == "Heavy Armour"){
       builder_data.heavy_armour = true;
       jQuery('.armour_slot_data_2').removeClass('locked');
       jQuery('#heavy_armour_flag').html("Yes")
+    }
+    if(skill_ele.data('name') == "Body Point Bonus") {
+      builder_data.character.body_point_bonus += 5;
     }
 
     builder_data.character.cp_avail -= skill_ele.data('cost');
@@ -388,6 +394,7 @@ jQuery(document).on('ready', function(){
     builder_data.character.cp_spent = 0;
     builder_data.character.cp_total = 0;
     builder_data.character.blanket_value = builder_data.character.level_data.cppb;
+    builder_data.character.body_point_bonus = 0;
     builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
     builder_data.character.skills = {};
     builder_data.character.skill_count = 0;
@@ -508,7 +515,7 @@ jQuery(document).on('ready', function(){
       } else {
         var cost = parseInt(jQuery(this).data('cost'));
       }
-      var has_req = (jQuery(this).data('requirements') != "");
+      var has_req = ((jQuery(this).data('requirements') != "" )&& (jQuery(this).data('requirements').indexOf('Max') !== -1));
       var spell_circle = is_spell_circle(name);
 
       if(jQuery(this).data('class_skill')){
@@ -572,7 +579,7 @@ jQuery(document).on('ready', function(){
   }
 
   function meets_racial_req(skill_row){
-    if(builder_data.character.racial_skills == 0 || (((builder_data.character.level % 2) == 1) && (builder_data.character.racial_skills - builder_data.character.automatic_racial_skills) <= (builder_data.character.level/2))){
+    if((builder_data.character.next_racial_skill_level <= builder_data.character.level)){
       return true;
     }
     return false;
@@ -641,11 +648,15 @@ jQuery(document).on('ready', function(){
             if (conditionals.hasOwnProperty(subreq)) {
               reqs.push(conditionals[subreq]);
             } else {
-              reqs.push(subreq);
+              if(req.indexOf("Max") !== -1){
+                reqs.push(subreq);
+              }
             }
           }
         } else {
-          reqs.push(req);
+          if(req.indexOf("Max") !== -1){
+            reqs.push(req);
+          }
         }
       }
 

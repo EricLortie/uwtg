@@ -391,8 +391,6 @@ function build_skill_row($post, $s_count, $skill_type) {
 			$demagogue_cost = get_sub_field('demagogue_cost');
 			$champion_cost = get_sub_field('champion_cost');
 
-			$max = get_sub_field('max');
-
 			$race = get_sub_field('race');
 
 			$pc_class = get_sub_field('class');
@@ -419,6 +417,14 @@ function build_skill_row($post, $s_count, $skill_type) {
 				$cat_icon = "fa-magic";
 			} else {
 				$prereq = get_sub_field('prerequesites');
+			}
+
+			preg_match('/(?:Max: ([1-9]))/', $prereq, $max);
+			if(count($max)>0){
+				$max = $max[1];
+				$prereq = "";
+			} else {
+				$max = "";
 			}
 
 			$multiple = false;
@@ -580,7 +586,7 @@ function build_skill_row($post, $s_count, $skill_type) {
 					skill_row.data('requirements', `<?php echo $prereq ?>`);
 					skill_row.data('multiple', `<?php echo $multiple ?>`);
 					skill_row.data('automatic', `<?php echo $automatic; ?>`);
-					skill_row.data('max', `<?php echo $max ?>`);
+					skill_row.data('max', <?php echo $max ?>);
 
 					if(builder_data.circles.indexOf("<?php echo $name; ?>") >= 0){
 						skill_row.data('spell_circle', true);
