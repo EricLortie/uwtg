@@ -558,7 +558,7 @@ jQuery(document).on('ready', function(){
       } else {
         var cost = parseInt(jQuery(this).data('cost'));
       }
-      var has_req = ((jQuery(this).data('requirements') != "" )&& (jQuery(this).data('requirements').indexOf('Max') !== -1));
+      var has_req = ((jQuery(this).data('requirements') != "" ));
       var spell_circle = is_spell_circle(name);
 
       if(jQuery(this).data('class_skill')){

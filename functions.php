@@ -397,12 +397,6 @@ function build_skill_row($post, $s_count, $skill_type) {
 			$pc_class_string = str_replace(" ", "", $pc_class);
 			$class_level = get_sub_field('level');
 
-			if($name == "Mysticism"){
-				$max = 10;
-			} else if($name == "Physician"){
-				$max = 10;
-			}
-
 			$optional = get_sub_field('optional_fields');
 
 			$sphere_class = '';
@@ -425,6 +419,12 @@ function build_skill_row($post, $s_count, $skill_type) {
 				$prereq = "";
 			} else {
 				$max = "";
+			}
+
+			if($name == "Mysticism"){
+				$max = 10;
+			} else if($name == "Physician"){
+				$max = 10;
 			}
 
 			$multiple = false;
