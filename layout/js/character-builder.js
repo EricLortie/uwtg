@@ -670,7 +670,7 @@ jQuery(document).on('ready', function(){
     if(cur_circle == 0){
       return ((cur_circle_count > next_circle_count) && (cur_circle_count < next_circle_count+2));
     } else {
-      return ((next_circle_count <= cur_circle_count+1) && (prev_circle_count >= cur_circle_count+2));
+      return ((next_circle_count <= cur_circle_count+1) && (prev_circle_count >= cur_circle_count+2 || prev_circle_count == 5));
     }
     return false;
   }
