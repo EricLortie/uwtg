@@ -39,6 +39,7 @@
           builder_data.character.pc_class = "";
           builder_data.character.race = "";
           builder_data.character.skills = {};
+          builder_data.character.spells = {};
           builder_data.character.class_skills = {};
           builder_data.character.frags_avail = 0;
           builder_data.character.frags_spent = 0;
@@ -54,11 +55,13 @@
           builder_data.occupations = [];
           builder_data.pc_classes = [];
           builder_data.spell_spheres = [];
+          builder_data.spells = {};
           builder_data.heavy_armour = false;
 
           builder_data.armour_points = 0;
           builder_data.armour_pieces = 0;
           builder_data.armour = {};
+          builder_data.available_spells = {};
 
           builder_data.circle_values = {
             "Spell Slot: 1st Circle": 0,
@@ -272,6 +275,40 @@
               });
             }
           }
+          function push_spell_to_remote(spell_data, slot, circle, day, spell_name){
+
+            if(window.location.href.indexOf('uwtg') == -1){
+              var api_spell = {
+                rulebook: spell_data.character.rulebook,
+                character_id: spell_data.character.character_id,
+                category: spell_data.character.category,
+                character: JSON.stringify(spell_data.character),
+                pc_class: spell_data.character.pc_class,
+                vocation: spell_data.character.vocation,
+                occupation: spell_data.character.occupation,
+                race: spell_data.character.race,
+                skill_count: spell_data.character.skill_count,
+                frags_spent: spell_data.character.frags_spent,
+                spell_spheres: spell_data.character.spell_spheres,
+                cp_spent: spell_data.character.cp_spent,
+                spell_name: spell_name,
+                spell_slot: slot,
+                spell_circle: circle,
+                spell_day: day
+              };
+
+              jQuery.ajax({
+                  type: "POST",
+                  data :JSON.stringify(api_spell),
+                  headers: { 'X-API-KEY': "tempest_grove" },
+                  url: "https://arcane-sierra-27033.herokuapp.com/spell_slots",
+                  contentType: "application/json",
+                  dataType: "json",
+                  success: function(data){
+                  }
+              });
+            }
+          }
 
         </script>
 
@@ -388,6 +425,70 @@
 
           <?php endwhile;
         endif; ?>
+
+        <?php if( have_rows('spells', get_id_by_slug('codex-spells')) ): ?>
+          <?php $count = 0; ?>
+          <?php while( have_rows('spells', get_id_by_slug('codex-spells')) ): the_row(); ?>
+
+            <?php $name = preg_replace('<type>', '[type]', get_sub_field('name')); ?>
+            <?php $sphere = get_sub_field('sphere'); ?>
+            <?php $incant = preg_replace('<type>', '[type]', get_sub_field('incant')); ?>
+            <?php $level = get_sub_field('level'); ?>
+            <?php $duration = get_sub_field('duration'); ?>
+            <?php $desc = preg_replace('<type>', '[type]', get_sub_field('description')); ?>
+
+
+            <script type="text/javascript">
+              if(typeof builder_data.spells[`<?php echo $sphere; ?>`] == "undefined"){
+                builder_data.spells[`<?php echo $sphere; ?>`] = {}
+              }
+              if(typeof builder_data.spells[`<?php echo $sphere; ?>`][`<?php echo $level; ?>`] == "undefined"){
+                builder_data.spells[`<?php echo $sphere; ?>`][`<?php echo $level; ?>`] = []
+              }
+              builder_data.spells[`<?php echo $sphere; ?>`][`<?php echo $level; ?>`].push({
+                name: `<?php echo $name ?>`,
+                level: `<?php echo $level ?>`,
+                sphere: `<?php echo $sphere ?>`,
+                incant: `<?php echo $incant ?>`,
+                duration: `<?php echo $duration ?>`,
+                desc: `<?php echo $desc ?>`
+              });
+            </script>
+
+          <?php endwhile; ?>
+        <?php endif; ?>
+
+        <?php if( have_rows('spells', get_id_by_slug('codex-frag-spells')) ): ?>
+          <?php $count = 0; ?>
+          <?php while( have_rows('spells', get_id_by_slug('codex-frag-spells')) ): the_row(); ?>
+
+            <?php $name = preg_replace('<type>', '[type]', get_sub_field('name')); ?>
+            <?php $sphere = get_sub_field('sphere'); ?>
+            <?php $incant = preg_replace('<type>', '[type]', get_sub_field('incant')); ?>
+            <?php $level = get_sub_field('level'); ?>
+            <?php $duration = get_sub_field('duration'); ?>
+            <?php $desc = preg_replace('<type>', '[type]', get_sub_field('description')); ?>
+
+
+            <script type="text/javascript">
+              if(typeof builder_data.spells[`<?php echo $sphere; ?>`] == "undefined"){
+                builder_data.spells[`<?php echo $sphere; ?>`] = {}
+              }
+              if(typeof builder_data.spells[`<?php echo $sphere; ?>`][`<?php echo $level; ?>`] == "undefined"){
+                builder_data.spells[`<?php echo $sphere; ?>`][`<?php echo $level; ?>`] = []
+              }
+              builder_data.spells[`<?php echo $sphere; ?>`][`<?php echo $level; ?>`].push({
+                name: `<?php echo $name ?>`,
+                level: `<?php echo $level ?>`,
+                sphere: `<?php echo $sphere ?>`,
+                incant: `<?php echo $incant ?>`,
+                duration: `<?php echo $duration ?>`,
+                desc: `<?php echo $desc ?>`
+              });
+            </script>
+
+          <?php endwhile; ?>
+        <?php endif; ?>
 
         <?php if( have_rows('spell_spheres', get_id_by_slug('codex-magic')) ): ?>
           <?php $count = 0; ?>
@@ -675,8 +776,8 @@
                     </button>
                   </div>
                   <div class="col-xs-6">
-                    <button id="btn_view_spells" class="btn-cb-content btn btn-red" data-tab="Spells">
-                      Spells
+                    <button id="btn_view_spellbook" class="btn btn-red">
+                      Spellbook
                     </button>
                   </div>
                 </div>
@@ -792,16 +893,8 @@
                         </div>
                       </div>
                     <?php }?>
-
-
                   </div>
 
-                  <div id="cb_spell_details" class="cb_display_content"  data-tab="Spells">
-                    <h4>Spell Pyramid</h4>
-                    <p>Coming soon-ish! You'll be able to set up your spell pyramid here.</p>
-                    <p>Consider donating to my <a href="https://www.patreon.com/EricLortie" target="_blank">Patreon page</a> to further motivate me.</p>
-
-                  </div>
                 </div>
               </div>
             </div><!-- /#character_data -->
@@ -1030,38 +1123,122 @@ get_footer();
 
 ?>
 
-<div class="modal fade" id="armour_modal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Armour</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  Type:<br/>
-                  <select id="armour_type">
-                    <?php foreach([[0, "No Armour"], [1, 'Leather'],[2, 'Boiled/Studded Leather'],[3, 'Chain/Scale'],[4, 'Plate']] as $a) { ?>
-                      <option value="<?php echo $a[0];?>" type="<?php echo $a[1];?>"><?php echo $a[1];?></option>
-                    <?php } ?>
-                  </select>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12">
-                  Penalty:<br/>
-                  <select id="armour_penalty">
-                    <option value="0">0</option>
-                    <option value="0.5">0.5</option>
-                    <option value="1">1</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" id="armour_add" class="btn" slot="" level="" old-ap="">Add To Slot</button>
-            </div>
+<div class="modal fade builder_modal" id="spellbook_modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Spellbook</h4>
+          <p>As you purchase spell spheres and spell circles these slots will unlock.
+            You'll be able to add appropriate spells to them for reference during games.</p>
         </div>
+        <div class="modal-body">
+
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#Friday" aria-controls="Friday" role="tab" data-toggle="tab">Friday</a></li>
+          <li role="presentation"><a href="#Saturday" aria-controls="Saturday" role="tab" data-toggle="tab">Saturday</a></li>
+          <li role="presentation"><a href="#Sunday" aria-controls="Sunday" role="tab" data-toggle="tab">Sunday</a></li>
+        </ul>
+        <div class="tab-content">
+          <?php for ($day=1;$day<=3;$day++){ ?>
+            <?php if($day == 1){
+              $label = "Friday";
+            } else if ($day == 2){
+                $label = "Saturday";
+            } else {
+              $label = "Sunday";
+            }
+            ?>
+            <div role="tabpanel" id="<?php echo $label;?>" class="<?php if($day == 1) { echo 'active'; } ?> tab-pane fade in">
+              <div class="row spell_circle disabled elf_only" circle="elf">
+                <div class="col-sm-1">
+                  <label class="elf-circle">High Elf</label>
+                </div>
+                <div class="col-sm-2">
+                  <div class="spell_slot" circle="elf" slot="<?php echo $slot; ?>" day="<?php echo $day; ?>">
+                    <p class="spell_name" circle="elf" slot="<?php echo $slot; ?>" day="<?php echo $day; ?>">No spell selected.</p>
+                    <p class="change_spell">Change</p>
+                  </div>
+                </div>
+              </div>
+
+              <?php for ($circle=9;$circle>=1;$circle--){ ?>
+                <div class="row spell_circle disabled" circle="<?php echo $circle; ?>">
+                  <div class="col-sm-1">
+                    <label circle="<?php echo $circle;?>"><?php echo $circle;?></label>
+                  </div>
+                  <?php for ($slot=1;$slot<=5;$slot++){ ?>
+                    <div class="col-sm-2">
+                      <div class="spell_slot disabled" circle="<?php echo $circle; ?>" slot="<?php echo $slot; ?>" day="<?php echo $day; ?>">
+                        <p class="spell_name" circle="<?php echo $circle; ?>" slot="<?php echo $slot; ?>" day="<?php echo $day; ?>">No spell selected.</p>
+                        <p class="change_spell">Change</p>
+                      </div>
+                    </div>
+                  <?php } ?>
+                </div>
+              <?php } ?>
+            </div>
+          <?php } ?>
+        </div>
+
+
+        <div class="modal-footer">
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="modal fade builder_modal" id="spell_modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Change Spell</h4>
+      </div>
+      <div class="modal-body">
+        <div id="spell_list" class="row">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="spell_selector_close" class="btn">Return To Spellbook</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade builder_modal" id="armour_modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Armour</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+            Type:<br/>
+            <select id="armour_type">
+              <?php foreach([[0, "No Armour"], [1, 'Leather'],[2, 'Boiled/Studded Leather'],[3, 'Chain/Scale'],[4, 'Plate']] as $a) { ?>
+                <option value="<?php echo $a[0];?>" type="<?php echo $a[1];?>"><?php echo $a[1];?></option>
+              <?php } ?>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            Penalty:<br/>
+            <select id="armour_penalty">
+              <option value="0">0</option>
+              <option value="0.5">0.5</option>
+              <option value="1">1</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="armour_add" class="btn" slot="" level="" old-ap="">Add To Slot</button>
+      </div>
+    </div>
+  </div>
 </div>

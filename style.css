@@ -781,24 +781,87 @@ select.mandatory:disabled {
 .armour_slot_data_2 {
   background: #111;
 }
+.modal-header button.close {
+  color:whitesmoke;
+  font-weight:bold;
+  background: none;
+  opacity: 1;
+}
 #armour_modal .modal-dialog {
   width: 300px;
   margin-top: 140px;
 }
-#armour_modal .modal-content {
+.builder_modal .modal-content {
   background: #333;
   border: 1px solid whitesmoke;
 }
-#armour_modal select {
+.builder_modal select {
   padding: .5rem;
   margin-top: .5rem;
   width: 100%;
   background: #222;
   color: #ccc;
 }
-#armour_modal button {
+.builder_modal button {
   font-weight: bold;
   background: darkred;
+}
+#spell_modal .modal-dialog {
+  max-width: 500px;
+  margin-top: 50px;
+}
+.spell_desc {
+  width: 92%;
+}
+#spellbook_modal .modal-dialog {
+  width: 90%;
+}
+#spellbook_modal .nav-tabs>li>a {
+  color: yellow;
+}
+#spellbook_modal .nav-tabs>li.active>a, #spellbook_modal .nav-tabs>li.active>a:focus, #spellbook_modal .nav-tabs>li.active>a:hover {
+  color: black;
+}
+.spell_circle {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+.spell_circle.disabled {
+ display:none;
+}
+.spell_circle label {
+  font-size: 3rem;
+  float: right;
+}
+.spell_circle.elf label {
+  font-size: 2rem;
+}
+.spell_slot {
+  height: 50px;
+  border: 1px solid whitesmoke;
+  background: lightgrey;
+  width: 98%;
+  position:relative;
+  margin:0px auto;
+}
+.spell_slot.disabled {
+  background:#555;
+  border:1px solid darkred;
+}
+.spell_slot p.spell_name {
+  font-size: 80%;
+  font-weight: bolder;
+}
+.spell_slot p.change_spell {
+  font-size: 80%;
+  float:right;
+  cursor: pointer;
+}
+.spell_slot p {
+  color: black;
+}
+.spell_slot.disabled p {
+  display:none;
 }
 .locked .action_buttons {
   display: none;

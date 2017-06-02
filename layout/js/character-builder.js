@@ -6,6 +6,12 @@ jQuery(document).on('ready', function(){
     desc.slideToggle();
   });
 
+  // The button that surfaces the descrition for a skill
+  jQuery(document).on('click', '.spell_expander', function(){
+    var desc = jQuery(this).closest('.skill_row').find('.skill_desc');
+    desc.slideToggle();
+  });
+
     // The button that hides the descrition for a skill
   jQuery('.skill_closer').on('click', function(e){
     e.preventDefault();
@@ -14,7 +20,7 @@ jQuery(document).on('ready', function(){
   });
 
   //The button that adds a skill to the character
-  jQuery('.skill_add').on('click', function(){
+  jQuery('.skill_add:not(spell_add)').on('click', function(){
     if(jQuery(this).hasClass('spell_sphere_add')) {
       update_spell_spheres(); // This function will update the value of the next sphere purchased
     }
@@ -53,6 +59,11 @@ jQuery(document).on('ready', function(){
   function set_race(race, frag_cost){
     builder_data.character.frags_spent = 0;
     builder_data.character.race = race;
+    if(race == "High Elves (Deminis'Thalan)"){
+      jQuery('.spell_circle.elf_only').show();
+    } else {
+      jQuery('.spell_circle.elf_only').show();
+    }
     jQuery('#cb_race_show').html(race);;
     if(typeof frag_cost != 'undefined' && frag_cost != ''){
       builder_data.character.frags_spent = parseInt(frag_cost);
@@ -303,6 +314,7 @@ jQuery(document).on('ready', function(){
 
 
   function add_skill_to_character(skill_ele){
+    var name = skill_ele.data('name');
     if(skill_ele.data('multiple') == false || skill_ele.data('multiple') == "" || skill_ele.data('multiple') == 0 || skill_ele.data('multiple') == "0"){
       skill_ele.find('.skill_add').hide();
       skill_ele.find('.skill_purchased').slideToggle();
@@ -311,16 +323,22 @@ jQuery(document).on('ready', function(){
     if(skill_ele.data('sphere')){
       builder_data.character.spell_spheres += 1;
     }
-    if(builder_data.character.skills.hasOwnProperty(skill_ele.data('name'))) {
-      builder_data.character.skills[skill_ele.data('name')] += 1;
+    if(builder_data.character.skills.hasOwnProperty(name)) {
+      builder_data.character.skills[name] += 1;
     } else {
-      builder_data.character.skills[skill_ele.data('name')] = 1;
+      builder_data.character.skills[name] = 1;
     }
     if(skill_ele.data('spell_circle')){
-      builder_data.circle_values[skill_ele.data('name')] += 1;
+
+      builder_data.circle_values[name] += 1;
+      var circle = builder_data.circles.indexOf(name)+1;
+      slot = parseInt(builder_data.circle_values[name]);
+      jQuery('.spell_circle[circle="'+circle+'"]').removeClass('disabled');
+      jQuery('.spell_circle[circle="'+circle+'"]').find('.spell_slot[slot="'+slot+'"]').removeClass('disabled');
+
     }
     if(skill_ele.data('class_skill')){
-      if(builder_data.character.class_skills.hasOwnProperty(skill_ele.data('name'))) {
+      if(builder_data.character.class_skills.hasOwnProperty(name)) {
         builder_data.character.class_skills[skill_ele.data('level')] += 1;
       } else {
         builder_data.character.class_skills[skill_ele.data('level')] = 1;
@@ -332,12 +350,12 @@ jQuery(document).on('ready', function(){
         builder_data.character.next_racial_skill_level = builder_data.character.level+2;
       }
     }
-    if(skill_ele.data('name') == "Heavy Armour"){
+    if(name == "Heavy Armour"){
       builder_data.heavy_armour = true;
       jQuery('.armour_slot_data_2').removeClass('locked');
       jQuery('#heavy_armour_flag').html("Yes")
     }
-    if(skill_ele.data('name') == "Body Point Bonus") {
+    if(name == "Body Point Bonus") {
       builder_data.character.body_point_bonus += 5;
     }
 
@@ -355,8 +373,32 @@ jQuery(document).on('ready', function(){
     update_skills();
     if((!skill_ele.find('.skill_add').hasClass('automatic_skill'))){
       builder_data.step += 1;
-      push_character_to_remote(builder_data.character, builder_data.step, skill_ele.data('name'));
+      push_character_to_remote(builder_data.character, builder_data.step, name);
     }
+  }
+
+  function get_spell_circle(name){
+    circle = 0;
+    if(name.indexOf("1st")!==0) {
+      circle = 1;
+    } else if(name.indexOf("2nd")!==0){
+      circle = 2;
+    } else if(name.indexOf("3rd")!==0){
+      circle = 3;
+    } else if(name.indexOf("4th")!==0){
+      circle = 4;
+    } else if(name.indexOf("5th")!==0){
+      circle = 5;
+    } else if(name.indexOf("6th")!==0){
+      circle = 6;
+    } else if(name.indexOf("7th")!==0){
+      circle = 7;
+    } else if(name.indexOf("8th")!==0){
+      circle = 8;
+    } else if(name.indexOf("9th")!==0){
+      circle = 9;
+    }
+    return circle;
   }
 
   function reset_character() {
@@ -468,6 +510,7 @@ jQuery(document).on('ready', function(){
     }
     update_character();
     update_skills();
+
   }
 
   function output_skills(skills) {
@@ -507,8 +550,8 @@ jQuery(document).on('ready', function(){
 
   });
 
-  function update_skills() {
-    jQuery('.skill_row').each(function(){
+  function update_skills(skill_id) {
+    jQuery('.skill_row:not(.spell_row)').each(function(){
       var name = jQuery(this).data('name');
       if (isNaN(cost)){
         cost = 0;
@@ -602,12 +645,12 @@ jQuery(document).on('ready', function(){
 
   function has_circle_req(skill) {
     cur_circle = builder_data.circles.indexOf(skill);
-    cur_circle_count = builder_data.circle_values[skill];
+    var cur_circle_count = builder_data.circle_values[skill];
     skills = builder_data.character.skills;
-    if(typeof cur_skill_count == 'undefined'){
-      cur_skill_count = 0;
+    if(typeof cur_circle_count == 'undefined'){
+      cur_circle_count = 0;
     }
-    if (cur_skill_count >= 5) {
+    if (cur_circle_count >= 5) {
       return false;
     } else if (skill == "Spell Slot: Ritual Base" && skills["Read Magic: Ritual"] == 1 && skills["Spell Slot: 9th Circle"] >= 1) {
       return true;
@@ -946,9 +989,35 @@ jQuery(document).on('ready', function(){
 
     update_character();
     update_skills();
+    set_spellbook();
 
     jQuery('#opt-clear').trigger('click');
 
+  }
+
+  function set_spellbook(){
+
+    for (var day in builder_data.character.spells) {
+       if (builder_data.character.spells.hasOwnProperty(day)) {
+
+         var spellbook_day = builder_data.character.spells[day];
+         for (var circle in spellbook_day) {
+            if (spellbook_day.hasOwnProperty(circle)) {
+              jQuery(`.spell_slot[circle="${circle}"]`).removeClass('disabled');
+              jQuery(`.spell_circle[circle="${circle}"]`).removeClass('disabled');
+
+              var spellbook_circle = spellbook_day[circle];
+              for (var slot in spellbook_circle) {
+                 if (spellbook_circle.hasOwnProperty(slot)) {
+
+                   jQuery(`.spell_name[circle="${circle}"][slot="${slot}"][day="${day}"]`).html(spellbook_circle[slot]);
+
+                 }
+               }
+            }
+          }
+       }
+     }
   }
 
   // Cache selectors outside callback for performance.
@@ -1034,6 +1103,89 @@ jQuery(document).on('ready', function(){
   if(jQuery('.tooltip').length > 0){
     jQuery( document ).tooltip();
   }
+
+  jQuery('#btn_view_spellbook').on('click', function(){
+    builder_data.available_spells = {};
+    builder_data.available_spells["elf"] = []
+    for (var sphere in builder_data.spells) {
+      for (var level in builder_data.spells[sphere]) {
+        if(typeof builder_data.character.skills["Spell Sphere: "+ sphere] !== 'undefined'){
+          for (var spell in builder_data.spells[sphere][level]) {
+            if(typeof builder_data.character.skills[builder_data.circles[level-1]] !== 'undefined'){
+              console.log(`${sphere} - ${level} - ${spell}: builder_data[${sphere}][${level}][${level}] => ${builder_data.spells[sphere][level][spell]}`);
+              console.log(jQuery('.spell_slot[circle="'+level+'"]').data('available_spells'));
+              console.log(spell_to_add);
+              var spell_to_add = builder_data.spells[sphere][level][spell];
+              if(typeof builder_data.available_spells[level] == "undefined"){
+                builder_data.available_spells[level] = []
+              }
+              builder_data.available_spells[level].push(spell_to_add);
+              builder_data.available_spells["elf"].push(spell_to_add);
+            }
+          }
+        }
+      }
+    }
+    jQuery('#spellbook_modal').modal();
+  });
+
+  jQuery('.change_spell').on('click', function(){
+    var circle = jQuery(this).closest('.spell_slot').attr('circle');
+    var slot = jQuery(this).closest('.spell_slot').attr('slot');
+    var day = jQuery(this).closest('.spell_slot').attr('day');
+    var available_level_spells = builder_data.available_spells[circle];
+    jQuery('#spell_modal').find('#spell_list').html('');
+
+    for (i=0;i<available_level_spells.length;i++){
+      var spell_html = `<div class="row skill_row spell_row"><div class="col-sm-12 skill" style=""><div class="row"><div class="col-xs-1">
+        <i id="" class="fa fa-plus-square spell_add skill_add" circle="${circle}" slot="${slot}" day="${day}" spell-name="${available_level_spells[i]['name']}" aria-hidden="true"></i>
+        <i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
+      </div>
+      <div class="col-xs-9">
+        <span class="cat_label"><i class="fa fa-magic" aria-hidden="true"></i></span>&nbsp;
+          ${available_level_spells[i]['sphere']}: ${available_level_spells[i]['name']}
+        </span>
+        &nbsp; <i class="fa fa-info-circle skill_expander spell_expander" uuidaria-hidden="true"></i>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 skill_desc spell_desc" style="display:none;">
+        Incant: ${available_level_spells[i]['incant']}<br/>
+        Duration: ${available_level_spells[i]['duration']}<br/>
+        Description: ${available_level_spells[i]['desc']}<br/>
+        <hr />
+        <p class="skill_meta"><a href="#" class="skill_closer"><i class="fa fa-times" aria-hidden="true"></i>&nbsp; close</a></p>
+      </div>
+    </div></div></div></div>`;
+    jQuery('#spell_modal').find('#spell_list').append(spell_html);
+    }
+
+    jQuery('#spell_modal').modal();
+  });
+
+  jQuery(document).on('click', '.spell_add', function(){
+    var circle = jQuery(this).attr('circle');
+    var slot = jQuery(this).attr('slot');
+    var day = jQuery(this).attr('day');
+    var spell_name = jQuery(this).attr('spell-name');
+    jQuery(`.spell_name[circle="${circle}"][slot="${slot}"][day="${day}"]`).html(spell_name);
+
+    if(typeof builder_data.character.spells[day] === "undefined"){
+      builder_data.character.spells[day] = {};
+    }
+    if(typeof builder_data.character.spells[day][circle] === "undefined"){
+      builder_data.character.spells[day][circle] = {};
+    }
+    builder_data.character.spells[day][circle][slot] = spell_name;
+
+    jQuery('#spell_modal').modal('toggle');
+
+    push_spell_to_remote(builder_data, slot, level, day, spell_name);
+
+  });
+  jQuery('#spell_selector_close').on('click', function(){
+    jQuery('#spell_modal').modal('toggle');
+  });
 
   jQuery('.show_armour_modal').on('click', function(){
     var slot = jQuery(this).attr('slot');
