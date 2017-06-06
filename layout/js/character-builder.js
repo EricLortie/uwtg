@@ -553,10 +553,9 @@ jQuery(document).on('ready', function(){
   function update_skills(skill_id) {
     jQuery('.skill_row:not(.spell_row)').each(function(){
       var name = jQuery(this).data('name');
+      var cost = parseInt(jQuery(this).data('cost'));
       if (isNaN(cost)){
         cost = 0;
-      } else {
-        var cost = parseInt(jQuery(this).data('cost'));
       }
       var has_req = ((jQuery(this).data('requirements') != "" ));
       var spell_circle = is_spell_circle(name);
