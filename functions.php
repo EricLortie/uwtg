@@ -341,6 +341,8 @@ if ( ! function_exists('write_log')) {
    }
 }
 
+add_filter( 'wpcf7_support_html5_fallback', '__return_true' );
+
 
 function build_skill_row($post, $s_count, $skill_type) {
 	$s_count++;
