@@ -863,6 +863,32 @@ select.mandatory:disabled {
 .spell_slot.disabled p {
   display:none;
 }
+#spheres .sphere {
+  width: 90%;
+  position: relative;
+  margin: auto;
+  margin-top: 3rem;
+}
+table.sphere td {
+  padding: .5rem;
+}
+.sphere_header {
+  background: darkgrey;
+  color: black;
+  font-size: 120%;
+  font-weight: bolder;
+  text-align: center;
+}
+.spell_expander {
+  color: yellow;
+}
+.spell_data {
+  color: #ddd;
+}
+
+.spell_info {
+  display:none;
+}
 .locked .action_buttons {
   display: none;
 }

@@ -23,6 +23,7 @@
 				<?php
 				if( have_posts() ):
 					while( have_posts() ):
+            $slug = get_post_field( 'post_name' );
 						the_post();
             the_content();
 					endwhile;
@@ -49,6 +50,86 @@
           builder_data.character_states = [];
           builder_data.skills = [];
         </script>
+
+
+        <?php if($slug == "codex-spells" || $slug == 'codex-frag-spells'): ?>
+        <?php $spell_spheres = []; ?>
+
+            <?php if( have_rows('spells', get_id_by_slug('codex-spells')) ): ?>
+              <?php while( have_rows('spells', get_id_by_slug('codex-spells')) ): the_row(); ?>
+
+                <?php $spell = new stdClass(); ?>
+                <?php $spell->name = preg_replace('<type>', '[type]', get_sub_field('name')); ?>
+                <?php $spell->sphere = get_sub_field('sphere'); ?>
+                <?php $spell->incant = preg_replace('<type>', '[type]', get_sub_field('incant')); ?>
+                <?php $spell->level = get_sub_field('level'); ?>
+                <?php $spell->duration = get_sub_field('duration'); ?>
+                <?php $spell->desc = preg_replace('<type>', '[type]', get_sub_field('description')); ?>
+                <?php
+                  if($spell_spheres[$spell->sphere] == null){
+                    $spell_spheres[$spell->sphere] = [];
+                  }
+                  if($spell_spheres[$spell->sphere][$spell->level] == null){
+                    $spell_spheres[$spell->sphere][$spell->level] = [];
+                  }
+                  array_push($spell_spheres[$spell->sphere][$spell->level], $spell);
+                ?>
+
+              <?php endwhile; ?>
+            <?php endif; ?>
+
+            <?php if( have_rows('spells', get_id_by_slug('codex-frag-spells')) ): ?>
+              <?php while( have_rows('spells', get_id_by_slug('codex-frag-spells')) ): the_row(); ?>
+
+                <?php $spell = new stdClass(); ?>
+                <?php $spell->name = preg_replace('<type>', '[type]', get_sub_field('name')); ?>
+                <?php $spell->sphere = "Frag Sphere: " . get_sub_field('sphere'); ?>
+                <?php $spell->incant = preg_replace('<type>', '[type]', get_sub_field('incant')); ?>
+                <?php $spell->level = get_sub_field('level'); ?>
+                <?php $spell->duration = get_sub_field('duration'); ?>
+                <?php $spell->desc = preg_replace('<type>', '[type]', get_sub_field('description')); ?>
+                <?php
+                  if($spell_spheres[$spell->sphere] == null){
+                    $spell_spheres[$spell->sphere] = [];
+                  }
+                  if($spell_spheres[$spell->sphere][$spell->level] == null){
+                    $spell_spheres[$spell->sphere][$spell->level] = [];
+                  }
+                  array_push($spell_spheres[$spell->sphere][$spell->level], $spell);
+                ?>
+
+              <?php endwhile; ?>
+            <?php endif; ?>
+
+            <div id="spheres" class="row">
+              <?php foreach ($spell_spheres as $sphere => $spells) {?>
+                <div class="col-sm-4">
+                  <table class="sphere" border="1">
+                    <tr>
+                      <th colspan="2" class="sphere_header"><label><?php echo $sphere; ?></label></th>
+                    </tr>
+                      <?php foreach($spells as $level){ ?>
+                        <tr>
+                          <?php foreach($level as $spell){ ?>
+                            <td class="spell_data">
+                              <?php echo $spell->name; ?>&nbsp<i class="fa fa-info-circle spell_expander" aria-hidden="true"></i>
+                              <div class="spell_info">
+                                <p><strong>Incant: <?php echo $spell->incant; ?></strong></p>
+                                <p>Duration: <?php echo $spell->duration; ?></p>
+                                <hr/>
+                                <p><?php echo $spell->desc; ?></p>
+                              </div>
+                            </td>
+                          <?php } ?>
+                        </tr>
+                      <?php } ?>
+                  </table>
+                </div>
+
+              <?php } ?>
+            </div>
+
+        <?php endif; ?>
 
         <?php if( have_rows('races') ): ?>
             <?php while( have_rows('races')): the_row(); ?>
@@ -426,4 +507,21 @@
 </div><!--/.container-->
 
 <script type="text/javascript" src="<?php site_url(); ?>/wp-content/themes/illdy/layout/js/character-builder.js"></script>
+<script type="text/javascript" src="<?php site_url(); ?>/wp-content/themes/illdy/layout/js/codex.js"></script>
 <?php get_footer(); ?>
+
+
+<div class="modal fade builder_modal" id="spell_modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Spell Details</h4>
+      </div>
+      <div id="spell_info" class="modal-body">
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>

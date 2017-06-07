@@ -437,7 +437,6 @@
             <?php $duration = get_sub_field('duration'); ?>
             <?php $desc = preg_replace('<type>', '[type]', get_sub_field('description')); ?>
 
-
             <script type="text/javascript">
               if(typeof builder_data.spells[`<?php echo $sphere; ?>`] == "undefined"){
                 builder_data.spells[`<?php echo $sphere; ?>`] = {}
