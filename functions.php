@@ -648,3 +648,55 @@ function build_skill_row($post, $s_count, $skill_type) {
 	<?php
 	}
 }
+
+function get_spells(){
+
+  if( have_rows('spells', get_id_by_slug('codex-spells')) ):
+    while( have_rows('spells', get_id_by_slug('codex-spells')) ): the_row();
+
+       $spell = new stdClass();
+       $spell->name = preg_replace('<type>', '[type]', get_sub_field('name'));
+       $spell->sphere = get_sub_field('sphere');
+       $spell->incant = preg_replace('<type>', '[type]', get_sub_field('incant'));
+       $spell->level = get_sub_field('level');
+       $spell->duration = get_sub_field('duration');
+       $spell->desc = preg_replace('<type>', '[type]', get_sub_field('description'));
+
+        if($spell_spheres[$spell->sphere] == null){
+          $spell_spheres[$spell->sphere] = [];
+        }
+        if($spell_spheres[$spell->sphere][$spell->level] == null){
+          $spell_spheres[$spell->sphere][$spell->level] = [];
+        }
+        array_push($spell_spheres[$spell->sphere][$spell->level], $spell);
+
+
+     endwhile;
+   endif;
+
+   if( have_rows('spells', get_id_by_slug('codex-frag-spells')) ):
+     while( have_rows('spells', get_id_by_slug('codex-frag-spells')) ): the_row();
+
+       $spell = new stdClass();
+       $spell->name = preg_replace('<type>', '[type]', get_sub_field('name'));
+       $spell->sphere = get_sub_field('sphere');
+       $spell->incant = preg_replace('<type>', '[type]', get_sub_field('incant'));
+       $spell->level = get_sub_field('level');
+       $spell->duration = get_sub_field('duration');
+       $spell->desc = preg_replace('<type>', '[type]', get_sub_field('description'));
+
+        if($spell_spheres[$spell->sphere] == null){
+          $spell_spheres[$spell->sphere] = [];
+        }
+        if($spell_spheres[$spell->sphere][$spell->level] == null){
+          $spell_spheres[$spell->sphere][$spell->level] = [];
+        }
+        array_push($spell_spheres[$spell->sphere][$spell->level], $spell);
+
+
+     endwhile;
+   endif;
+
+	 return $spell_spheres;
+
+}

@@ -51,58 +51,12 @@
           builder_data.skills = [];
         </script>
 
-        <p><i class="fa fa-info-circle" aria-hidden="true" style="color: yellow;"></i> Click for info</p>
-        <p><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i> Work in progress. Description missing.</p>
-
-
         <?php if($slug == "codex-spells" || $slug == 'codex-frag-spells'): ?>
-        <?php $spell_spheres = []; ?>
 
-            <?php if( have_rows('spells', get_id_by_slug('codex-spells')) ): ?>
-              <?php while( have_rows('spells', get_id_by_slug('codex-spells')) ): the_row(); ?>
+            <?php $spell_spheres = get_spells(); ?>
 
-                <?php $spell = new stdClass(); ?>
-                <?php $spell->name = preg_replace('<type>', '[type]', get_sub_field('name')); ?>
-                <?php $spell->sphere = get_sub_field('sphere'); ?>
-                <?php $spell->incant = preg_replace('<type>', '[type]', get_sub_field('incant')); ?>
-                <?php $spell->level = get_sub_field('level'); ?>
-                <?php $spell->duration = get_sub_field('duration'); ?>
-                <?php $spell->desc = preg_replace('<type>', '[type]', get_sub_field('description')); ?>
-                <?php
-                  if($spell_spheres[$spell->sphere] == null){
-                    $spell_spheres[$spell->sphere] = [];
-                  }
-                  if($spell_spheres[$spell->sphere][$spell->level] == null){
-                    $spell_spheres[$spell->sphere][$spell->level] = [];
-                  }
-                  array_push($spell_spheres[$spell->sphere][$spell->level], $spell);
-                ?>
-
-              <?php endwhile; ?>
-            <?php endif; ?>
-
-            <?php if( have_rows('spells', get_id_by_slug('codex-frag-spells')) ): ?>
-              <?php while( have_rows('spells', get_id_by_slug('codex-frag-spells')) ): the_row(); ?>
-
-                <?php $spell = new stdClass(); ?>
-                <?php $spell->name = preg_replace('<type>', '[type]', get_sub_field('name')); ?>
-                <?php $spell->sphere = "Frag Sphere: " . get_sub_field('sphere'); ?>
-                <?php $spell->incant = preg_replace('<type>', '[type]', get_sub_field('incant')); ?>
-                <?php $spell->level = get_sub_field('level'); ?>
-                <?php $spell->duration = get_sub_field('duration'); ?>
-                <?php $spell->desc = preg_replace('<type>', '[type]', get_sub_field('description')); ?>
-                <?php
-                  if($spell_spheres[$spell->sphere] == null){
-                    $spell_spheres[$spell->sphere] = [];
-                  }
-                  if($spell_spheres[$spell->sphere][$spell->level] == null){
-                    $spell_spheres[$spell->sphere][$spell->level] = [];
-                  }
-                  array_push($spell_spheres[$spell->sphere][$spell->level], $spell);
-                ?>
-
-              <?php endwhile; ?>
-            <?php endif; ?>
+            <p><i class="fa fa-info-circle" aria-hidden="true" style="color: yellow;"></i> Click for info</p>
+            <p><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i> Work in progress. Description missing.</p>
 
             <div id="spheres" class="row">
               <?php $count = 1; ?>
@@ -132,7 +86,6 @@
                       <?php } ?>
                   </table>
                 </div>
-                <?php write_log($count%3); ?>
                 <?php if($count%3==0){ ?>
                   </div>
                   <br/>
@@ -253,6 +206,9 @@
         <?php endif; ?>
 
         <?php if( have_rows('spell_spheres') ): ?>
+
+          <?php $spell_spheres = get_spells(); ?>
+
           <div class="race-content switcher-content">
 
             <div id="cf-magic" class="cf-repeater">
@@ -268,7 +224,7 @@
                     $description = get_sub_field('description');
                     $focus = get_sub_field('focus');
                     $frag_cost = get_sub_field('frag_cost');
-                    $spells = get_sub_field('spells');
+                    $spells = $spell_spheres[$name];
 
                     ?>
                     <h2><?php echo $name; ?></h2>
@@ -280,17 +236,33 @@
                         <?php if ($frag_cost != "") { ?>
                           <h4><i>Frag Cost: <?php echo $frag_cost; ?></i></h4>
                         <?php } ?>
+                        <h4>Spells</h4>
+                        <table class="sphere" border="1">
+                          <?php foreach($spells as $level){ ?>
+                            <tr>
+                              <?php foreach($level as $spell){ ?>
+                                <td class="spell_data">
+                                  <?php echo $spell->name; ?>&nbsp<i class="fa fa-info-circle spell_expander" aria-hidden="true"></i>
+                                  <?php if( $spell->desc == ""){ ?>
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i>
+                                    <?php } ?>
+                                  <div class="spell_info">
+                                    <p><strong>Incant: <?php echo $spell->incant; ?></strong></p>
+                                    <p>Duration: <?php echo $spell->duration; ?></p>
+                                    <hr/>
+                                    <p><?php echo $spell->desc; ?></p>
+                                  </div>
+                                </td>
+                              <?php } ?>
+                            </tr>
+                          <?php } ?>
+                        </table>
 
                       </div>
                       <div class="col-sm-8 column">
 
                         <h4>Description</h4>
                         <?php echo $description; ?>
-
-                        <?php if ($frag_cost != "") { ?>
-                          <h4>Spells</h4>
-                          <?php echo $spells; ?>
-                        <?php } ?>
 
                       </div>
                     </div>
