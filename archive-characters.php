@@ -66,6 +66,8 @@
 		                      <?php the_excerpt(); ?>
 													<?php if ($show_content){ ?>
 		                      	<a href="<?php the_permalink(); ?>" title="<?php _e( 'Read more', 'illdy' ); ?>" class="blog-post-button"><?php _e( 'Read more', 'illdy' ); ?></a>
+													<?php } else { ?>
+														<a href="#" id="popup-bio-form" title="Update Character" class="" style="color:red;"><?php _e( 'Suggest Public Biography', 'illdy' ); ?></a>
 													<?php } ?>
 											</div>
 		              </div>
@@ -85,3 +87,28 @@
 	</div><!--/.row-->
 </div><!--/.container-->
 <?php get_footer(); ?>
+
+
+<script type="text/javascript">
+jQuery(document).on('ready', function(){
+	jQuery('#popup-bio-form').on('click', function(){ jQuery('#character_bio_modal').modal(); })
+});
+</script>
+
+
+<div class="modal fade builder_modal" id="character_bio_modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Suggest Character Biography</h4>
+      </div>
+      <div class="modal-body">
+				<p>You can suggest additions or changes to this character by submitting this form. This should only be publicly known information. This of this as "Here's what you may have heard about this character around town."</p>
+				<?php echo do_shortcode('[contact-form-7 id="421" title="Character Biography Form"]'); ?>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
