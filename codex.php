@@ -51,8 +51,8 @@
           builder_data.skills = [];
         </script>
 
-        <p><i class="fa fa-info-circle" aria-hidden="true"></i>: Click for info</p>
-        <p><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i>: Work in progress. Description missing.</p>
+        <p><i class="fa fa-info-circle" aria-hidden="true" style="color: yellow;"></i> Click for info</p>
+        <p><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i> Work in progress. Description missing.</p>
 
 
         <?php if($slug == "codex-spells" || $slug == 'codex-frag-spells'): ?>
