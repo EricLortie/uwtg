@@ -51,6 +51,9 @@
           builder_data.skills = [];
         </script>
 
+        <p><i class="fa fa-info-circle" aria-hidden="true"></i>: Click for info</p>
+        <p><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i>: Work in progress. Description missing.</p>
+
 
         <?php if($slug == "codex-spells" || $slug == 'codex-frag-spells'): ?>
         <?php $spell_spheres = []; ?>
@@ -113,6 +116,9 @@
                           <?php foreach($level as $spell){ ?>
                             <td class="spell_data">
                               <?php echo $spell->name; ?>&nbsp<i class="fa fa-info-circle spell_expander" aria-hidden="true"></i>
+                              <?php if( $spell->desc == ""){ ?>
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i>
+                                <?php } ?>
                               <div class="spell_info">
                                 <p><strong>Incant: <?php echo $spell->incant; ?></strong></p>
                                 <p>Duration: <?php echo $spell->duration; ?></p>
