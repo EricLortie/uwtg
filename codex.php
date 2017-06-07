@@ -105,6 +105,7 @@
             <?php endif; ?>
 
             <div id="spheres" class="row">
+              <?php $count = 1; ?>
               <?php foreach ($spell_spheres as $sphere => $spells) {?>
                 <div class="col-sm-4">
                   <table class="sphere" border="1">
@@ -131,7 +132,14 @@
                       <?php } ?>
                   </table>
                 </div>
-
+                <?php write_log($count%3); ?>
+                <?php if($count%3==0){ ?>
+                  </div>
+                  <br/>
+                  <br/>
+                  <div class="row">
+                <?php } ?>
+                <?php $count++; ?>
               <?php } ?>
             </div>
 
