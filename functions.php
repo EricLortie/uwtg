@@ -465,7 +465,7 @@ function build_skill_row($post, $s_count, $skill_type) {
 					skill_ele.append(`
 						<div class="row">
 							<div class="col-xs-1">
-								<i id="<?php echo $btn_class; ?>" class="fa fa-plus-square skill_add <?php echo $btn_class; ?> state_saver <?php echo (($automatic) ? "automatic_skill" : "" ) ?> <?php echo (($name == "Favoured") ? "favoured" : ""); ?>" aria-hidden="true"></i>
+								<i id="<?php echo $btn_class; ?>" class="fa fa-plus-square skill_add <?php echo $btn_class; ?> <?php echo (($automatic) ? "automatic_skill" : "" ) ?> <?php echo (($name == "Favoured") ? "favoured" : ""); ?>" aria-hidden="true"></i>
 								<i class="fa fa-check-square-o skill_purchased" aria-hidden="true"></i>
 							</div>
 							<div class="col-xs-9">

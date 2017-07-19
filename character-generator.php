@@ -310,7 +310,7 @@
 
 
                               <div class="blog-post text-center" style="margin-bottom:3rem;">
-                                <a id="select_class" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector blog-post-button state_saver locked">Select <?php echo $pc_class->name; ?></a>
+                                <a id="select_class" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector blog-post-button locked">Select <?php echo $pc_class->name; ?></a>
                               </div>
 
                             </div>

@@ -51,6 +51,8 @@ jQuery(document).on('ready', function(){
     jQuery('#details_section').hide();
     jQuery('#menu_primary').show();
     jQuery('#menu_launcher').show();
+    jQuery('#btn_choose_race').removeClass('selected');
+    jQuery('#btn_choose_class').removeClass('selected');
     reset_character();
     reset_skills();
     jQuery('#opt-clear').trigger('click');
@@ -62,7 +64,10 @@ jQuery(document).on('ready', function(){
     if(race == "High Elves (Deminis'Thalan)"){
       jQuery('.spell_circle.elf_only').show();
     } else {
-      jQuery('.spell_circle.elf_only').show();
+      jQuery('.spell_circle.elf_only').hide();
+    }
+    if(race == 'Minotaur (Fae)') {
+        builder_data.character.strength += 1;
     }
     jQuery('#cb_race_show').html(race);;
     if(typeof frag_cost != 'undefined' && frag_cost != ''){
@@ -355,7 +360,14 @@ jQuery(document).on('ready', function(){
       jQuery('.armour_slot_data_2').removeClass('locked');
       jQuery('#heavy_armour_flag').html("Yes")
     }
+    if(name == "Strength Bonus") {
+      builder_data.character.strength += 1;
+    }
     if(name == "Body Point Bonus") {
+      builder_data.character.body_point_bonus += 5;
+    }
+    if(name == "Orcish Constitution") {
+      builder_data.character.strength += 1;
       builder_data.character.body_point_bonus += 5;
     }
 
@@ -371,9 +383,10 @@ jQuery(document).on('ready', function(){
     jQuery('#cb_skill_count').html(builder_data.character.skill_count);
     update_character();
     update_skills();
-    if((!skill_ele.find('.skill_add').hasClass('automatic_skill'))){
+    if((!skill_ele.find('.skill_add').hasClass('automatic_skill') && name != "Weapon Group Proficiency: Simple")){
       builder_data.step += 1;
       push_character_to_remote(builder_data.character, builder_data.step, name);
+      set_state(name);
     }
   }
 
@@ -409,6 +422,7 @@ jQuery(document).on('ready', function(){
     jQuery('#cb_occupation_show').html("");
     jQuery('#char_vocation').hide();
     jQuery('#cb_vocation_show').html("");
+    jQuery('#cb_character_details').find('span').html('');
 
     builder_data.heavy_armour = false;
     builder_data.armour_points = 0;
@@ -436,10 +450,12 @@ jQuery(document).on('ready', function(){
     builder_data.character.cp_spent = 0;
     builder_data.character.cp_total = 0;
     builder_data.character.blanket_value = builder_data.character.level_data.cppb;
+    builder_data.character.strength = 0;
     builder_data.character.body_point_bonus = 0;
     builder_data.character.body_points = builder_data.character.level_data['bp_' + builder_data.type];
     builder_data.character.skills = {};
     builder_data.character.skill_count = 0;
+    builder_data.character_states = [];
 
 
     update_character();
@@ -472,7 +488,8 @@ jQuery(document).on('ready', function(){
     jQuery('#cb_level').html(builder_data.character.level);
     jQuery('#cb_cp_spent').html(builder_data.character.cp_spent);
     jQuery('#cb_frags_spent').html(builder_data.character.frags_spent);
-    jQuery('#cb_bp').html(builder_data.character.body_points);
+    jQuery('#cb_bp').html(builder_data.character.body_points+builder_data.character.body_point_bonus);
+    jQuery('#cb_strength').html(builder_data.character.strength);
     jQuery('#cb_skills').html(output_skills(builder_data.character.skills));
     jQuery('#cb_skill_count').html(builder_data.character.skill_count);
 
@@ -486,10 +503,12 @@ jQuery(document).on('ready', function(){
 
   }
 
-  function set_state(){
+  function set_state(name='Character Creation'){
     state_counter += 1;
-    jQuery('#btn_undo').removeClass('locked');
-    builder_data.character_states.unshift({'count': state_counter, 'character': jQuery.extend(true, {}, builder_data.character)});
+    if(name != 'Character Creation'){
+      jQuery('#btn_undo').removeClass('locked');
+    }
+    builder_data.character_states.unshift({'element': name, 'count': state_counter, 'character': jQuery.extend(true, {}, builder_data.character)});
     if(builder_data.character_states.length > 5){
       builder_data.character_states.splice(4, 1);
     }
@@ -1111,9 +1130,6 @@ jQuery(document).on('ready', function(){
         if(typeof builder_data.character.skills["Spell Sphere: "+ sphere] !== 'undefined'){
           for (var spell in builder_data.spells[sphere][level]) {
             if(typeof builder_data.character.skills[builder_data.circles[level-1]] !== 'undefined'){
-              console.log(`${sphere} - ${level} - ${spell}: builder_data[${sphere}][${level}][${level}] => ${builder_data.spells[sphere][level][spell]}`);
-              console.log(jQuery('.spell_slot[circle="'+level+'"]').data('available_spells'));
-              console.log(spell_to_add);
               var spell_to_add = builder_data.spells[sphere][level][spell];
               if(typeof builder_data.available_spells[level] == "undefined"){
                 builder_data.available_spells[level] = []

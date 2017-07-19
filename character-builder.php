@@ -41,6 +41,8 @@
           builder_data.character.skills = {};
           builder_data.character.spells = {};
           builder_data.character.class_skills = {};
+          builder_data.character.strength = 0;
+          builder_data.character.body_point_bonus = 0;
           builder_data.character.frags_avail = 0;
           builder_data.character.frags_spent = 0;
           builder_data.character.skill_count = 0;
@@ -548,11 +550,11 @@
                 <div id="menu_items">
                   <div id="menu_primary">
                     <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
-                      <a id="btn_choose_race" href="#" title="Choose Race" class="full-width blog-post-button state_saver locked">Select Race <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
+                      <a id="btn_choose_race" href="#" title="Choose Race" class="full-width blog-post-button locked">Select Race <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
                     </div>
 
                     <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
-                      <a id="btn_choose_class" href="#" title="Choose Class" class="full-width blog-post-button state_saver locked">Select Class <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
+                      <a id="btn_choose_class" href="#" title="Choose Class" class="full-width blog-post-button locked">Select Class <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
                     </div>
 
                     <div class="blog-post text-center" style="">
@@ -642,7 +644,7 @@
                           <img src="<?php echo $race->photo ?>" class="img-responsive builder_photo" alt="<?php echo $race->name ?>" title="<?php echo $race->name ?>"/>
 
                           <div class="blog-post text-center" style="margin-bottom:3rem;">
-                            <a id="select_race" href="#" title="Select Race" data-race="<?php echo $race->name; ?>" data-frag_cost="<?php echo $race->frag_cost; ?>" class="builder_selector blog-post-button state_saver locked">
+                            <a id="select_race" href="#" title="Select Race" data-race="<?php echo $race->name; ?>" data-frag_cost="<?php echo $race->frag_cost; ?>" class="builder_selector blog-post-button locked">
                               Select <?php echo $race->race_string; ?>
                             </a>
                           </div>
@@ -707,7 +709,7 @@
 
 
                           <div class="blog-post text-center" style="margin-bottom:3rem;">
-                            <a id="select_class" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector blog-post-button state_saver locked">Select <?php echo $pc_class->name; ?></a>
+                            <a id="select_class" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector blog-post-button locked">Select <?php echo $pc_class->name; ?></a>
                           </div>
 
                         </div>
@@ -730,12 +732,12 @@
               <div class="row">
                 <div class="col-xs-4 non_data_fields">
                   <div class="btn_warning text-center mandatory_section" style="margin-bottom:3rem;">
-                    <a id="btn_reset" href="#" title="Reset" class="blog-post-button state_saver"><i class="fa fa-trash" aria-hidden="true"></i> Reset</a>
+                    <a id="btn_reset" href="#" title="Reset" class="blog-post-button"><i class="fa fa-trash" aria-hidden="true"></i> Reset</a>
                   </div>
                 </div>
                 <div class="col-xs-4 non_data_fields">
                   <div class="btn_warning text-center mandatory_section" style="margin-bottom:3rem;">
-                    <a id="btn_undo" href="#" title="Undo" class="blog-post-button"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
+                    <a id="btn_undo" href="#" title="Undo" class="blog-post-button locked"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
                   </div>
                 </div>
                 <div class="col-xs-4 non_data_fields">
@@ -746,7 +748,7 @@
 
                 <div class="col-xs-12 non_data_fields">
 
-                  <button id="btn_add_blanket" class="btn btn-red state_saver mandatory_section" style="margin: 2rem 0;">
+                  <button id="btn_add_blanket" class="btn btn-red mandatory_section" style="margin: 2rem 0;">
                     Add Blanket of XP (+<span id="blanket_val">65</span>CP)
                   </button>
                 </div>
@@ -794,6 +796,7 @@
                     <h4>Frags Spent: <span id="cb_frags_spent"></span></h4>
                     <h4>Body Points: <span id="cb_bp"></span></h4>
                     <h4>Skills: <span id="cb_skill_count">0</span></h4>
+                    <h4>Strength: <span id="cb_strength">0</span></h4>
                   </div>
 
                   <div id="cb_skill_details" class="cb_display_content" data-tab="Skills">
@@ -1061,7 +1064,7 @@
 
 
                 <div class="blog-post text-center" style="margin-bottom:3rem;">
-                  <a id="select_occupation" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector occupation blog-post-button state_saver locked">Select <?php echo $pc_class->name; ?></a>
+                  <a id="select_occupation" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="<?php echo $pc_class->frag_cost; ?>" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector occupation blog-post-button locked">Select <?php echo $pc_class->name; ?></a>
                 </div>
 
               </div>
@@ -1103,7 +1106,7 @@
 
 
                 <div class="blog-post text-center" style="margin-bottom:3rem;">
-                  <a id="select_vocation" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="0" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector vocation blog-post-button state_saver locked">Select <?php echo $pc_class->name; ?></a>
+                  <a id="select_vocation" href="#" title="Select Class" data-class="<?php echo $pc_class->name; ?>" data-frag_cost="0" data-cost-ele="<?php echo strtolower(substr($pc_class->name, 0, 3)); ?>_cost" class="builder_selector vocation blog-post-button locked">Select <?php echo $pc_class->name; ?></a>
                 </div>
 
               </div>
