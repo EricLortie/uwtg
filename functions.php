@@ -700,3 +700,8 @@ function get_spells(){
 	 return $spell_spheres;
 
 }
+
+function cmp($a, $b)
+{
+  return strcmp($a->name, $b->name);
+}

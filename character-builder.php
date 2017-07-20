@@ -619,7 +619,9 @@
                   <p><span class="custom-dropdown custom-dropdown--red">
                     <select id="race-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red">
                     <option>Select a race</option>
-                      <?php foreach ($races as $race) { ?>
+                      <?php
+                      usort($races, "cmp");
+                      foreach ($races as $race) { ?>
                         <?php
                         $race_string = ($race->frag_cost > 0) ? $race->name . " (" . $race->frag_cost . " FRAGS)" : $race->name;
                         if(is_array($race->appendix)) {
@@ -634,7 +636,8 @@
                 </div>
 
                 <div id="race-content" class="col-sm-12">
-                  <?php foreach ($races as $race) { ?>
+                  <?php
+                  foreach ($races as $race) { ?>
                     <div class="race content repeater-content" data-name="<?php echo $race->name; ?>">
                       <h2><?php echo $race->name; ?></h2>
 
@@ -683,7 +686,8 @@
                   <p><span class="custom-dropdown custom-dropdown--red">
                     <select id="class-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red">
                     <option>Select a class</option>
-                      <?php foreach ($classes as $class) { ?>
+                      <?php
+                      foreach ($classes as $class) { ?>
                         <?php $class_string = ($class->frag_cost > 0) ? $class->name . " (" . $class->frag_cost . " FRAGS)" : $class->name; ?>
                         <option value="<?php echo $class->name; ?>"><?php echo $class_string ?></option>
                       <?php } ?>
