@@ -1278,6 +1278,9 @@ jQuery(document).on('ready', function(){
         // and signed request each expire
         var uid = response.authResponse.userID;
         var accessToken = response.authResponse.accessToken;
+        console.log('User logged in.');
+        jQuery('.login_element').hide();
+        jQuery('.advanced_element').show();
       } else if (response.status === 'not_authorized') {
         // the user is logged in to Facebook,
         // but has not authenticated your app
