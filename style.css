@@ -381,8 +381,17 @@ ul.forums li {
 .blog-post-button.selected .passed {
   display:block;
 }
-
-
+.fb_login_placeholder, .fb-login-button {
+  background: #4267b2;
+  border-radius: 5px;
+  color: white;
+  height: 40px;
+  text-align: center;
+  width: 100%;
+}
+.fb-login-button {
+  display: none;
+}
 
 .person-content-social {
     width: 100%;

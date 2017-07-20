@@ -1251,5 +1251,38 @@ jQuery(document).on('ready', function(){
     push_armour_to_remote(builder_data, slot, level, ap, penalty, type);
 
   });
+  window.fbAsyncInit = function() {
+
+    FB.init({
+      appId      : '121772051743892',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+    FB.AppEvents.logPageView();
+    FB.getLoginStatus(function(response) {
+      if (response.status === 'connected') {
+        // the user is logged in and has authenticated your
+        // app, and response.authResponse supplies
+        // the user's ID, a valid access token, a signed
+        // request, and the time the access token
+        // and signed request each expire
+        var uid = response.authResponse.userID;
+        var accessToken = response.authResponse.accessToken;
+      } else if (response.status === 'not_authorized') {
+        // the user is logged in to Facebook,
+        // but has not authenticated your app
+      } else {
+        // the user isn't logged in to Facebook.
+      }
+     });
+     FB.Event.subscribe('xfbml.render', finished_rendering);
+  };
+
+
+
+  var finished_rendering = function() {
+    jQuery('.fb_login_placeholder').hide();
+  }
 
 });

@@ -11,6 +11,18 @@
 
  ?>
 <?php get_header(); ?>
+
+<div id="fb-root"></div>
+<script>
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-12">
@@ -143,7 +155,7 @@
               'Specialization +1: Simple Weapon',
               'Specialization +1: Medium Weapon',
               'Specialization +1: Large Weapon',
-              //'Specialization +1: Exotic Weapon',
+              'Specialization +1: Exotic Weapon',
             ],
             'Critical +2: Group': [
               'Critical +2: Simple Group',
@@ -576,6 +588,14 @@
                       <a id="btn_generate" href="#" title="Build Character" class="full-width blog-post-button state_saver locked">Start Character</a>
                     </div>
 
+                    <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
+                      <p>Logging in allows you to save and load characters, as well as unlocks additional functionality.</p>
+
+                        <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
+                        <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+
+                    </div>
+
                     <div class="btn_warning text-center" style="margin-bottom:3rem;">
                       <a id="btn_data_import" href="#" title="Import" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Import</a>
                     </div>
@@ -809,6 +829,8 @@
                         <h4>Suggested Skills</h4>
                         <p>Coming soon-ish! You'll be able to get suggestions on what skill to purchase next.</p>
                         <p>Consider donating to my <a href="https://www.patreon.com/EricLortie" target="_blank">Patreon page</a> to further motivate me.</p>
+
+                        <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
 
                     </div>
 
