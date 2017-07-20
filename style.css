@@ -392,6 +392,9 @@ ul.forums li {
 .fb-login-button {
   display: none;
 }
+.advanced_element {
+  display: none;
+}
 
 .person-content-social {
     width: 100%;

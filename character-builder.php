@@ -588,7 +588,7 @@
                     </div>
 
                     <div class="btn_warning text-center advanced_element" style="margin-bottom:3rem;">
-                      <a id="btn_data_import" href="#" title="Import" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Import</a>
+                      <a id="btn_data_import" href="#" title="Import" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> LOAD CHARACTER</a>
                     </div>
                   </div>
 
