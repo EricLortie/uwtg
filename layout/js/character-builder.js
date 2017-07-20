@@ -1277,11 +1277,13 @@ jQuery(document).on('ready', function(){
       }
      });
      FB.Event.subscribe('xfbml.render', finished_rendering);
+     console.log('end of init');
   };
 
 
 
   var finished_rendering = function() {
+    console.log('finished rendering');
     jQuery('.fb_login_placeholder').hide();
   }
 

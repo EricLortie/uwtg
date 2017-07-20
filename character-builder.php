@@ -588,7 +588,7 @@
                       <a id="btn_generate" href="#" title="Build Character" class="full-width blog-post-button state_saver locked">Start Character</a>
                     </div>
 
-                    <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
+                    <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;" style="display:none;">
                       <p>Logging in allows you to save and load characters, as well as unlocks additional functionality.</p>
 
                         <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
