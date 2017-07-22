@@ -1300,8 +1300,10 @@ jQuery(document).on('ready', function(){
         var uid = response.authResponse.userID;
         var accessToken = response.authResponse.accessToken;
         console.log('User logged in.');
+        jQuery('.fb-login-button').hide();
         jQuery('.login_element').hide();
         jQuery('.advanced_element').show();
+
         load_characters(uuid);
 
         builder_data.character.fb_user_id = uid;
