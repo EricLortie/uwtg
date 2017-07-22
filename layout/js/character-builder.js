@@ -1323,6 +1323,9 @@ jQuery(document).on('ready', function(){
   var finished_rendering = function() {
     console.log('finished rendering');
     jQuery('.fb_login_placeholder').hide();
+    jQuery('.fb-login-button').hide();
+    jQuery('.login_element').hide();
+    jQuery('.advanced_element').show();
   }
 
   if(window.location.href.indexOf('uwtg') !== -1) {
