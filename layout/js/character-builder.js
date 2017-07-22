@@ -1303,9 +1303,9 @@ jQuery(document).on('ready', function(){
         jQuery('.fb-login-button').hide();
         jQuery('.login_element').hide();
         jQuery('.advanced_element').show();
-        console.log('fkey='+uuid);
+        console.log('fkey='+uid);
 
-        load_characters(uuid);
+        load_characters(uid);
 
         builder_data.character.fb_user_id = uid;
       } else if (response.status === 'not_authorized') {
