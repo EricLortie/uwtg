@@ -1303,6 +1303,7 @@ jQuery(document).on('ready', function(){
         jQuery('.fb-login-button').hide();
         jQuery('.login_element').hide();
         jQuery('.advanced_element').show();
+        console.log('fkey='+uuid);
 
         load_characters(uuid);
 
