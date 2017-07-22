@@ -395,6 +395,9 @@ ul.forums li {
 .advanced_element {
   display: none;
 }
+#char_name {
+  display:none;
+}
 
 .person-content-social {
     width: 100%;
@@ -936,7 +939,7 @@ p#option_string span.opt {
 }
 #character_data.sticky {
    position: fixed;
-   top: 0;
+   top: 45;
 }
 .character-meta {
   font-weight: bold;

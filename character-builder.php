@@ -53,6 +53,7 @@
           builder_data.character.racial_skills = 0;
           builder_data.character.automatic_racial_skills = 0;
           builder_data.character.next_racial_skill_level = 1;
+          builder_data.character.fb_user_id = 0;
           builder_data.races = [];
           builder_data.skill = 0;
           builder_data.step = 0;
@@ -210,7 +211,7 @@
             ]
           }
 
-          function push_character_to_remote(character, step, skill){
+          function save_skill(character, step, skill){
 
             if(skill != "Weapon Group Proficiency: Simple" && window.location.href.indexOf('uwtg') == -1){
 
@@ -228,7 +229,8 @@
                 skill_count: character.skill_count,
                 frags_spent: character.frags_spent,
                 spell_spheres: character.spell_spheres,
-                cp_spent: character.cp_spent
+                cp_spent: character.cp_spent,
+                fb_user_id: character.fb_user_id
               };
 
               jQuery.ajax({
@@ -242,6 +244,64 @@
                   }
               });
             }
+          }
+
+          function load_characters(fb_user_id){
+
+            jQuery.ajax({
+                type: "GET",
+                data : {fb_user_id: fb_user_id},
+                headers: { 'X-API-KEY': "tempest_grove" },
+                url: "https://arcane-sierra-27033.herokuapp.com/characters/fetch_by_fb_user_id",
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data){
+                  console.log(data);
+                  builder_data.saved_characters = {};
+                  for (let char of data) {
+                    builder_data.saved_characters[char.id] = JSON.parse(char.character);
+                    let char_name = JSON.parse(char.character).char_name;
+                    jQuery('#character-save-dropdown').append('<option value="'+char.id+'">'+char_name+'</option>');
+                    jQuery('#character-load-dropdown').append('<option value="'+char.id+'">'+char_name+'</option>');
+                  }
+                },
+                failure: function(data){
+                  console.log(data);
+                }
+            });
+          }
+
+          function save_character(character){
+            console.log('saving character');
+            var api_character = {
+              id: character.id,
+              rulebook: character.rulebook,
+              character_id: character.character_id,
+              category: character.category,
+              character: JSON.stringify(character),
+              pc_class: character.pc_class,
+              vocation: character.vocation,
+              occupation: character.occupation,
+              race: character.race,
+              fb_user_id: character.fb_user_id
+            };
+
+            console.log(api_character);
+
+            jQuery.ajax({
+                type: "POST",
+                data :JSON.stringify(api_character),
+                headers: { 'X-API-KEY': "tempest_grove" },
+                url: "https://arcane-sierra-27033.herokuapp.com/characters/save_character_data",
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data){
+                  console.log(data);
+                },
+                failure: function(data){
+                  console.log(data);
+                }
+            });
           }
           function push_armour_to_remote(armour_data, slot, level, ap, penalty, type){
 
@@ -593,7 +653,30 @@
                   </div>
 
                   <div id="data_fields" class="" style="padding-bottom:3rem;">
+
+                    <label>Saving and loading characters requires that you first login.</label>
+
+                    <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
+                    <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
                     <div id="data_fields_export">
+                      <div id="save_character_section">
+
+                        <label>Click the button below to save this character to the character builder database.</label>
+
+                        <p><span id="character-save-dropdown-container" class="custom-dropdown custom-dropdown--red" style="width:100%">
+                          <select id="character-save-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red" style="width:100%">
+                            <option>Select a character</option>
+                            <option value="char_new">Create a new character</option>
+                          </select>
+                        </span></p>
+                        <input type="text" id="char_name" />
+                        <br/>
+                        <button id="save_character" class="btn btn-red btn_process_data advanced_element">Save Character</button>
+
+                      </div>
+                    </div>
+
+                    <!--
                       <label>Click the button below to generate your character export. Copy and paste it into a word document to save it.</label>
                       <input type="text" id="char_export_code" disabled="disabled" />
                       <button id="generate_export" class="btn btn-red btn_process_data">Generate Export</button>
@@ -601,16 +684,18 @@
                       <label>Alternatively, click the button below to save this character to your browser. You can only have one saved character.</label>
                       <button id="save_character" class="btn btn-red btn_process_data">Save</button>
                       <p id="save_warning">Note: This character was saved only to this browser on this device.</p>
-                    </div>
+                    </div> -->
                     <div id="data_fields_import">
-                      <label>Paste your character data here. Click import to load this character.</label>
-                      <input type="text" id="data_import"/>
-                      <button id="process_import" class="btn btn-red btn_process_data">Process Import</button>
+                      <label>Load a character from the database.</label>
 
-                      <div id="load_character_section">
-                        <label>Press this button to load your saved character from your browser.</label>
-                        <button id="load_character" class="btn btn-red btn_process_data">Load Saved Character</button>
-                      </div>
+                      <p><span id="character-save-dropdown-container" class="custom-dropdown custom-dropdown--red" style="width:100%">
+                        <select id="character-load-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red" style="width:100%">
+                          <option>Select a character</option>
+                        </select>
+                      </span></p>
+                      <br/>
+                      <button id="load_character" class="btn btn-red btn_process_data advanced_element">Load Character</button>
+
                     </div>
 
                     <div class="row">
@@ -755,9 +840,9 @@
                     <a id="btn_undo" href="#" title="Undo" class="blog-post-button locked"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
                   </div>
                 </div>
-                <div class="col-xs-4 non_data_fields">
+                <div class="col-xs-4 non_data_fields advanced_element">
                   <div class="btn_warning text-center mandatory_section" style="margin-bottom:3rem;">
-                    <a id="btn_data_export" href="#" title="Export" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Export</a>
+                    <a id="btn_data_export" href="#" title="Export" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</a>
                   </div>
                 </div>
 
@@ -821,6 +906,7 @@
                         <p>Coming soon-ish! You'll be able to get suggestions on what skill to purchase next.</p>
                         <p>Consider donating to my <a href="https://www.patreon.com/EricLortie" target="_blank">Patreon page</a> to further motivate me.</p>
 
+                        <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
                         <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
 
                     </div>

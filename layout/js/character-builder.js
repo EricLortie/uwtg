@@ -105,14 +105,13 @@ jQuery(document).on('ready', function(){
       builder_data.character.frags_spent = old_frag_count;
       builder_data.character.blankets_spent = old_blankets_spent;
       builder_data.character.level = old_level;
-      update_character();
 
       jQuery('.skill_row.'+pc_class.replace(' ','')).each(function(){
         jQuery(this).data('class_restricted', false);
       });
 
+      update_character();
       add_automatic_skills();
-      update_skills();
 
       jQuery('#occupation_selector').hide();
       jQuery('#details_section').show();
@@ -382,10 +381,9 @@ jQuery(document).on('ready', function(){
     }
     jQuery('#cb_skill_count').html(builder_data.character.skill_count);
     update_character();
-    update_skills();
     if((!skill_ele.find('.skill_add').hasClass('automatic_skill') && name != "Weapon Group Proficiency: Simple")){
       builder_data.step += 1;
-      push_character_to_remote(builder_data.character, builder_data.step, name);
+      save_skill(builder_data.character, builder_data.step, name);
       set_state(name);
     }
   }
@@ -416,6 +414,7 @@ jQuery(document).on('ready', function(){
 
   function reset_character() {
 
+    builder_data.character.user_id = 0;
     builder_data.character.vocation = "";
     builder_data.character.occupation = "";
     jQuery('#char_occupation').hide();
@@ -528,7 +527,6 @@ jQuery(document).on('ready', function(){
       jQuery('#btn_undo').addClass('locked');
     }
     update_character();
-    update_skills();
 
   }
 
@@ -569,7 +567,7 @@ jQuery(document).on('ready', function(){
 
   });
 
-  function update_skills(skill_id) {
+  function update_skills() {
     jQuery('.skill_row:not(.spell_row)').each(function(){
       var name = jQuery(this).data('name');
       var cost = parseInt(jQuery(this).data('cost'));
@@ -957,28 +955,43 @@ jQuery(document).on('ready', function(){
   });
 
   jQuery('#save_character').on('click', function(){
-    localStorage.setItem('saved_character', JSON.stringify(builder_data.character));
-    jQuery('#load_character_section').show();
-    if(builder_data.character['skill_count'] == 0){
-      jQuery('#btn_reset').trigger('click');
+    var cn_dd = jQuery('#character-save-dropdown');
+    if(cn_dd.val() != '' || cn_dd.val() != 'char_new' || jQuery('#char_name').val() != ''){
+      let char_id = '';
+      let char_name = '';
+      if(cn_dd.val() != '' && cn_dd.val() != 'char_new'){
+        char_id = encodeURI(cn_dd.val());
+      } else {
+        char_name = encodeURI(jQuery('#char_name').val());
+      }
+      builder_data.character.id = char_id;
+      builder_data.character.char_name = char_name;
+
+      save_character(builder_data.character)
+
+      jQuery('#load_character_section').show();
+      if(builder_data.character['skill_count'] == 0){
+        jQuery('#btn_reset').trigger('click');
+      } else {
+        jQuery('.non_data_fields').show();
+        jQuery('#data_fields').hide();
+        jQuery('#char_export_code').val("");
+        jQuery('#data_import').val("");
+        jQuery('.mandatory_section').show();
+        jQuery('#btn_generate').hide();
+        jQuery('#cb_selectors').hide();
+        jQuery('#details_section').show();
+        jQuery('#menu_primary').show();
+        jQuery('#menu_launcher').hide();
+      }
     } else {
-      jQuery('.non_data_fields').show();
-      jQuery('#data_fields').hide();
-      jQuery('#char_export_code').val("");
-      jQuery('#data_import').val("");
-      jQuery('.mandatory_section').show();
-      jQuery('#btn_generate').hide();
-      jQuery('#cb_selectors').hide();
-      jQuery('#details_section').show();
-      jQuery('#menu_primary').show();
-      jQuery('#menu_launcher').hide();
+      alert('You must select a character or add a character name.');
     }
   });
 
   jQuery('#load_character').on('click', function(){
-    saved_char = localStorage.getItem('saved_character');
-    parsed_char = JSON.parse(saved_char);
-    load_character(parsed_char);
+    let char_id = jQuery('#character-load-dropdown').val();
+    load_character(builder_data.saved_characters[char_id]);
   });
 
   jQuery('#process_import').on('click', function(e){
@@ -989,7 +1002,6 @@ jQuery(document).on('ready', function(){
   });
 
   function load_character(character){
-
     builder_data.character = character;
 
     jQuery('.non_data_fields').show();
@@ -1005,12 +1017,15 @@ jQuery(document).on('ready', function(){
     jQuery('#menu_primary').show();
     jQuery('#menu_launcher').hide();
 
+    jQuery('.skill_row').each(function(){
+      skill_ele = jQuery(this);
+      set_skill_cost_and_visibility(skill_ele);
+    });
+
     update_character();
-    update_skills();
     set_spellbook();
 
     jQuery('#opt-clear').trigger('click');
-
   }
 
   function set_spellbook(){
@@ -1047,7 +1062,7 @@ jQuery(document).on('ready', function(){
     $window.scroll(function() {
       if(!jQuery('header#header').hasClass('mobile')){
         //console.log("Testing: " + $window.scrollTop() + " & " + elTop);
-         $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
+         $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop-200);
        }
     });
 
@@ -1252,6 +1267,12 @@ jQuery(document).on('ready', function(){
 
   });
 
+  jQuery('#character-save-dropdown').on('change', function(){
+    if(jQuery(this).val() == 'char_new'){
+      jQuery('#char_name').show();
+    }
+  });
+
   (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
      if (d.getElementById(id)) {return;}
@@ -1281,6 +1302,9 @@ jQuery(document).on('ready', function(){
         console.log('User logged in.');
         jQuery('.login_element').hide();
         jQuery('.advanced_element').show();
+        load_characters(uuid);
+
+        builder_data.character.fb_user_id = uid;
       } else if (response.status === 'not_authorized') {
         // the user is logged in to Facebook,
         // but has not authenticated your app
@@ -1297,6 +1321,11 @@ jQuery(document).on('ready', function(){
   var finished_rendering = function() {
     console.log('finished rendering');
     jQuery('.fb_login_placeholder').hide();
+  }
+
+  if(window.location.href.indexOf('uwtg') !== -1) {
+    jQuery('.login_element').hide();
+    jQuery('.advanced_element').show();
   }
 
 });
