@@ -939,7 +939,7 @@ p#option_string span.opt {
 }
 #character_data.sticky {
    position: fixed;
-   top: 45;
+   top: 45px;
 }
 .character-meta {
   font-weight: bold;
