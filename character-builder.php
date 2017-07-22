@@ -650,6 +650,7 @@
                     <div class="btn_warning text-center advanced_element" style="margin-bottom:3rem;">
                       <a id="btn_data_import" href="#" title="Import" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> LOAD CHARACTER</a>
                     </div>
+                    <hr/>
                   </div>
 
                   <div id="data_fields" class="" style="padding-bottom:3rem;">
