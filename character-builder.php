@@ -643,7 +643,7 @@
                       <p>Logging in allows you to save and load characters, as well as unlocks additional functionality.</p>
 
                         <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
-                        <div class="fb-login-button" style="padding-top:0px !important" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                        <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
 
                     </div>
 
@@ -657,7 +657,7 @@
                     <label>Saving and loading characters requires that you first login.</label>
 
                     <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
-                    <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                    <div class="fb-login-button" style="padding-top:0px !important" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
                     <div id="data_fields_export">
                       <div id="save_character_section">
 
