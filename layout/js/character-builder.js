@@ -1321,12 +1321,14 @@ jQuery(document).on('ready', function(){
 
         builder_data.character.fb_user_id = uid;
       } else if (response.status === 'not_authorized') {
+        console.log('not authorized');
         // the user is logged in to Facebook,
         // but has not authenticated your app
         jQuery('.fb-login-button').show();
         jQuery('.login_element').show();
         jQuery('.advanced_element').hide();
       } else {
+        console.log('not logged in');
         // the user isn't logged in to Facebook.
         jQuery('.fb-login-button').show();
         jQuery('.login_element').show();
