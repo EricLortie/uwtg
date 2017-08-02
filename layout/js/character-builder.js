@@ -1292,9 +1292,6 @@ jQuery(document).on('ready', function(){
        FB.api('/me', function(response) {
          console.log('Good to see you, ' + response.name + '.');
          builder_data.user_logged_in = true;
-         jQuery('.fb-login-button').hide();
-         jQuery('.login_element').hide();
-         jQuery('.advanced_element').show();
        });
       } else {
        console.log('User cancelled login or did not fully authorize.');
@@ -1355,18 +1352,26 @@ jQuery(document).on('ready', function(){
         jQuery('.advanced_element').hide();
       }
      });
-     FB.Event.subscribe('xfbml.render', finished_rendering);
+     FB.Event.subscribe('xfbml.render', toggle_fb_elements);
+     FB.Event.subscribe('auth.statusChange', toggle_fb_elements);
      console.log('end of init');
   };
 
 
 
-  var finished_rendering = function() {
+  var toggle_fb_elements = function() {
     console.log('finished rendering');
+    if(builder_data.user_logged_in){
       jQuery('.fb_login_placeholder').hide();
       jQuery('.fb-login-button').hide();
       jQuery('.login_element').hide();
       jQuery('.advanced_element').show();
+    } else {
+      jQuery('.fb_login_placeholder').show();
+      jQuery('.fb-login-button').show();
+      jQuery('.login_element').show();
+      jQuery('.advanced_element').hide();
+    }
   }
 
   // if(window.location.href.indexOf('uwtg') !== -1) {
