@@ -1292,6 +1292,9 @@ jQuery(document).on('ready', function(){
        FB.api('/me', function(response) {
          console.log('Good to see you, ' + response.name + '.');
          builder_data.user_logged_in = true;
+
+         var uid = response.authResponse.userID;
+         load_characters(uid);
        });
       } else {
        console.log('User cancelled login or did not fully authorize.');

@@ -670,16 +670,18 @@
                     <div class="btn_warning text-center advanced_element" style="margin-bottom:3rem;">
                       <div class="row">
                         <div class="col-sm-6">
-                          <button class="btn btn-red" id="btn_data_import">
+                          <button class="btn btn-red" style="width:77%" id="btn_data_import">
                             <i class="fa fa-floppy-o" aria-hidden="true"></i> LOAD
                           </button>
                         </div>
                         <div class="col-sm-6">
-                          <button class="btn btn-red" id="fb-logout-button">LOGOUT</button>
+                          <button class="btn btn-red" style="width:77%" id="fb-logout-button">LOGOUT</button>
                         </div>
                       </div>
                     </div>
-                    <hr/>
+                    <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
+                      <hr/>
+                    </div>
                   </div>
 
                   <div id="data_fields" class="" style="padding-bottom:3rem;">
