@@ -1285,6 +1285,20 @@ jQuery(document).on('ready', function(){
     builder_data.user_logged_in = false;
   });
 
+  jQuery('#fb-login-button').on('click', function(){
+    FB.login(function(response) {
+      if (response.authResponse) {
+       console.log('Welcome!  Fetching your information.... ');
+       FB.api('/me', function(response) {
+         console.log('Good to see you, ' + response.name + '.');
+         builder_data.user_logged_in = true;
+       });
+      } else {
+       console.log('User cancelled login or did not fully authorize.');
+      }
+    });
+  });
+
   (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
      if (d.getElementById(id)) {return;}
