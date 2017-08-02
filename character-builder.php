@@ -21,9 +21,15 @@
 				<?php
 				if( have_posts() ):
 					while( have_posts() ):
-						the_post();
-            the_content();
-            echo '<hr/>';
+						the_post(); ?>
+            <button class="btn btn-red" style="max-width: 300px; display:block; margin:0px auto;" data-toggle="collapse" data-target="#demo">Read Instructions</button>
+
+            <div id="demo" class="collapse">
+              <hr/>
+              <?php the_content(); ?>
+            </div>
+            <hr/>
+            <?php
 					endwhile;
 				else:
 					get_template_part( 'template-parts/content', 'none' );
@@ -213,7 +219,6 @@
 
 
           function save_skill(skill, category){
-            console.log('saving skills');
             jQuery.ajax({
                 type: "POST",
                 data :JSON.stringify({name: skill, category: category}),
@@ -228,7 +233,6 @@
           }
 
           function save_character_step(character, step, skill){
-            console.log('saving character step');
 
             if(skill != "Weapon Group Proficiency: Simple" && window.location.href.indexOf('uwtg') == -1){
 
@@ -290,7 +294,7 @@
           }
 
           function save_character(character){
-            console.log('saving character');
+
             var api_character = {
               id: character.id,
               rulebook: character.rulebook,
@@ -303,8 +307,6 @@
               race: character.race,
               fb_user_id: character.fb_user_id
             };
-
-            console.log(api_character);
 
             jQuery.ajax({
                 type: "POST",
@@ -660,13 +662,21 @@
                     <div class="blog-post text-center col-sm-12 login_element" style="margin-bottom:3rem;">
                       <p>Logging in allows you to save and load characters, as well as unlocks additional functionality.</p>
 
-                        <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
-                        <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                      <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
+                      <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
 
                     </div>
 
                     <div class="btn_warning text-center advanced_element" style="margin-bottom:3rem;">
-                      <a id="btn_data_import" href="#" title="Import" class="blog-post-button"><i class="fa fa-floppy-o" aria-hidden="true"></i> LOAD CHARACTER</a>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <button class="btn btn-red" id="btn_data_import">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> LOAD
+                          </button>
+                        </div>
+                        <div class="col-sm-6">
+                          <button class="btn btn-red" id="fb-logout-button">LOGOUT</button>
+                        </div>
                     </div>
                     <hr/>
                   </div>

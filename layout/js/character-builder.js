@@ -1081,7 +1081,7 @@ jQuery(document).on('ready', function(){
     jQuery('#menu_launcher').css('background', 'none');
     jQuery('#menu_launcher').css('padding-top', '0');
     jQuery('#race_selector').fadeIn();
-    scrollTo(jQuery('#selector_elements'));
+    scrollTo(jQuery('#menu_launcher'));
 
   });
   jQuery('#btn_choose_class').on('click', function(){
@@ -1089,7 +1089,7 @@ jQuery(document).on('ready', function(){
     jQuery('#menu_launcher').css('background', 'none');
     jQuery('#menu_launcher').css('padding-top', '0');
     jQuery('#class_selector').fadeIn();
-    scrollTo(jQuery('#selector_elements'));
+    scrollTo(jQuery('#menu_launcher'));
   });
 
   function scrollTo(ele) {
@@ -1273,6 +1273,13 @@ jQuery(document).on('ready', function(){
     }
   });
 
+  jQuery('#fb-logout-button').on('click', function(){
+    FB.logout();
+    jQuery('.fb-login-button').show();
+    jQuery('.login_element').show();
+    jQuery('.advanced_element').hide();
+  })
+
   (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
      if (d.getElementById(id)) {return;}
@@ -1311,8 +1318,14 @@ jQuery(document).on('ready', function(){
       } else if (response.status === 'not_authorized') {
         // the user is logged in to Facebook,
         // but has not authenticated your app
+        jQuery('.fb-login-button').show();
+        jQuery('.login_element').show();
+        jQuery('.advanced_element').hide();
       } else {
         // the user isn't logged in to Facebook.
+        jQuery('.fb-login-button').show();
+        jQuery('.login_element').show();
+        jQuery('.advanced_element').hide();
       }
      });
      FB.Event.subscribe('xfbml.render', finished_rendering);
@@ -1322,7 +1335,6 @@ jQuery(document).on('ready', function(){
 
 
   var finished_rendering = function() {
-    console.log('finished rendering');
     jQuery('.fb_login_placeholder').hide();
     jQuery('.fb-login-button').hide();
     jQuery('.login_element').hide();
