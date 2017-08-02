@@ -1282,6 +1282,7 @@ jQuery(document).on('ready', function(){
     jQuery('.fb-login-button').show();
     jQuery('.login_element').show();
     jQuery('.advanced_element').hide();
+    builder_data.user_logged_in = false;
   });
 
   (function(d, s, id){
@@ -1310,7 +1311,7 @@ jQuery(document).on('ready', function(){
         // and signed request each expire
         var uid = response.authResponse.userID;
         var accessToken = response.authResponse.accessToken;
-        builder_data.access_token = accessToken;
+        builder_data.user_logged_in = true;
         console.log('User logged in.');
         jQuery('.fb-login-button').hide();
         jQuery('.login_element').hide();
@@ -1322,6 +1323,7 @@ jQuery(document).on('ready', function(){
         builder_data.character.fb_user_id = uid;
       } else if (response.status === 'not_authorized') {
         console.log('not authorized');
+        builder_data.user_logged_in = false;
         // the user is logged in to Facebook,
         // but has not authenticated your app
         jQuery('.fb-login-button').show();
@@ -1329,6 +1331,7 @@ jQuery(document).on('ready', function(){
         jQuery('.advanced_element').hide();
       } else {
         console.log('not logged in');
+        builder_data.user_logged_in = false;
         // the user isn't logged in to Facebook.
         jQuery('.fb-login-button').show();
         jQuery('.login_element').show();
@@ -1342,15 +1345,22 @@ jQuery(document).on('ready', function(){
 
 
   var finished_rendering = function() {
-    jQuery('.fb_login_placeholder').hide();
-    jQuery('.fb-login-button').hide();
-    jQuery('.login_element').hide();
-    jQuery('.advanced_element').show();
+    if(builder_data.user_logged_in){
+      jQuery('.fb_login_placeholder').hide();
+      jQuery('.fb-login-button').hide();
+      jQuery('.login_element').hide();
+      jQuery('.advanced_element').show();
+    } else {
+      jQuery('.fb_login_placeholder').show();
+      jQuery('.fb-login-button').show();
+      jQuery('.login_element').show();
+      jQuery('.advanced_element').hide();
+    }
   }
 
-  if(window.location.href.indexOf('uwtg') !== -1) {
-    jQuery('.login_element').hide();
-    jQuery('.advanced_element').show();
-  }
+  // if(window.location.href.indexOf('uwtg') !== -1) {
+  //   jQuery('.login_element').hide();
+  //   jQuery('.advanced_element').show();
+  // }
 
 });
