@@ -1274,11 +1274,12 @@ jQuery(document).on('ready', function(){
   });
 
   jQuery('#fb-logout-button').on('click', function(){
-    FB.logout();
+    console.log('logging out');
+    FB.logout(builder_data.access_token);
     jQuery('.fb-login-button').show();
     jQuery('.login_element').show();
     jQuery('.advanced_element').hide();
-  })
+  });
 
   (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
@@ -1306,6 +1307,7 @@ jQuery(document).on('ready', function(){
         // and signed request each expire
         var uid = response.authResponse.userID;
         var accessToken = response.authResponse.accessToken;
+        builder_data.access_token = accessToken;
         console.log('User logged in.');
         jQuery('.fb-login-button').hide();
         jQuery('.login_element').hide();
