@@ -1360,7 +1360,7 @@ jQuery(document).on('ready', function(){
 
 
 
-    var toggle_placeholder = function() {
+    var toggle_fb_placeholder = function() {
       console.log('toggle placeholder');
       jQuery('.fb_login_placeholder').hide();
     }
