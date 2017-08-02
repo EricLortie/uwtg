@@ -1275,7 +1275,10 @@ jQuery(document).on('ready', function(){
 
   jQuery('#fb-logout-button').on('click', function(){
     console.log('logging out');
-    FB.logout(builder_data.access_token);
+    FB.logout(function(response) {
+      // user is now logged out
+      console.log(response);
+    });
     jQuery('.fb-login-button').show();
     jQuery('.login_element').show();
     jQuery('.advanced_element').hide();
