@@ -677,6 +677,7 @@
                         <div class="col-sm-6">
                           <button class="btn btn-red" id="fb-logout-button">LOGOUT</button>
                         </div>
+                      </div>
                     </div>
                     <hr/>
                   </div>
@@ -704,16 +705,6 @@
 
                       </div>
                     </div>
-
-                    <!--
-                      <label>Click the button below to generate your character export. Copy and paste it into a word document to save it.</label>
-                      <input type="text" id="char_export_code" disabled="disabled" />
-                      <button id="generate_export" class="btn btn-red btn_process_data">Generate Export</button>
-
-                      <label>Alternatively, click the button below to save this character to your browser. You can only have one saved character.</label>
-                      <button id="save_character" class="btn btn-red btn_process_data">Save</button>
-                      <p id="save_warning">Note: This character was saved only to this browser on this device.</p>
-                    </div> -->
                     <div id="data_fields_import">
                       <label>Load a character from the database.</label>
 

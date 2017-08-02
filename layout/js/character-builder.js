@@ -1292,6 +1292,9 @@ jQuery(document).on('ready', function(){
        FB.api('/me', function(response) {
          console.log('Good to see you, ' + response.name + '.');
          builder_data.user_logged_in = true;
+         jQuery('.fb-login-button').hide();
+         jQuery('.login_element').hide();
+         jQuery('.advanced_element').show();
        });
       } else {
        console.log('User cancelled login or did not fully authorize.');
@@ -1359,17 +1362,11 @@ jQuery(document).on('ready', function(){
 
 
   var finished_rendering = function() {
-    if(builder_data.user_logged_in){
+    console.log('finished rendering');
       jQuery('.fb_login_placeholder').hide();
       jQuery('.fb-login-button').hide();
       jQuery('.login_element').hide();
       jQuery('.advanced_element').show();
-    } else {
-      jQuery('.fb_login_placeholder').show();
-      jQuery('.fb-login-button').show();
-      jQuery('.login_element').show();
-      jQuery('.advanced_element').hide();
-    }
   }
 
   // if(window.location.href.indexOf('uwtg') !== -1) {
