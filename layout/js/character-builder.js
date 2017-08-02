@@ -1325,6 +1325,7 @@ jQuery(document).on('ready', function(){
         // and signed request each expire
         var uid = response.authResponse.userID;
         var accessToken = response.authResponse.accessToken;
+        builder_data.access_token = response.authResponse.accessToken;
         builder_data.user_logged_in = true;
         console.log('User logged in.');
         jQuery('.fb-login-button').hide();
@@ -1361,13 +1362,15 @@ jQuery(document).on('ready', function(){
 
   var toggle_fb_elements = function() {
     console.log('finished rendering');
-    if(builder_data.user_logged_in){
+    if(FB.getUserID() > 0){
       jQuery('.fb_login_placeholder').hide();
       jQuery('.fb-login-button').hide();
       jQuery('.login_element').hide();
       jQuery('.advanced_element').show();
     } else {
-      jQuery('.fb_login_placeholder').show();
+      if(builder_data.access_token){
+        jQuery('.fb_login_placeholder').show();
+      }
       jQuery('.fb-login-button').show();
       jQuery('.login_element').show();
       jQuery('.advanced_element').hide();
