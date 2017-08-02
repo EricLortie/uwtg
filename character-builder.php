@@ -213,7 +213,7 @@
 
 
           function save_skill(skill, category){
-
+            console.log('saving skills');
             jQuery.ajax({
                 type: "POST",
                 data :JSON.stringify({name: skill, category: category}),
@@ -228,6 +228,7 @@
           }
 
           function save_character_step(character, step, skill){
+            console.log('saving character step');
 
             if(skill != "Weapon Group Proficiency: Simple" && window.location.href.indexOf('uwtg') == -1){
 
