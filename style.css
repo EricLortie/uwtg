@@ -1040,28 +1040,16 @@ div.nav-ele {
   background: url('./inc/builder_bg5.jpg') no-repeat center center fixed;
 }
 
-#menu_primary {
-  margin-top: -90px;
-}
-
 #menu_items {
   max-width: 300px;
   position: relative;
-  padding 3rem;
   border: 1px solid #222;
   box-shadow: 5px 5px 10px black;
   margin: 0px auto;
   background: url('./inc/bg_black.png');
   border-radius: 1rem;
   margin-bottom: 6rem;
-  padding-top: 2rem;
-}
-
-/* Small Devices, Tablets equivalent to class sm */
-@media only screen and (max-width : 768px) {
-  #menu_primary {
-    margin-top: 0;
-  }
+  padding: 1rem;
 }
 
 .race-slider-nav.mobile .race.slick-slide {

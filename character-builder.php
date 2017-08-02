@@ -631,7 +631,7 @@
             <div id="menu_launcher" class="row bg_<?php echo rand(1,5); ?>">
               <div class="col-sm-12">
                 <div id="menu_items">
-                  <div id="menu_primary">
+                  <div id="menu_primary" class="row">
                     <div class="blog-post text-center col-sm-12" style="margin-bottom:3rem;">
                       <a id="btn_choose_race" href="#" title="Choose Race" class="full-width blog-post-button locked">Select Race <i class="fa fa-check-square passed" aria-hidden="true"></i></a>
                     </div>
@@ -684,8 +684,8 @@
                     </div>
                   </div>
 
-                  <div id="data_fields" class="" style="padding-bottom:3rem;">
-
+                  <div id="data_fields" class="row" style="padding-bottom:3rem;">
+                    <div class="col-sm-12">
                     <label>Saving and loading characters requires that you first login.</label>
 
                     <p class="fb_login_placeholder" style="padding-top: 9px;"><img src="<?php echo get_template_directory_uri(); ?>/inc/loading_spinner.gif" style="height:20px;"/> Loading</p>
@@ -719,13 +719,7 @@
                       <button id="load_character" class="btn btn-red btn_process_data advanced_element">Load Character</button>
 
                     </div>
-
-                    <div class="row">
-                      <div class="col-xs-12">
-                        <button id="btn_close_data" class="btn btn-red">Back</button>
-                      </div>
-                    </div>
-
+                  </div>
                 </div>
               </div>
             </div>
