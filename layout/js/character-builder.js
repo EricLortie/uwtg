@@ -1353,29 +1353,34 @@ jQuery(document).on('ready', function(){
         jQuery('.advanced_element').hide();
       }
      });
-     FB.Event.subscribe('xfbml.render', toggle_fb_elements);
+     FB.Event.subscribe('xfbml.render', toggle_fb_placeholder);
      FB.Event.subscribe('auth.statusChange', toggle_fb_elements);
      console.log('end of init');
   };
 
 
 
-  var toggle_fb_elements = function() {
-    console.log('finished rendering');
-    if(FB.getUserID() > 0){
+    var toggle_placeholder = function() {
+      console.log('toggle placeholder');
       jQuery('.fb_login_placeholder').hide();
-      jQuery('.fb-login-button').hide();
-      jQuery('.login_element').hide();
-      jQuery('.advanced_element').show();
-    } else {
-      if(builder_data.access_token){
-        jQuery('.fb_login_placeholder').show();
-      }
-      jQuery('.fb-login-button').show();
-      jQuery('.login_element').show();
-      jQuery('.advanced_element').hide();
     }
-  }
+
+    var toggle_fb_elements = function() {
+      console.log('finished rendering');
+      if(FB.getUserID() > 0){
+        jQuery('.fb_login_placeholder').hide();
+        jQuery('.fb-login-button').hide();
+        jQuery('.login_element').hide();
+        jQuery('.advanced_element').show();
+      } else {
+        if(builder_data.access_token){
+          jQuery('.fb_login_placeholder').show();
+        }
+        jQuery('.fb-login-button').show();
+        jQuery('.login_element').show();
+        jQuery('.advanced_element').hide();
+      }
+    }
 
   // if(window.location.href.indexOf('uwtg') !== -1) {
   //   jQuery('.login_element').hide();
