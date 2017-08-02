@@ -211,7 +211,23 @@
             ]
           }
 
-          function save_skill(character, step, skill){
+
+          function save_skill(skill, category){
+
+            jQuery.ajax({
+                type: "POST",
+                data :JSON.stringify({name: skill, category: category}),
+                headers: { 'X-API-KEY': "tempest_grove" },
+                url: "https://arcane-sierra-27033.herokuapp.com/skills",
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data){
+                }
+            });
+
+          }
+
+          function save_character_step(character, step, skill){
 
             if(skill != "Weapon Group Proficiency: Simple" && window.location.href.indexOf('uwtg') == -1){
 
@@ -230,7 +246,8 @@
                 frags_spent: character.frags_spent,
                 spell_spheres: character.spell_spheres,
                 cp_spent: character.cp_spent,
-                fb_user_id: character.fb_user_id
+                fb_user_id: character.fb_user_id,
+                status: 'builder'
               };
 
               jQuery.ajax({

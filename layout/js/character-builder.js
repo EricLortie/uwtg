@@ -383,7 +383,7 @@ jQuery(document).on('ready', function(){
     update_character();
     if((!skill_ele.find('.skill_add').hasClass('automatic_skill') && name != "Weapon Group Proficiency: Simple")){
       builder_data.step += 1;
-      save_skill(builder_data.character, builder_data.step, name);
+      save_character_step(builder_data.character, builder_data.step, name);
       set_state(name);
     }
   }
