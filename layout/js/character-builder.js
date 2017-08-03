@@ -123,6 +123,7 @@ jQuery(document).on('ready', function(){
     }
     function set_vocation(pc_class){
 
+      console.log('SETTING VOCATION');
       builder_data.character.vocation = pc_class;
 
       jQuery('#char_vocation').show();
