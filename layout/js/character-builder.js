@@ -1007,6 +1007,10 @@ jQuery(document).on('ready', function(){
   });
 
   function load_character(character){
+
+    reset_character();
+    reset_skills();
+
     builder_data.character = character;
 
     jQuery('.non_data_fields').show();
@@ -1016,6 +1020,9 @@ jQuery(document).on('ready', function(){
     jQuery('.mandatory_section').show();
     jQuery('#btn_generate').hide();
     jQuery('#cb_selectors').hide();
+
+    set_race(builder_data.character.pc_class, builder_data.character.race_frag_cost)
+
     if(builder_data.character.occupation){
       set_occupation(builder_data.character.pc_class, builder_data.character.cost_element);
     } else if (builder_data.character.vocation != '') {
@@ -1023,15 +1030,9 @@ jQuery(document).on('ready', function(){
     } else {
       set_class(builder_data.character.pc_class, builder_data.character.class_frag_cost, builder_data.character.cost_element);
     }
-    set_race(builder_data.character.pc_class, builder_data.character.race_frag_cost)
     jQuery('#details_section').show();
     jQuery('#menu_primary').show();
     jQuery('#menu_launcher').hide();
-
-    jQuery('.skill_row').each(function(){
-      skill_ele = jQuery(this);
-      set_skill_cost_and_visibility(skill_ele);
-    });
 
     update_character();
     set_spellbook();
