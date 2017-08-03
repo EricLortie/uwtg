@@ -60,6 +60,8 @@
           builder_data.character.automatic_racial_skills = 0;
           builder_data.character.next_racial_skill_level = 1;
           builder_data.character.fb_user_id = 0;
+          builder_data.character.occupation = false;
+          builder_data.character.vocation = true;
           builder_data.races = [];
           builder_data.skill = 0;
           builder_data.step = 0;
@@ -317,6 +319,7 @@
                 dataType: "json",
                 success: function(data){
                   console.log(data);
+                  load_characters(builder_data.character.fb_user_id);
                 },
                 failure: function(data){
                   console.log(data);
@@ -719,6 +722,9 @@
                       <button id="load_character" class="btn btn-red btn_process_data advanced_element">Load Character</button>
 
                     </div>
+                    <hr/>
+                    <button id="btn_close_data" class="btn btn-red advanced_element">Back</button>
+
                   </div>
                 </div>
               </div>

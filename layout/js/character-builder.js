@@ -72,6 +72,7 @@ jQuery(document).on('ready', function(){
     jQuery('#cb_race_show').html(race);;
     if(typeof frag_cost != 'undefined' && frag_cost != ''){
       builder_data.character.frags_spent = parseInt(frag_cost);
+      builder_data.character.race_frag_cost = parseInt(frag_cost);
     }
 
     jQuery('.skill_row').each(function(){
@@ -99,6 +100,8 @@ jQuery(document).on('ready', function(){
       }
       reset_character();
       set_class(pc_class, 50, cost_ele)
+      builder_data.character.occupation = true;
+      builder_data.character.class_frag_cost = 50;
       builder_data.character.old_class = old_class;
       builder_data.character.pc_class = pc_class;
       builder_data.character.cp_avail = old_cp_count;
@@ -143,8 +146,10 @@ jQuery(document).on('ready', function(){
     }
 
   function set_class(pc_class, frag_cost, cost_ele){
+    console.log('SETTING CLASS');
     builder_data.character.pc_class = pc_class;
     builder_data.character.cost_element = cost_ele;
+    builder_data.character.class_frag_cost = frag_cost;
 
     if(pc_class == "Mercenary" || pc_class == "Ranger" || pc_class == "Templar"){
       builder_data.type = "w";
@@ -962,7 +967,7 @@ jQuery(document).on('ready', function(){
       if(cn_dd.val() != '' && cn_dd.val() != 'char_new'){
         char_id = encodeURI(cn_dd.val());
       } else {
-        char_name = encodeURI(jQuery('#char_name').val());
+        char_name = jQuery('#char_name').val();
       }
       builder_data.character.id = char_id;
       builder_data.character.char_name = char_name;
@@ -1011,8 +1016,14 @@ jQuery(document).on('ready', function(){
     jQuery('.mandatory_section').show();
     jQuery('#btn_generate').hide();
     jQuery('#cb_selectors').hide();
-    jQuery("#cb-class").val(builder_data.character.pc_class);
-    jQuery("#cb-race").val(builder_data.character.pc_class);
+    if(builder_data.character.occupation){
+      set_occupation(builder_data.character.pc_class, builder_data.character.cost_element);
+    } else if (builder_data.character.vocation != '') {
+      set_vocation(builder_data.character.vocation);
+    } else {
+      set_class(builder_data.character.pc_class, builder_data.character.class_frag_cost, builder_data.character.cost_element);
+    }
+    set_race(builder_data.character.pc_class, builder_data.character.race_frag_cost)
     jQuery('#details_section').show();
     jQuery('#menu_primary').show();
     jQuery('#menu_launcher').hide();
@@ -1130,7 +1141,7 @@ jQuery(document).on('ready', function(){
     set_occupation(jQuery(this).data('class'), jQuery(this).data('cost-ele'));
   });
   jQuery(document).on('click', '#select_vocation', function(){
-    set_vocation(jQuery(this).data('class'), jQuery(this).data('cost-ele'));
+    set_vocation(jQuery(this).data('class'));
   });
 
   if(jQuery('.tooltip').length > 0){
@@ -1385,9 +1396,9 @@ jQuery(document).on('ready', function(){
       }
     }
 
-  // if(window.location.href.indexOf('uwtg') !== -1) {
-  //   jQuery('.login_element').hide();
-  //   jQuery('.advanced_element').show();
-  // }
+  if(window.location.href.indexOf('uwtg') !== -1) {
+    jQuery('.login_element').hide();
+    jQuery('.advanced_element').show();
+  }
 
 });
