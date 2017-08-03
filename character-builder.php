@@ -282,6 +282,7 @@
                 success: function(data){
                   console.log(data);
                   builder_data.saved_characters = {};
+                  jQuery('#character-load-dropdown').html('<option>Select a character</option>');
                   for (let char of data) {
                     builder_data.saved_characters[char.id] = JSON.parse(char.character);
                     let char_name = encodeURI(JSON.parse(char.character).char_name);

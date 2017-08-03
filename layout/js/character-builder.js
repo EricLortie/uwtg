@@ -51,6 +51,8 @@ jQuery(document).on('ready', function(){
     jQuery('#details_section').hide();
     jQuery('#menu_primary').show();
     jQuery('#menu_launcher').show();
+    jQuery('#category-dropdown').val('');
+    jQuery('#character-load-dropdown').val('');
     jQuery('#btn_choose_race').removeClass('selected');
     jQuery('#btn_choose_class').removeClass('selected');
     reset_character();
@@ -965,7 +967,7 @@ jQuery(document).on('ready', function(){
       let char_id = '';
       let char_name = '';
       if(cn_dd.val() != '' && cn_dd.val() != 'char_new'){
-        char_id = encodeURI(cn_dd.val());
+        char_id = cn_dd.val();
       } else {
         char_name = jQuery('#char_name').val();
       }
@@ -975,6 +977,7 @@ jQuery(document).on('ready', function(){
       save_character(builder_data.character)
 
       jQuery('#load_character_section').show();
+      jQuery('#character-load-dropdown').val('');
       if(builder_data.character['skill_count'] == 0){
         jQuery('#btn_reset').trigger('click');
       } else {
@@ -1013,6 +1016,7 @@ jQuery(document).on('ready', function(){
 
     builder_data.character = character;
 
+    jQuery('#character-load-dropdown').val('');
     jQuery('.non_data_fields').show();
     jQuery('#data_fields').hide();
     jQuery('#char_export_code').val("");
