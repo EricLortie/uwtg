@@ -969,11 +969,11 @@ jQuery(document).on('ready', function(){
       let char_name = '';
       if(cn_dd.val() != '' && cn_dd.val() != 'char_new'){
         char_id = cn_dd.val();
+        builder_data.character.id = char_id;
       } else {
         char_name = jQuery('#char_name').val();
+        builder_data.character.char_name = char_name;
       }
-      builder_data.character.id = char_id;
-      builder_data.character.char_name = char_name;
 
       save_character(builder_data.character)
 
