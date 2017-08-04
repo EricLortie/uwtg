@@ -297,8 +297,6 @@
 
           function save_character(character){
 
-            fb_user_id = (window.location.href.indexOf('uwtg') == -1) ? fb_user_id : 10154865952982709;
-
             var api_character = {
               id: character.id,
               rulebook: character.rulebook,
@@ -309,7 +307,7 @@
               vocation: character.vocation,
               occupation: character.occupation,
               race: character.race,
-              fb_user_id: fb_user_id
+              fb_user_id: builder_data.character.fb_user_id
             };
 
             jQuery.ajax({
@@ -707,7 +705,8 @@
                             <option value="char_rename">Rename character</option>
                           </select>
                         </span></p>
-                        <input type="text" id="char_name" />
+                        <label>Character Name
+                        <input type="text" id="char_name" /></label>
                         <br/>
                         <button id="save_character" class="btn btn-red btn_process_data advanced_element">Save Character</button>
 

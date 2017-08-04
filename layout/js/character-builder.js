@@ -1285,9 +1285,7 @@ jQuery(document).on('ready', function(){
   });
 
   jQuery('#character-save-dropdown').on('change', function(){
-    if(jQuery(this).val() == 'char_new'){
-      jQuery('#char_name').show();
-    }
+    jQuery('#char_name').val(jQuery(this).find('option:selected').html());
   });
 
   jQuery('#fb-logout-button').on('click', function(){
