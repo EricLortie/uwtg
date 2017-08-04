@@ -77,7 +77,7 @@
           builder_data.armour = {};
           builder_data.available_spells = {};
 
-          builder_data.circle_values = {
+          builder_data.character.circle_values = {
             "Spell Slot: 1st Circle": 0,
             "Spell Slot: 2nd Circle": 0,
             "Spell Slot: 3rd Circle": 0,
@@ -298,6 +298,8 @@
 
           function save_character(character){
 
+            fb_user_id = (window.location.href.indexOf('uwtg') == -1) ? fb_user_id : 10154865952982709;
+
             var api_character = {
               id: character.id,
               rulebook: character.rulebook,
@@ -308,7 +310,7 @@
               vocation: character.vocation,
               occupation: character.occupation,
               race: character.race,
-              fb_user_id: character.fb_user_id
+              fb_user_id: fb_user_id
             };
 
             jQuery.ajax({

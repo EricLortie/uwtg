@@ -342,9 +342,9 @@ jQuery(document).on('ready', function(){
     }
     if(skill_ele.data('spell_circle')){
 
-      builder_data.circle_values[name] += 1;
+      builder_data.character.circle_values[name] += 1;
       var circle = builder_data.circles.indexOf(name)+1;
-      slot = parseInt(builder_data.circle_values[name]);
+      slot = parseInt(builder_data.character.circle_values[name]);
       jQuery('.spell_circle[circle="'+circle+'"]').removeClass('disabled');
       jQuery('.spell_circle[circle="'+circle+'"]').find('.spell_slot[slot="'+slot+'"]').removeClass('disabled');
 
@@ -660,7 +660,7 @@ jQuery(document).on('ready', function(){
   }
 
   function is_spell_circle(skill){
-    circle_search = builder_data.circle_values[skill];
+    circle_search = builder_data.character.circle_values[skill];
     if(typeof circle_search != 'undefined'){
       return true;
     }
@@ -669,7 +669,7 @@ jQuery(document).on('ready', function(){
 
   function has_circle_req(skill) {
     cur_circle = builder_data.circles.indexOf(skill);
-    var cur_circle_count = builder_data.circle_values[skill];
+    var cur_circle_count = builder_data.character.circle_values[skill];
     skills = builder_data.character.skills;
     if(typeof cur_circle_count == 'undefined'){
       cur_circle_count = 0;
@@ -689,8 +689,8 @@ jQuery(document).on('ready', function(){
   }
 
   function circle_math_req(cur_circle, cur_circle_count){
-    prev_circle_count = builder_data.circle_values[builder_data.circles[cur_circle-1]];
-    next_circle_count = builder_data.circle_values[builder_data.circles[cur_circle+1]];
+    prev_circle_count = builder_data.character.circle_values[builder_data.circles[cur_circle-1]];
+    next_circle_count = builder_data.character.circle_values[builder_data.circles[cur_circle+1]];
     if(cur_circle == 0){
       return ((cur_circle_count > next_circle_count) && (cur_circle_count < next_circle_count+2));
     } else {
