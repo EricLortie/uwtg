@@ -700,9 +700,7 @@
 
                         <p><span id="character-save-dropdown-container" class="custom-dropdown custom-dropdown--red" style="width:100%">
                           <select id="character-save-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red" style="width:100%">
-                            <option>Select a character</option>
-                            <option value="char_new">Create a new character</option>
-                            <option value="char_rename">Rename character</option>
+                            <option>Create a new character</option>
                           </select>
                         </span></p>
                         <label>Character Name

@@ -1285,7 +1285,11 @@ jQuery(document).on('ready', function(){
   });
 
   jQuery('#character-save-dropdown').on('change', function(){
-    jQuery('#char_name').val(jQuery(this).find('option:selected').html());
+    let dd_val = jQuery(this).find('option:selected').html();
+    if (dd_val != 'Create a character'){
+      jQuery('#char_name').val();
+
+    }
   });
 
   jQuery('#fb-logout-button').on('click', function(){
