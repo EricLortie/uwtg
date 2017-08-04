@@ -271,7 +271,6 @@
           }
 
           function load_characters(fb_user_id){
-
             jQuery.ajax({
                 type: "GET",
                 data : {fb_user_id: fb_user_id},
@@ -705,11 +704,16 @@
                           <select id="character-save-dropdown" class="builder_selector custom-dropdown__select custom-dropdown__select--red" style="width:100%">
                             <option>Select a character</option>
                             <option value="char_new">Create a new character</option>
+                            <option value="char_rename">Rename character</option>
                           </select>
                         </span></p>
                         <input type="text" id="char_name" />
                         <br/>
                         <button id="save_character" class="btn btn-red btn_process_data advanced_element">Save Character</button>
+
+                        <br/>
+                        <hr/>
+                        <button id="delete_character" class="btn btn-red btn_process_data advanced_element" style="background: #333;border: 1px solid white;">Delete Character</button>
 
                       </div>
                     </div>

@@ -1311,7 +1311,7 @@ jQuery(document).on('ready', function(){
          builder_data.user_logged_in = true;
 
          var uid = response.authResponse.userID;
-         load_characters(uid);
+         load_characters(String(uid));
        });
       } else {
        console.log('User cancelled login or did not fully authorize.');
@@ -1353,7 +1353,7 @@ jQuery(document).on('ready', function(){
         jQuery('.advanced_element').show();
         console.log('fkey='+uid);
 
-        load_characters(uid);
+        load_characters(String(uid));
 
         builder_data.character.fb_user_id = uid;
       } else if (response.status === 'not_authorized') {
