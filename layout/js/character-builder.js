@@ -185,10 +185,10 @@ jQuery(document).on('ready', function(){
   function set_skill_cost_and_visibility(skill_ele) {
     if(skill_ele.data('class_skill') == true){
       skill_ele.find('.level_cost').show();
-      if(skill_ele.data('class') != builder_data.character.pc_class ){
-        skill_ele.data('class_restricted', true);
-      } else {
+      if(skill_ele.data('class') == builder_data.character.pc_class || skill_ele.data('class') == builder_data.character.vocation || skill_ele.data('class') == builder_data.character.occupation ){
         skill_ele.data('class_restricted', false);
+      } else {
+        skill_ele.data('class_restricted', true);
       }
       skill_ele.data('cost', parseInt(skill_ele.find('.level_cost').html()));
 
