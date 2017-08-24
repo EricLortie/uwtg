@@ -19,9 +19,9 @@ $second_button_url = get_theme_mod( 'illdy_jumbotron_general_second_button_url',
 $show_videos = false;
 ?>
 	<div class="bottom-header front-page">
-        <?php if (!wp_is_mobile() || !$show_videos) { ?>
+        <?php /* if (!wp_is_mobile() || !$show_videos) { ?>
 		<video id="awesome_video" src="<?php echo get_theme_root_uri() . '/illdy/inc/larp1.mp4'; ?>" autoplay ></video>
-        <?php } ?>
+        <?php } */ ?>
 		<div class="container">
 			<div class="row">
 
@@ -51,7 +51,7 @@ $show_videos = false;
 		</div><!--/.container-->
 	</div><!--/.bottom-header.front-page-->
 
-    <?php if (!wp_is_mobile() || !$show_videos) { ?>
+    <?php /* if (!wp_is_mobile() || !$show_videos) { ?>
 		<script type="text/javascript">
 		  var index = 1,
 		      playlist = [
@@ -71,4 +71,4 @@ $show_videos = false;
 		    if (index >= playlist.length) { index = 0; }
 		  }
 		</script>
-    <?php } ?>
+    <?php } */ ?>
